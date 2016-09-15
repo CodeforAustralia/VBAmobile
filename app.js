@@ -48,6 +48,6 @@ app.post('/login', function (req, res) {
   session.login(credential, expressRes);
 });
 
-app.listen(3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log('Example app listening on port 3000!');
 });
