@@ -1,0 +1,58 @@
+<div class="wrapper">
+  <header class="header">
+    <div class="titles">
+      <h1 class="title">VBA</h1>
+      <h2 class="sub-title">mobile</h2>
+    </div>
+    {{#if loggedIn}}
+      <h2 class="sub-title">{{{username}}}</h2>
+    {{else}}
+    <a class="user w-inline-block" href="login">
+      <img alt="user setting logo" class="user-logo" height="56" src="images/ic_account_box_white_24px.svg" width="56">
+    </a>
+    {{/if}}
+  </header>
+  <main class="content-wrapper">
+    <div class="form-container w-container">
+      <h1 class="form-header">General Observation</h1>
+      <div class="form w-form">
+        <form data-name="Email Form" id="email-form" name="email-form">
+          <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Survey  name" type="text">
+          <select class="w-select" data-name="Primary discipline" id="Primary-discipline" name="Primary-discipline">
+            <option value="">Aquatic Fauna</option>
+            <option value="First">Aquatic Invertebrates</option>
+            <option value="Second">Fauna</option>
+            <option value="Third">Marine</option>
+            <option value="">Terrestrial Fauna</option>
+          </select>
+          <input class="w-input" data-name="Site ID" id="Site-ID" maxlength="256" name="Site-ID" placeholder="Site ID" required="required" type="text">
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+      <h2 class="form-header">Survey information</h2>
+      <div class="form w-form">
+        <form data-name="Email Form 2" id="email-form-2" name="email-form-2">
+          <label for="start-date">Start Date:</label>
+          <input class="w-input" data-name="start date" id="start-date" maxlength="256" name="start-date" placeholder="dd/mm/yyyy" type="text">
+          <label for="email">End date:</label>
+          <input class="w-input" data-name="Email" id="email" maxlength="256" name="email" placeholder="dd/mm/yyyy" required="required" type="email">
+          <textarea class="survey-comment w-input" data-name="Survey comment" id="Survey-comment" maxlength="5000" name="Survey-comment" placeholder="Survey comment"></textarea>
+          <div class="form-buttons">
+            <input class="w-button" data-wait="Please wait..." type="submit" value="Add Species">
+          </div>
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
