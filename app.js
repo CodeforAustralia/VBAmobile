@@ -37,7 +37,7 @@ app.get('/login', function(req, res) {
 
 app.post('/login', function (req, res) {
   // var session = new Session();
-  console.log('Login request for' + req.body.username);
+  console.log('Login request for ' + req.body.username);
   var credential = {
   	username : req.body.username,
   	password : req.body.password
