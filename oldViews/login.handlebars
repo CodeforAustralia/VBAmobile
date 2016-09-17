@@ -1,0 +1,40 @@
+<div class="wrapper">
+  <header class="header">
+    <div class="titles">
+      <h1 class="title">VBA</h1>
+      <h2 class="sub-title">mobile</h2>
+    </div>
+    {{#if loggedIn}}
+      <p class="username">{{username}}</p>
+    {{else}}
+    <a class="user w-inline-block" href="login">
+      <img alt="user setting logo" class="user-logo" height="56" src="images/ic_account_box_white_24px.svg" width="56">
+    </a>
+    {{/if}}
+  </header>
+  <main class="content-wrapper">
+    <div class="login-container">
+      <h2 class="login-title">Log in to VBA mobile</h2>
+      <div class="w-form">
+        <form action="/login" class="login-form" data-name="Login Form" data-redirect="/" id="wf-form-Login-Form" method="post" name="wf-form-Login-Form">
+          <label for="Username">Username :</label>
+          <input class="w-input" data-name="username" id="username" maxlength="256" name="username" placeholder="Enter your username" required="required" type="text">
+          <label for="email">Password :&nbsp;</label>
+          <input class="w-input" data-name="password" id="password" maxlength="256" name="password" placeholder="Enter your password" required="required" type="password">
+          <input class="w-button" data-wait="Please wait..." type="submit" value="Log in">
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
+      <div class="account-links">
+        <a class="login-links" href="#">Forgotten account?</a>
+        <div>·</div>
+        <a class="login-links" href="#">Sign up for VBA</a>
+      </div>
+    </div>
+  </main>
+</div>
