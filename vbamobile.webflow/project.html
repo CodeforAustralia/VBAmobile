@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!-- Last Published: Sat Sep 17 2016 04:08:42 GMT+0000 (UTC) -->
-<html data-wf-page="57da29184d0e071437ed1d38" data-wf-site="57ced8c91d3807cb6dad5f35">
+<html data-wf-page="57db58be05ab7ada438b83d8" data-wf-site="57ced8c91d3807cb6dad5f35">
 <head>
   <meta charset="utf-8">
-  <title>login</title>
-  <meta content="login" property="og:title">
+  <title>New Project</title>
+  <meta content="New Project" property="og:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/components.css" rel="stylesheet" type="text/css">
@@ -30,15 +30,31 @@
     <a class="username" href="#">username</a>
   </header>
   <main class="content-wrapper">
-    <div class="login-container">
-      <h2 class="login-title">Log in to VBA mobile</h2>
+    <div class="form-container">
+      <h1>New project</h1>
       <div class="w-form">
-        <form action="/login" class="login-form" data-name="Login Form" data-redirect="/" id="wf-form-Login-Form" method="post" name="wf-form-Login-Form">
-          <label for="username-2">Username :</label>
-          <input class="w-input" data-name="username" id="username-2" maxlength="256" name="username" placeholder="Enter your username" required="required" type="text">
-          <label for="password">Password :&nbsp;</label>
-          <input class="w-input" data-name="password" id="password" maxlength="256" name="password" placeholder="Enter your password" required="required" type="password">
-          <input class="w-button" data-wait="Please wait..." type="submit" value="Log in">
+        <form action="/project" data-name="Email Form" data-redirect="/" id="email-form" method="post" name="email-form">
+          <label for="name">Name:</label>
+          <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Project name" type="text">
+          <label for="Description-2">Description:</label>
+          <textarea class="w-input" data-name="Description" id="Description-2" maxlength="5000" name="Description" placeholder="Describe the project..."></textarea>
+          <div class="w-embed">
+            <label for="date">Start date:</label>
+            <input class="w-input" type="date" name="startdate">
+          </div>
+          <div class="w-embed">
+            <label for="date">End date:</label>
+            <input class="w-input" type="date" name="enddate">
+          </div>
+          <label for="Comment">Comment:</label>
+          <textarea class="w-input" data-name="Comment" id="Comment" maxlength="5000" name="Comment" placeholder="Any comment ? "></textarea>
+          <div class="w-checkbox">
+            <input checked="checked" class="w-checkbox-input" data-name="Published ?" id="Published" name="Published" type="checkbox">
+            <label class="w-form-label" for="Published">Published</label>
+          </div>
+          <div class="button-container">
+            <input class="project-save-button w-button" data-wait="Please wait..." type="submit" value="Save">
+          </div>
         </form>
         <div class="w-form-done">
           <div>Thank you! Your submission has been received!</div>
@@ -46,11 +62,6 @@
         <div class="w-form-fail">
           <div>Oops! Something went wrong while submitting the form</div>
         </div>
-      </div>
-      <div class="account-links">
-        <a class="login-links" href="#">Forgotten account?</a>
-        <div>·</div>
-        <a class="login-links" href="#">Sign up for VBA</a>
       </div>
     </div>
   </main>

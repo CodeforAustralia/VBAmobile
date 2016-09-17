@@ -35,6 +35,16 @@ app.get('/login', function(req, res) {
   	});
 });
 
+app.get('/newproject', function(req, res) {
+	res.render('newsurvey',{
+  		loggedIn : session.loggedIn,
+  		helpers : {
+  			username : session.username
+  		}
+  	});
+});
+
+
 app.post('/login', function (req, res) {
   // var session = new Session();
   console.log('Login request for ' + req.body.username);
