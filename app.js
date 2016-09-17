@@ -35,13 +35,22 @@ app.get('/login', function(req, res) {
   	});
 });
 
-app.get('/newproject', function(req, res) {
-	res.render('newsurvey',{
+app.get('/project', function(req, res) {
+	res.render('project',{
   		loggedIn : session.loggedIn,
   		helpers : {
   			username : session.username
   		}
   	});
+});
+
+app.post('/project', function(req, res) {
+	console.log(req.body);
+	res.redirect('/');
+});
+
+app.post('/newproject', function(req, res) {
+
 });
 
 
