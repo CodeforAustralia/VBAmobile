@@ -2,7 +2,7 @@
   <div class="form-container">
     <h1 class="form-header">General Observation</h1>
     <div class="form w-form">
-      <form action="/survey" data-name="Email Form" data-redirect="/survey" id="email-form" method="post" name="email-form">
+      <form data-name="Email Form" id="email-form" name="email-form">
         <label for="name">Name:</label>
         <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Survey  name" type="text">
         <label for="Primary-discipline">Primary discipline:</label>
@@ -15,22 +15,25 @@
         </select>
         <label for="Site-ID">Site ID:</label>
         <input class="w-input" data-name="Site ID" id="Site-ID" maxlength="256" name="Site-ID" placeholder="Site ID" required="required" type="text">
-        <h2 class="form-header">Survey information</h2>
-        <div class="dates-selectors-container">
-          <div class="date-selector-element w-embed">
-            <label for="date">Start date:</label>
-            <input class="w-input" type="date" name="startdate">
-          </div>
-          <div class="date-selector-element w-embed">
-            <label for="date">End date:</label>
-            <input class="w-input" type="date" name="enddate">
-          </div>
-        </div>
-        <label for="Survey-comment">Survey comment:</label>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+    <h2 class="form-header">Survey information</h2>
+    <div class="form w-form">
+      <form action="/survey" data-name="Email Form 2" id="email-form-2" method="post" name="email-form-2">
+        <label for="start-date">Start Date:</label>
+        <input class="w-input" data-name="start date" id="start-date" maxlength="256" name="start-date" placeholder="dd/mm/yyyy" type="text">
+        <label for="email">End date:</label>
+        <input class="w-input" data-name="Email" id="email" maxlength="256" name="email" placeholder="dd/mm/yyyy" required="required" type="email">
         <textarea class="survey-comment w-input" data-name="Survey comment" id="Survey-comment" maxlength="5000" name="Survey-comment" placeholder="Survey comment"></textarea>
-        <div class="form-button-center">
-          <input class="form-button w-button" data-wait="Please wait..." type="submit" value="save">
-          <a class="form-button w-button" href="/species">add species</a>
+        <div class="form-button-container">
+          <input class="form-button-survey w-button" data-wait="Please wait..." type="submit" value="save">
+          <a class="form-button-survey w-button" href="/species">add species</a>
         </div>
       </form>
       <div class="w-form-done">

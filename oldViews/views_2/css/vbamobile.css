@@ -55,6 +55,7 @@ body {
   display: -ms-flexbox;
   display: flex;
   min-height: 90vh;
+  padding-top: 5%;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
@@ -206,17 +207,20 @@ body {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 5%;
-  -webkit-justify-content: space-around;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-align-self: stretch;
   -ms-flex-item-align: stretch;
   align-self: stretch;
   -webkit-box-flex: 0;
-  -webkit-flex: 0 25vh;
-  -ms-flex: 0 25vh;
-  flex: 0 25vh;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-basis: 25vh;
+  -ms-flex-preferred-size: 25vh;
+  flex-basis: 25vh;
 }
 
 .login-form {
@@ -251,7 +255,6 @@ body {
 }
 
 .login-container {
-  margin-top: 5%;
   padding: 1%;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -280,10 +283,6 @@ body {
   display: -ms-flexbox;
   display: flex;
   width: 50vw;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
 }
 
 .form-button-survey {
@@ -316,6 +315,7 @@ body {
 }
 
 .project-save-button {
+  margin: 26px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -324,54 +324,10 @@ body {
   flex-basis: 20%;
 }
 
-.project-button {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  width: 25vh;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-align-self: stretch;
-  -ms-flex-item-align: stretch;
-  align-self: stretch;
-}
-
-.project-edit-form {
-  width: 50%;
-}
-
-.form-button-center {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-justify-content: space-around;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-}
-
-.form-button {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-basis: 20%;
-  -ms-flex-preferred-size: 20%;
-  flex-basis: 20%;
-}
-
 @media (max-width: 991px) {
+  .content-wrapper {
+    padding-top: 5%;
+  }
   .form-container {
     display: -webkit-box;
     display: -webkit-flex;
@@ -392,33 +348,6 @@ body {
     -ms-flex-align: stretch;
     align-items: stretch;
   }
-  .project-edit-form {
-    width: 50%;
-  }
-  .form-button-center {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-  }
-  .dates-selectors-container {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-  }
-  .date-selector-element {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-  }
 }
 
 @media (max-width: 767px) {
@@ -426,13 +355,11 @@ body {
     max-height: 100%;
   }
   .content-wrapper {
+    padding-top: 5%;
     -webkit-box-pack: start;
     -webkit-justify-content: flex-start;
     -ms-flex-pack: start;
     justify-content: flex-start;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
     -webkit-box-align: stretch;
     -webkit-align-items: stretch;
     -ms-flex-align: stretch;
@@ -457,49 +384,25 @@ body {
     width: 40px;
   }
   .button-container {
+    width: 50%;
+    margin-bottom: 1px;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-align-self: stretch;
-    -ms-flex-item-align: stretch;
-    align-self: stretch;
-  }
-  .form-container {
-    width: 100vw;
-    padding-right: 4%;
-    padding-left: 2%;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
     -webkit-align-self: center;
     -ms-flex-item-align: center;
     align-self: center;
   }
-  .project-edit-form {
+  .form-container {
     width: 100%;
-    padding-right: 2%;
-    padding-left: 2%;
-  }
-  .form-button-center {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-  }
-  .dates-selectors-container {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
   }
 }
 
@@ -535,6 +438,7 @@ body {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    padding-top: 5%;
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
@@ -604,21 +508,19 @@ body {
     align-items: center;
   }
   .button-container {
-    -webkit-box-orient: vertical;
+    width: 100%;
+    -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
-    align-items: stretch;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
   }
   .login-container {
     padding: 5%;
@@ -630,8 +532,7 @@ body {
     column-count: 1;
   }
   .form-container {
-    padding-right: 2%;
-    padding-left: 2%;
+    width: 100%;
     -webkit-box-align: stretch;
     -webkit-align-items: stretch;
     -ms-flex-align: stretch;
@@ -646,58 +547,6 @@ body {
     -webkit-flex: 0 0 45%;
     -ms-flex: 0 0 45%;
     flex: 0 0 45%;
-  }
-  .project-save-button {
-    -webkit-align-self: center;
-    -ms-flex-item-align: center;
-    align-self: center;
-  }
-  .project-button {
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
-    align-items: stretch;
-    -webkit-align-self: center;
-    -ms-flex-item-align: center;
-    align-self: center;
-  }
-  .project-edit-form {
-    padding-right: 2%;
-    padding-left: 2%;
-  }
-  .form-button-center {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-  }
-  .dates-selectors-container {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    overflow: visible;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: distribute;
-    justify-content: space-around;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
-    align-items: stretch;
-  }
-  .date-selector-element {
-    width: 50%;
-    -webkit-box-flex: 0;
-    -webkit-flex: 0 auto;
-    -ms-flex: 0 auto;
-    flex: 0 auto;
   }
 }
 
