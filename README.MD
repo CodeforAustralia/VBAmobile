@@ -58,7 +58,7 @@ The latest version of the app should be running on [Heroku](https://vbamobile.he
 
 ## Credits
 
-* Johan Codinha [@Panelvw](https://twitter.com/panelvw) | [github](https://github.com/JohanCodinha) | [Linkedin](https://au.linkedin.com/in/johancodinha)
+<!--* Johan Codinha [@Panelvw](https://twitter.com/panelvw) | [github](https://github.com/JohanCodinha) | [Linkedin](https://au.linkedin.com/in/johancodinha)-->
 * [Department of Environment, Land, Water and Planning](delwp.vic.gov.au/)
 * [Parks Victoria] (parkweb.vic.gov.au)
 * [Code for Australia](https://codeforaustralia.org)
