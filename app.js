@@ -3,16 +3,19 @@ var bodyParser  = require('body-parser');
 var session     = require('express-session');
 
 var morgan      = require('morgan');
-// var mongoose    = require('mongoose');
 var exphbs      = require('express-handlebars');
-// var path = require('path');
 var connect     = require('connect');
 var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config      = require('./config'); // get our config file
 var Session     = require('./session');
-// var User        = require('./models/user.js'); // get our mongoose model
 var app         = express();
 var port        = process.env.PORT || 3000;
+
+// Package curently not being used : 
+// var mongoose    = require('mongoose');
+// var path        = require('path');
+// var User        = require('./models/user.js'); // get our mongoose model
+
 
 app.use(session({secret: config.secret, 
                  saveUninitialized: true,

@@ -8,8 +8,8 @@
     "start": "node app.js",
     "webflow": "node webflow.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Johan Codinha",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
     "connect": "^3.4.1",
