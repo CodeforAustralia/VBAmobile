@@ -31,12 +31,19 @@ staticSite.get('/', function(req, res) {
 });
 
 staticSite.get('/project', function(req, res) {
-	// console.log('requested project page from staticSite route')
 	return staticSiteCtrl.projectPage(req, res);
 });
 
+staticSite.get('/projects', function(req, res) {
+	return staticSiteCtrl.projectsPage(req, res);
+})
+
 staticSite.get('/login', function(req, res) {
 	res.render('login')
+});
+
+staticSite.get('/survey', function(req, res) {
+	return staticSiteCtrl.surveyPage(req, res);
 });
 
 staticSite.post('/login', function(req, res) {
