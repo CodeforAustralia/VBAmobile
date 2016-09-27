@@ -39,7 +39,7 @@ body {
   -webkit-align-content: flex-start;
   -ms-flex-line-pack: start;
   align-content: flex-start;
-  background-color: #073c70;
+  background-color: #00b2a9;
 }
 
 .user {
@@ -157,8 +157,7 @@ body {
 
 .form {
   display: block;
-  height: 100%;
-  margin-right: 0px;
+  width: 50%;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
@@ -207,7 +206,7 @@ body {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  margin-top: 5%;
+  margin-top: 1rem;
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
@@ -252,7 +251,7 @@ body {
 }
 
 .login-container {
-  margin-top: 5%;
+  margin-top: 1rem;
   padding: 1%;
   -webkit-align-self: center;
   -ms-flex-item-align: center;
@@ -323,6 +322,7 @@ body {
   -webkit-flex-basis: 20%;
   -ms-flex-preferred-size: 20%;
   flex-basis: 20%;
+  background-color: rgba(32, 21, 71, .8);
 }
 
 .project-button {
@@ -342,6 +342,7 @@ body {
   -webkit-align-self: stretch;
   -ms-flex-item-align: stretch;
   align-self: stretch;
+  background-color: rgba(32, 21, 71, .8);
 }
 
 .project-edit-form {
@@ -382,6 +383,14 @@ body {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+  background-color: rgba(32, 21, 71, .8);
+}
+
+.form-inner-container {
+  display: block;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
 }
 
 .survey-form {
@@ -402,6 +411,61 @@ body {
   -webkit-align-items: stretch;
   -ms-flex-align: stretch;
   align-items: stretch;
+}
+
+.projects-list {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0px;
+  padding-left: 0px;
+}
+
+.project-card-footer {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.project-card {
+  margin-bottom: 2%;
+  padding: 2%;
+  background-color: #e3eaf1;
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, .73);
+}
+
+.project-card-title {
+  font-size: 1.1em;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+
+.project-card-dates {
+  font-size: 0.8em;
+}
+
+.project-card-id {
+  font-size: 0.8em;
+}
+
+.project-card-desc {
+  margin: 2%;
+}
+
+.titles-link {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+  -webkit-align-items: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+  text-decoration: none;
 }
 
 @media (max-width: 991px) {
@@ -493,6 +557,12 @@ body {
   .project-button-logo {
     width: 40px;
   }
+  .form {
+    width: 100%;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
+  }
   .button-container {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
@@ -567,7 +637,6 @@ body {
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    background-color: #073c70;
   }
   .user-logo {
     height: 3em;
@@ -642,6 +711,7 @@ body {
     width: 40px;
   }
   .form-header {
+    margin-top: 1rem;
     font-size: 28px;
   }
   .form-buttons {
@@ -704,14 +774,6 @@ body {
     align-self: center;
   }
   .project-button {
-    -webkit-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-box-align: stretch;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
-    align-items: stretch;
     -webkit-align-self: center;
     -ms-flex-item-align: center;
     align-self: center;
@@ -750,6 +812,9 @@ body {
     -webkit-flex: 0 auto;
     -ms-flex: 0 auto;
     flex: 0 auto;
+  }
+  .form-button {
+    background-color: rgba(32, 21, 71, .8);
   }
   .survey-form {
     padding-right: 4%;

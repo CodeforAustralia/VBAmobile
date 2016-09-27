@@ -118,13 +118,16 @@ exports.projectsPage = function(req, res) {
 	})
 	.then(function(response) {
 		console.log(response.body)
-		// do some regex
-		let regex = /displayName:("(.*?)")/; 
-		let match = regex.exec(response.body);
- 		console.log('displayName: ' + match[2])
-		// do some eval
-		// burn in hell
-		res.send(response.body)
+		let projects = parseProject(response.body)
+
+		let user = isLoggedIn(req);
+		res.render('viewprojects', {
+  		loggedIn : user,
+  		helpers : {
+  			username : user
+  		},
+  		project: projects
+		});
 	})
 	.catch(function (err) {
       console.log(err) 
@@ -189,4 +192,42 @@ let getUserSessionDetail = function(cookies) {
 	.catch(function (err) {
       console.log(err) 
     });
+}
+
+let parseProject = function(string){
+	// do some regex
+	let str = string;
+	let m;
+	let projects = [];
+
+	// what a terrible name for an array of regex...
+	// /projectId:(\d*),projectNme:"/g could be use to increase security
+	let regexs = {
+		projectId: /projectId:(\d*),/g,
+		start: /projectStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		end: /projectEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		title: /projectNme:"([\s\S]*?)",projectStartSdt:/g,
+		desc: /projectDesc:"([\s\S]*?)",projectEndSdt/g ,
+	}
+
+	// Executing every regex until no more matchs
+	while ((m = regexs.projectId.exec(str)) !== null) {
+	  if (m.index === regexs.projectId.lastIndex) {
+	      regexs.projectId.lastIndex++;
+	  }
+	  console.log(m);
+	  let id = m;
+	  let title = regexs.title.exec(str);
+	  let desc 	= regexs.desc.exec(str);
+	  let start = regexs.start.exec(str);
+	  let end 	= regexs.end.exec(str);
+
+			projects.push({	title: title[1],
+											id: 	 id[1],
+											desc:  desc[1],
+											end: `${end[2]}/${end[3]}/${end[1]}`,
+											start: `${start[2]}/${start[3]}/${start[1]}`
+			});
+	}
+	return projects;
 }

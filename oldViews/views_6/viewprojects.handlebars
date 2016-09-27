@@ -1,0 +1,14 @@
+<main class="content-wrapper">
+    <ul class="projects-list w-list-unstyled">
+    {{#each project}}
+      <li class="project-card">
+        <div class="project-card-title">{{this.title}}</div>
+        <p class="project-card-desc">{{this.desc}}</p>
+        <div class="project-card-footer">
+          <div class="project-card-dates">{{this.start}} &#x279E; {{this.end}}</div>
+          <div class="project-card-id">#{{this.id}}</div>
+        </div>
+      </li>
+    {{/each}}
+    </ul>
+  </main>
