@@ -20,7 +20,7 @@ while ((m = regexs.projectId.exec(str)) !== null) {
   let title = regexs.title.exec(str);
   let desc 	= regexs.desc.exec(str);
   let start = regexs.start.exec(str);
-  let end 	= regexs.end.exec(str);
+  let end 	= regexs.end.exec(str) || ["", 2000, 00, 00];
 
 		projects.push({	title: title[1],
 										id: 	 id[1],

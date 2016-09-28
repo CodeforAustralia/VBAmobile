@@ -111,16 +111,10 @@ exports.projectsPage = function(req, res) {
 
 	requestp(options)
 	.then(function(response) {
-		// console.log(response)
-
-		debugger;
-		return response
-	})
-	.then(function(response) {
-		console.log(response.body)
+		// console.log(response.body)
 		let projects = parseProject(response.body)
-
 		let user = isLoggedIn(req);
+
 		res.render('viewprojects', {
   		loggedIn : user,
   		helpers : {
@@ -132,8 +126,6 @@ exports.projectsPage = function(req, res) {
 	.catch(function (err) {
       console.log(err) 
     });
-
-	// res.send('hello projects')
 };
 
 exports.newProject = function(req, res) {
@@ -220,7 +212,7 @@ let parseProject = function(string){
 	  let title = regexs.title.exec(str);
 	  let desc 	= regexs.desc.exec(str);
 	  let start = regexs.start.exec(str);
-	  let end 	= regexs.end.exec(str);
+	  let end 	= regexs.end.exec(str) || ["", 2000, 00, 00];
 
 			projects.push({	title: title[1],
 											id: 	 id[1],
