@@ -21,7 +21,6 @@ exports.landingPage = function(req, res) {
 
 exports.login = function(req, res) {
 	console.log('Login request for ' + req.body.username);
-
 	// let username = req.body.username;
 	let jar = request.jar();
 	let url = 'https://vba.dse.vic.gov.au/vba/login';
@@ -49,13 +48,21 @@ exports.login = function(req, res) {
 	}
 
 	requestp(options)
-	// procces the response, excract cookie and pass it on
+	// Checking if login is succefull
+	.then(function(response){
+		// looking for ?error=1 in the body, is not found login was succesfull
+		let str = response.body
+		let re = /\?error=1/
+		if (re.exec(str)) throw 'failed login';
+		return response;
+	})
+	// procces the response, extract cookie and pass it on
 	.then(function(response) {
-		debugger;
+		// console.log(response)
 		let cookies = jar.getCookies(url);
 		return cookies
 	})
-	// Fetch the User Details
+	// Fetch the User Details this will make an extra http request
 	.then(getUserSessionDetail)
 	// setup session cookies and redirect to '/'
 	.then(function(name) {
@@ -63,15 +70,13 @@ exports.login = function(req, res) {
 		sess.username = name;
 		// convert vba login cookie to string and store into the vbamobile cookie.
 		sess.cookies = jar.getCookieString(url);
-		// console.log("#########")
-		// let c = jar.getCookies(url)
-		// debugger;
 		res.redirect('/')
 	})
-	// Handle failed request... need to work on this one
 	.catch(function (err) {
-        console.log(err) 
-    });
+	  console.log(err)
+	  // need to let the user know login failled, this is bad ux
+	  if (err === 'failed login') res.redirect('/login');
+  });
 };
 
 exports.projectPage = function(req, res) {
@@ -193,7 +198,7 @@ let parseProject = function(string){
 	let projects = [];
 
 	// what a terrible name for an array of regex...
-	// /projectId:(\d*),projectNme:"/g could be use to increase security
+	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
 	let regexs = {
 		projectId: /projectId:(\d*),/g,
 		start: /projectStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
@@ -212,14 +217,14 @@ let parseProject = function(string){
 	  let title = regexs.title.exec(str);
 	  let desc 	= regexs.desc.exec(str);
 	  let start = regexs.start.exec(str);
-	  let end 	= regexs.end.exec(str) || ["", 2000, 00, 00];
+	  let end 	= regexs.end.exec(str);
 
-			projects.push({	title: title[1],
-											id: 	 id[1],
-											desc:  desc[1],
-											end: `${end[2]}/${end[3]}/${end[1]}`,
-											start: `${start[2]}/${start[3]}/${start[1]}`
-			});
+		projects.push({	title: 	title[1] ,
+										id: 		id[1],
+										desc: 	desc[1],
+										end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
+										start: `${start[2]}/${start[3]}/${start[1]}`
+		});
 	}
 	return projects;
 }
