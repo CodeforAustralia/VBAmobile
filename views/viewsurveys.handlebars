@@ -1,13 +1,14 @@
 <main class="content-wrapper">
+    <h1>Surveys</h1>
     <ul class="projects-list w-list-unstyled">
-    {{#each project}}
+    {{#each survey}}
       <li class="project-card">
-        <a class="card-link w-inline-block" href="/surveyspage/:1234">
+        <a class="card-link w-inline-block" href="/survey/:12">
           <div class="project-card-title">{{this.title}}</div>
-          <p class="project-card-desc">{{this.desc}}</p>
+          <div>Status : {{this.status}}</div>
           <div class="project-card-footer">
             <div class="project-card-dates">{{this.start}} &#x279E; {{this.end}}</div>
-            <div class="project-card-id">#{{this.id}}</div>
+            <div class="project-card-id">{{this.id}}</div>
           </div>
         </a>
       </li>

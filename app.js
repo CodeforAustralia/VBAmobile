@@ -46,5 +46,5 @@ app.get('/api', function(req, res) {
 });
 
 app.listen(port, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('Vba mobile server listening on port http://localhost:'+ port + '!');
 });

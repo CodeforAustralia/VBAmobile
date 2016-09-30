@@ -1,11 +1,8 @@
 var express = require('express');
 var request = require('request');
 var requestp = require('request-promise');
-// var jwt = require('jsonwebtoken');
 var config = require('../config');
 var session = require('express-session')
-
-// var     = require('../models/user.js'); // get our mongoose model
 
 var app = express();
 
@@ -109,14 +106,37 @@ exports.projectsPage = function(req, res) {
 		url: url,
 		headers: header,
 		form: {
-			_transaction: '<transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>',
+			// <transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>
+			_transaction: `
+			<transaction
+						xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+						<operations xsi:type="xsd:List">
+							<elem xsi:type="xsd:Object">
+								<criteria xsi:type="xsd:Object">
+									<projectStatusCde>pub</projectStatusCde>
+									<isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch>
+								</criteria>
+								<operationConfig xsi:type="xsd:Object">
+									<dataSource>Project_DS</dataSource>
+									<operationType>fetch</operationType>
+									<textMatchStyle>exact</textMatchStyle>
+								</operationConfig>
+								<startRow xsi:type="xsd:long">0</startRow>
+								<endRow xsi:type="xsd:long">75</endRow>
+								<componentId>isc_ManageProjectModule$2_2</componentId>
+								<appID>builtinApplication</appID>
+								<operation>mainProjectSearch</operation>
+							</elem>
+						</operations>
+					</transaction>
+			`,
 			protocolVersion: '1.0'
 		}
 	}
 
 	requestp(options)
 	.then(function(response) {
-		// console.log(response.body)
+		console.log(response.body)
 		let projects = parseProject(response.body)
 		let user = isLoggedIn(req);
 
@@ -126,6 +146,74 @@ exports.projectsPage = function(req, res) {
   			username : user
   		},
   		project: projects
+		});
+	})
+	.catch(function (err) {
+      console.log(err) 
+    });
+};
+
+exports.surveysPage = function(req, res) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	//Lets configure and request
+	// console.log(req.session.cookies);
+	let projectID = req.params.id;
+
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': req.session.cookies
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			// <transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">50</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<projectId>${projectID}</projectId>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>Survey_DS</dataSource>
+							<operationType>fetch</operationType>
+							<textMatchStyle>exact</textMatchStyle>
+						</operationConfig>
+						<startRow xsi:type="xsd:long">0</startRow>
+						<endRow xsi:type="xsd:long">1000</endRow>
+						<componentId>isc_SearchSurveyWindow$2_6</componentId>
+						<appID>builtinApplication</appID>
+						<operation>viewSurveySheetMain</operation>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+
+	requestp(options)
+	.then(function(response) {
+		// console.log(response.body)
+		let surveys = parseSurvey(response.body)
+		// console.log(surveys)
+		let user = isLoggedIn(req);
+
+		res.render('viewsurveys', {
+  		loggedIn : user,
+  		helpers : {
+  			username : user
+  		},
+  		survey: surveys
 		});
 	})
 	.catch(function (err) {
@@ -173,7 +261,23 @@ let getUserSessionDetail = function(cookies) {
 		method: 'POST',
 		headers: header,
 		form: {
-			_transaction: '<transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">0</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"></criteria><operationConfig xsi:type="xsd:Object"><dataSource>UserSessionDetail_DS</dataSource><operationType>fetch</operationType></operationConfig><appID>builtinApplication</appID><operation>UserSessionDetail_DS_fetch</operation><oldValues xsi:type="xsd:Object"></oldValues></elem></operations></transaction>',
+			_transaction: `
+			<transaction
+					xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+					<transactionNum xsi:type="xsd:long">0</transactionNum>
+					<operations xsi:type="xsd:List">
+						<elem xsi:type="xsd:Object">
+							<criteria xsi:type="xsd:Object"></criteria>
+							<operationConfig xsi:type="xsd:Object">
+								<dataSource>UserSessionDetail_DS</dataSource>
+								<operationType>fetch</operationType>
+							</operationConfig>
+							<appID>builtinApplication</appID>
+							<operation>UserSessionDetail_DS_fetch</operation>
+							<oldValues xsi:type="xsd:Object"></oldValues>
+						</elem>
+					</operations>
+				</transaction>`,
 			protocolVersion: '1.0'
 		}
 	}
@@ -227,4 +331,70 @@ let parseProject = function(string){
 		});
 	}
 	return projects;
+}
+
+let parseSurvey = function(string){
+	// do some regex
+	let str = string;
+	let m;
+	let surveys = [];
+	let decodeStatus = function (status) {
+		switch (status) {
+			case 'a':
+				return 'Approved'
+			break;
+			case 'cr':
+				return 'Change Requested'
+			break;
+			case 'del':
+				return 'Deleted'
+			break;
+			case 'draft':
+				return 'Draft'
+			break;
+			case 'na':
+				return 'Not approved'
+			break;			
+			case 'rr':
+				return 'Ready for review'
+			break;
+			case 'ur':
+				return 'Under review'
+			break;
+			default:
+				return 'Unknow'
+		}
+	}
+
+	// what a terrible name for an array of regex...
+	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
+	let regexs = {
+		surveyId: /surveyId:(\d*),/g,
+		start: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		end: /surveyEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		title: /surveyNme:"([\s\S]*?)",/g,
+		status: /expertReviewStatusCde:"([\s\S]*?)"/g ,
+	}
+
+	// Executing every regex until no more matchs
+	while ((m = regexs.surveyId.exec(str)) !== null) {
+	  if (m.index === regexs.surveyId.lastIndex) {
+	      regexs.surveyId.lastIndex++;
+	  }
+	  // console.log(m);
+	  
+	  let id = m;
+	  let title = regexs.title.exec(str);
+	  let status 	= regexs.status.exec(str);
+	  let start = regexs.start.exec(str);
+	  let end 	= regexs.end.exec(str);
+	  // debugger;
+		surveys.push({	title: 	title[1] ,
+										id: 		id[1],
+										status: 	decodeStatus(status[1]),
+										end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
+										start: `${start[2]}/${start[3]}/${start[1]}`
+		});
+	}
+	return surveys;
 }

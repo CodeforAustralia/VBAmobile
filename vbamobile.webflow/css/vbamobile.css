@@ -433,7 +433,6 @@ body {
 
 .project-card {
   margin-bottom: 2%;
-  padding: 2%;
   background-color: #e3eaf1;
   box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, .73);
 }
@@ -465,6 +464,13 @@ body {
   -webkit-align-items: baseline;
   -ms-flex-align: baseline;
   align-items: baseline;
+  text-decoration: none;
+}
+
+.card-link {
+  display: block;
+  padding: 2%;
+  color: #000;
   text-decoration: none;
 }
 
