@@ -474,6 +474,17 @@ body {
   text-decoration: none;
 }
 
+.survey-detail {
+  margin-bottom: 1%;
+  padding-left: 1%;
+  border-left: 5px solid rgba(32, 21, 71, .7);
+}
+
+.survey-site {
+  padding-left: 1%;
+  border-left: 5px solid rgba(0, 178, 169, .7);
+}
+
 @media (max-width: 991px) {
   .form-container {
     display: -webkit-box;
@@ -716,6 +727,10 @@ body {
   .project-button-logo {
     width: 40px;
   }
+  .form {
+    padding-right: 4%;
+    padding-left: 4%;
+  }
   .form-header {
     margin-top: 1rem;
     font-size: 28px;
@@ -825,6 +840,44 @@ body {
   .survey-form {
     padding-right: 4%;
     padding-left: 4%;
+  }
+  .project-card-footer {
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+  .project-card-dates {
+    font-size: 1em;
+  }
+  .project-card-id {
+    font-size: 1em;
+  }
+  .card-title {
+    font-size: 0.8em;
+    text-align: center;
+  }
+  .survey-detail {
+    border-color: #201547;
+    border-left-style: solid;
+    border-left-width: 6px;
+  }
+  .survey-site {
+    border-color: rgba(77, 75, 110, .7);
+    border-left-style: solid;
+    border-left-width: 5px;
+  }
+  .gps-location {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+  }
+  .section-title {
+    padding-left: 3%;
   }
 }
 

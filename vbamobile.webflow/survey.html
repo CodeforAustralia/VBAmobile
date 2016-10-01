@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!--  Last Published: Fri Sep 30 2016 10:34:29 GMT+0000 (UTC)  -->
-<html data-wf-page="57dc83871c93d4e04d965fca" data-wf-site="57ced8c91d3807cb6dad5f35">
-<head >
+<!--  Last Published: Sat Oct 01 2016 10:09:28 GMT+0000 (UTC)  -->
+<html data-wf-page="57ef8423a1f3da343ca8dff1" data-wf-site="57ced8c91d3807cb6dad5f35">
+<head>
   <meta charset="utf-8">
-  <title >species</title>
-  <meta content="species" property="og:title">
+  <title>surveys</title>
+  <meta content="surveys" property="og:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/components.css" rel="stylesheet" type="text/css">
@@ -30,48 +30,37 @@
     <a class="username" href="#">username</a>
   </header>
   <main class="content-wrapper">
-    <div class="form w-form">
-      <form action="/survey" class="survey-form" data-name="Email Form" data-redirect="/survey" id="email-form" method="post" name="email-form">
-        <div class="form-inner-container">
-          <h1 class="form-header">General Observation</h1>
-          <label for="Survey-comment">Survey comment:</label>
-          <textarea class="survey-comment w-input" data-name="Survey comment" id="Survey-comment" maxlength="5000" name="Survey-comment" placeholder="Survey comment"></textarea>
-          <label for="name">Name:</label>
-          <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Survey  name" type="text">
-          <label for="Primary-discipline">Primary discipline:</label>
-          <select class="w-select" data-name="Primary discipline" id="Primary-discipline" name="Primary-discipline">
-            <option value="">Aquatic Fauna</option>
-            <option value="First">Aquatic Invertebrates</option>
-            <option value="Second">Fauna</option>
-            <option value="Third">Marine</option>
-            <option value="">Terrestrial Fauna</option>
-          </select>
-          <label for="Site-ID">Site ID:</label>
-          <input class="w-input" data-name="Site ID" id="Site-ID" maxlength="256" name="Site-ID" placeholder="Site ID" required="required" type="text">
-          <h2 class="form-header">Survey information</h2>
-          <div class="dates-selectors-container">
-            <div class="date-selector-element w-embed">
-              <label for="date">Start date:</label>
-              <input class="w-input" type="date" name="startdate">
-            </div>
-            <div class="date-selector-element w-embed">
-              <label for="date">End date:</label>
-              <input class="w-input" type="date" name="enddate">
+    <h1 class="section-title">Survey detail</h1>
+    <ul class="projects-list w-list-unstyled">
+      <li class="project-card">
+        <a class="card-link w-inline-block" href="/surveyspage">
+          <div class="survey-detail">
+            <div class="card-title">Survey</div>
+            <div class="project-card-title">Bat survey Camperdown</div>
+            <div>This population was discovered in the 21st
+              <br>...blablabla this is a description</div>
+            <div class="project-card-footer">
+              <div class="project-card-dates">10/12/01 ➞ 14/12/01</div>
+              <div class="project-card-id">#1214</div>
             </div>
           </div>
-        </div>
-        <div class="form-button-center">
-          <input class="form-button w-button" data-wait="Please wait..." type="submit" value="save">
-          <a class="form-button w-button" href="/species">add species</a>
-        </div>
-      </form>
-      <div class="w-form-done">
-        <div >Thank you! Your submission has been received!</div>
-      </div>
-      <div class="w-form-fail">
-        <div >Oops! Something went wrong while submitting the form</div>
-      </div>
-    </div>
+          <div class="survey-site">
+            <div class="card-title">Locality</div>
+            <div class="project-card-title">Site name...</div>
+            <p>From the Hamilton Hwy travel north up Common Rd...</p>
+            <div class="gps-location">
+              <div>Lat : 144.0447</div>
+              <div>Lat : 144.0447</div>
+            </div>
+            <div>This is some text inside of a div block.</div>
+            <div class="project-card-footer">
+              <div class="project-card-dates">Accuracy : 50 m</div>
+              <div class="project-card-id">#1214</div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
   </main>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>
   <script src="js/vbamobile.js" type="text/javascript"></script>

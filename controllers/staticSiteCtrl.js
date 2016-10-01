@@ -87,6 +87,9 @@ exports.projectPage = function(req, res) {
 };
 
 exports.projectsPage = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	//Lets configure and request
 	// console.log(req.session.cookies);
@@ -134,13 +137,15 @@ exports.projectsPage = function(req, res) {
 		}
 	}
 
+	console.log(options)
+
 	requestp(options)
 	.then(function(response) {
 		console.log(response.body)
 		let projects = parseProject(response.body)
 		let user = isLoggedIn(req);
 
-		res.render('viewprojects', {
+		res.render('projects', {
   		loggedIn : user,
   		helpers : {
   			username : user
@@ -154,6 +159,9 @@ exports.projectsPage = function(req, res) {
 };
 
 exports.surveysPage = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	//Lets configure and request
 	// console.log(req.session.cookies);
@@ -174,7 +182,6 @@ exports.surveysPage = function(req, res) {
 		url: url,
 		headers: header,
 		form: {
-			// <transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>
 			_transaction: `
 			<transaction
 				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
@@ -190,7 +197,7 @@ exports.surveysPage = function(req, res) {
 							<textMatchStyle>exact</textMatchStyle>
 						</operationConfig>
 						<startRow xsi:type="xsd:long">0</startRow>
-						<endRow xsi:type="xsd:long">1000</endRow>
+						<endRow xsi:type="xsd:long">10</endRow>
 						<componentId>isc_SearchSurveyWindow$2_6</componentId>
 						<appID>builtinApplication</appID>
 						<operation>viewSurveySheetMain</operation>
@@ -205,15 +212,17 @@ exports.surveysPage = function(req, res) {
 	.then(function(response) {
 		// console.log(response.body)
 		let surveys = parseSurvey(response.body)
-		// console.log(surveys)
 		let user = isLoggedIn(req);
+		
+		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
 
-		res.render('viewsurveys', {
+		res.render('surveys', {
   		loggedIn : user,
   		helpers : {
   			username : user
   		},
-  		survey: surveys
+  		// only return the first 10...
+  		survey: surveys.splice(0,10)
 		});
 	})
 	.catch(function (err) {
@@ -236,9 +245,7 @@ exports.surveyPage = function(req, res) {
 	});
 };
 
-let isLoggedIn = function(req) {
-	// !!username ? console.log("welcome back " + req.session.username) : console.log('new session');
-	return req.session.username || false;
+let isLoggedIn = function(req) {return req.session.username || false;
 }
 
 let getUserSessionDetail = function(cookies) {
@@ -264,7 +271,6 @@ let getUserSessionDetail = function(cookies) {
 			_transaction: `
 			<transaction
 					xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-					<transactionNum xsi:type="xsd:long">0</transactionNum>
 					<operations xsi:type="xsd:List">
 						<elem xsi:type="xsd:Object">
 							<criteria xsi:type="xsd:Object"></criteria>
@@ -274,7 +280,6 @@ let getUserSessionDetail = function(cookies) {
 							</operationConfig>
 							<appID>builtinApplication</appID>
 							<operation>UserSessionDetail_DS_fetch</operation>
-							<oldValues xsi:type="xsd:Object"></oldValues>
 						</elem>
 					</operations>
 				</transaction>`,
@@ -375,13 +380,12 @@ let parseSurvey = function(string){
 		title: /surveyNme:"([\s\S]*?)",/g,
 		status: /expertReviewStatusCde:"([\s\S]*?)"/g ,
 	}
-
+	console.time("re");
 	// Executing every regex until no more matchs
 	while ((m = regexs.surveyId.exec(str)) !== null) {
 	  if (m.index === regexs.surveyId.lastIndex) {
 	      regexs.surveyId.lastIndex++;
 	  }
-	  // console.log(m);
 	  
 	  let id = m;
 	  let title = regexs.title.exec(str);
@@ -389,12 +393,13 @@ let parseSurvey = function(string){
 	  let start = regexs.start.exec(str);
 	  let end 	= regexs.end.exec(str);
 	  // debugger;
-		surveys.push({	title: 	title[1] ,
+		surveys.push({	title: 	title[1] || 'Unknow title' ,
 										id: 		id[1],
 										status: 	decodeStatus(status[1]),
 										end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
 										start: `${start[2]}/${start[3]}/${start[1]}`
 		});
 	}
+	console.timeEnd("re");
 	return surveys;
 }
