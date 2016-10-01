@@ -230,6 +230,73 @@ exports.surveysPage = function(req, res) {
     });
 };
 
+exports.surveys = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+		let projectID = req.params.id;
+
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': req.session.cookies
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">50</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<projectId>${projectID}</projectId>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>Survey_DS</dataSource>
+							<operationType>fetch</operationType>
+							<textMatchStyle>exact</textMatchStyle>
+						</operationConfig>
+						<startRow xsi:type="xsd:long">0</startRow>
+						<endRow xsi:type="xsd:long">10</endRow>
+						<componentId>isc_SearchSurveyWindow$2_6</componentId>
+						<appID>builtinApplication</appID>
+						<operation>viewSurveySheetMain</operation>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+		
+	requestp(options)
+	.then(function(response) {
+		// console.log(response.body)
+		let surveys = parseSurvey(response.body)
+		let user = isLoggedIn(req);
+		
+		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
+
+		// res.render('surveys', {
+  // 		loggedIn : user,
+  // 		helpers : {
+  // 			username : user
+  // 		},
+  // 		// only return the first 10...
+  // 		survey: surveys.splice(0,10)
+		// });
+	})
+	.catch(function (err) {
+      console.log(err) 
+    });
+};
+
 exports.newProject = function(req, res) {
 	console.log(req.session.cookies)
 	res.redirect('/survey');
