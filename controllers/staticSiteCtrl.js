@@ -211,7 +211,7 @@ exports.surveysPage = function(req, res) {
 	requestp(options)
 	.then(function(response) {
 		// console.log(response.body)
-		let surveys = parseSurvey(response.body)
+		let surveys = parseSurveys(response.body)
 		let user = isLoggedIn(req);
 		
 		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
@@ -233,8 +233,9 @@ exports.surveysPage = function(req, res) {
 exports.surveys = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
-		let projectID = req.params.id;
 
+	let projectID = req.params.id;
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
 		'Connection': 'keep-alive',
@@ -274,23 +275,49 @@ exports.surveys = function(req, res) {
 			</transaction>`,
 			protocolVersion: '1.0'
 		}
-		
+	}
 	requestp(options)
 	.then(function(response) {
 		// console.log(response.body)
-		let surveys = parseSurvey(response.body)
-		let user = isLoggedIn(req);
-		
-		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
+		let surveys = parseSurveys(response.body)
+		console.log(`project #${projectID} -> survey found : ${surveys.length}.`)
 
-		// res.render('surveys', {
-  // 		loggedIn : user,
-  // 		helpers : {
-  // 			username : user
-  // 		},
-  // 		// only return the first 10...
-  // 		survey: surveys.splice(0,10)
-		// });
+		let surveysIdList = surveys.map(function(survey) {
+			return survey.id
+		})
+		console.log(surveysIdList)
+
+		let surveysData = []
+		let surveysDataRequest = surveysIdList.map((id) => {
+
+			return new Promise((resolve) => {
+				fetchSurvey(id, req.session.cookies)
+					.then(function(response) {
+						console.log(response.body)
+						return parseSurvey(response.body)
+					})
+					.then((surveys) => {
+						console.log(surveys);
+						surveysData.push(surveys)
+						resolve()
+					})
+			})
+		});
+
+		Promise.all(surveysDataRequest).then(() => {
+			console.log(surveysData)
+			let user = isLoggedIn(req);
+
+			res.render('survey', {
+	  		loggedIn : user,
+	  		helpers : {
+	  			username : user
+	  		},
+	  		// only return the first 10...
+	  		survey: surveysData
+			});
+		})
+
 	})
 	.catch(function (err) {
       console.log(err) 
@@ -298,7 +325,7 @@ exports.surveys = function(req, res) {
 };
 
 exports.newProject = function(req, res) {
-	console.log(req.session.cookies)
+	// console.log(req.session.cookies)
 	res.redirect('/survey');
 };
 
@@ -358,7 +385,7 @@ let getUserSessionDetail = function(cookies) {
 	.then(function(response) {
 		let regex = /displayName:("(.*?)")/; 
 		let match = regex.exec(response.body);
- 		console.log('displayName: ' + match[2])
+ 		// console.log('displayName: ' + match[2])
  		return match[2];
 	})
 	// Handle failed request... need to work on this one 
@@ -388,7 +415,7 @@ let parseProject = function(string){
 	  if (m.index === regexs.projectId.lastIndex) {
 	      regexs.projectId.lastIndex++;
 	  }
-	  console.log(m);
+	  // console.log(m);
 	  let id = m;
 	  let title = regexs.title.exec(str);
 	  let desc 	= regexs.desc.exec(str);
@@ -405,7 +432,7 @@ let parseProject = function(string){
 	return projects;
 }
 
-let parseSurvey = function(string){
+let parseSurveys = function(string){
 	// do some regex
 	let str = string;
 	let m;
@@ -470,3 +497,111 @@ let parseSurvey = function(string){
 	console.timeEnd("re");
 	return surveys;
 }
+
+let parseSurvey = function(string){
+	// do some regex
+	let str = string;
+	let m;
+	let surveys = [];
+	let decodeStatus = function (status) {
+		switch (status) {
+			case 'a':
+				return 'Approved'
+			break;
+			case 'cr':
+				return 'Change Requested'
+			break;
+			case 'del':
+				return 'Deleted'
+			break;
+			case 'draft':
+				return 'Draft'
+			break;
+			case 'na':
+				return 'Not approved'
+			break;			
+			case 'rr':
+				return 'Ready for review'
+			break;
+			case 'ur':
+				return 'Under review'
+			break;
+			default:
+				return 'Unknow'
+		}
+	}
+
+	// what a terrible name for an array of regex...
+	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
+	let regexs = {
+		surveyId: /surveyId:(\d*),/g,
+		start: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		end: /surveyEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		title: /surveyNme:"([\s\S]*?)",/g,
+		status: /expertReviewStatusCde:"([\s\S]*?)"/g ,
+		comment: /surveyCommentTxt:"([\s\S]*?)"/g,
+		siteId: /siteId:"(\d*)"/g
+	}
+
+  let title = regexs.title.exec(str);
+  let status 	= regexs.status.exec(str);
+  let start = regexs.start.exec(str);
+  let end 	= regexs.end.exec(str);
+  // debugger;
+	surveys.push({	title: 	title[1] || 'Unknow title' ,
+									status: 	decodeStatus(status[1]),
+									end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
+									start: `${start[2]}/${start[3]}/${start[1]}`
+	});
+	
+	return surveys;
+}
+
+let fetchSurvey = function(surveyId, cookie) {
+	console.log(`fetching survey #${surveyId}`)
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">36</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<surveyId>${surveyId}</surveyId>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>Survey_DS</dataSource>
+							<operationType>fetch</operationType>
+						</operationConfig>
+						<appID>builtinApplication</appID>
+						<operation>fetchSurvey</operation>
+						<oldValues xsi:type="xsd:Object">
+							<surveyId>${surveyId}</surveyId>
+						</oldValues>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
+
+
+

@@ -38,7 +38,7 @@ app.set('view engine', 'handlebars');
 var staticSite = require('./routes/staticSite.js');
 
 
-var session = new Session();
+// var session = new Session();
 app.use('/', staticSite);
 
 app.get('/api', function(req, res) {
