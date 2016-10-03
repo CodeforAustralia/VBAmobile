@@ -287,27 +287,26 @@ exports.surveys = function(req, res) {
 		})
 		console.log(surveysIdList)
 
-		let surveysData = []
-		let surveysDataRequest = surveysIdList.map((id) => {
+		// filter down to the first 15 survey
+		// To-do pagination
+		surveysIdList.splice(15);
+		let surveysData = [];
 
+		let surveysDataRequests = surveysIdList.map((id) => {
 			return new Promise((resolve) => {
 				fetchSurvey(id, req.session.cookies)
 					.then(function(response) {
 						console.log(response.body)
-						return parseSurvey(response.body)
-					})
-					.then((surveys) => {
-						console.log(surveys);
-						surveysData.push(surveys)
+						surveyData = parseSurvey(response.body)
+						surveysData.push(surveyData)
 						resolve()
 					})
 			})
 		});
 
-		Promise.all(surveysDataRequest).then(() => {
-			console.log(surveysData)
+		Promise.all(surveysDataRequests).then(() => {
+			console.log(surveyData)
 			let user = isLoggedIn(req);
-
 			res.render('survey', {
 	  		loggedIn : user,
 	  		helpers : {
@@ -502,60 +501,53 @@ let parseSurvey = function(string){
 	// do some regex
 	let str = string;
 	let m;
-	let surveys = [];
-	let decodeStatus = function (status) {
-		switch (status) {
-			case 'a':
-				return 'Approved'
-			break;
-			case 'cr':
-				return 'Change Requested'
-			break;
-			case 'del':
-				return 'Deleted'
-			break;
-			case 'draft':
-				return 'Draft'
-			break;
-			case 'na':
-				return 'Not approved'
-			break;			
-			case 'rr':
-				return 'Ready for review'
-			break;
-			case 'ur':
-				return 'Under review'
-			break;
-			default:
-				return 'Unknow'
-		}
-	}
-
 	// what a terrible name for an array of regex...
-	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
-		start: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
-		end: /surveyEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
-		title: /surveyNme:"([\s\S]*?)",/g,
-		status: /expertReviewStatusCde:"([\s\S]*?)"/g ,
-		comment: /surveyCommentTxt:"([\s\S]*?)"/g,
-		siteId: /siteId:"(\d*)"/g
+		surveyStart: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		surveyEnd: /surveyEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
+		surveyNme: /surveyNme:"([\s\S]*?)",/g,
+		surveyComm: /surveyCommentTxt:"([\s\S]*?)"/g,
+		siteId: /siteId:(\d*),/g,
+		siteName: /siteNme:"([\s\S]*?)"/g,
+		siteDesc: /siteLocationDesc:"([\s\S]*?)"/g,
+		lat: /latitudeddNum:(.*?),/g,
+		long: /longitudeddNum:(.*?),/g,
+		accu: /latLongAccuracyddNum:(.*?),/g,
 	}
 
-  let title = regexs.title.exec(str);
-  let status 	= regexs.status.exec(str);
-  let start = regexs.start.exec(str);
-  let end 	= regexs.end.exec(str);
-  // debugger;
-	surveys.push({	title: 	title[1] || 'Unknow title' ,
-									status: 	decodeStatus(status[1]),
-									end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
-									start: `${start[2]}/${start[3]}/${start[1]}`
-	});
+	let re = {}
+	for (let prop in regexs) {
+		re[prop] = regexs[prop].exec(str)
+	}
+	debugger
+
+	// let surveyId = regexs.surveyId.exec(str);
+ //  let surveyStart = regexs.surveyStart.exec(str);
+ //  let surveyEnd 	= regexs.surveyEnd.exec(str);
+ //  let surveyNme = regexs.surveyNme.exec(str);
+ //  let surveyComm 	= regexs.comment.exec(str);
+ //  let siteId = regexs.siteId.exec(str);
+ //  let siteName = regexs.siteName.exec(str);
+ //  let siteDesc = regexs.siteDesc.exec(str);
+ //  let lat = regexs.lat.exec(str);
+ //  let long = regexs.long.exec(str);
 	
-	return surveys;
-}
+  // debugger;
+	return {
+					surveyId: re.surveyId[1],
+					surveyStart: `${re.surveyStart[2]}/${re.surveyStart[3]}/${re.surveyStart[1]}`,
+					surveyEnd: 		re.surveyEnd === null ? '...' : `${re.surveyEnd[2]}/${re.surveyEnd[3]}/${re.surveyEnd[1]}`,
+					surveyNme: 	re.surveyNme === null ? 'Unknow survey name' : re.surveyNme[1],
+					surveyComm: 	re.surveyComm === null ? 'No comments provided' : re.surveyComm[1],
+					siteId: re.siteId[1],
+					siteDesc: re.siteDesc === null ? 'No site description provided' : re.siteDesc[1],
+					lat: re.lat[1],
+					long: re.long[1],
+					siteId: re.siteId[1],
+					accu: re.accu[1]
+	};
+};
 
 let fetchSurvey = function(surveyId, cookie) {
 	console.log(`fetching survey #${surveyId}`)
