@@ -1,11 +1,11 @@
 <main class="content-wrapper">
     <h1 class="section-title">Survey detail</h1>
-    <ul class="cards-list w-list-unstyled">
+    <ul class="projects-list w-list-unstyled">
     {{#each survey}}
       <li class="project-card">
-        <a class="card-link w-inline-block" href="/survey/{{this.surveyId}}/species">
+        <a class="card-link w-inline-block" href="/surveyspage">
           <div class="survey-detail">
-            <div class="card-title">Survey</div>
+            <div class="card-title">Survey information :</div>
             <div class="project-card-title">{{this.surveyNme}}</div>
             <div>{{this.surveyComm}}</div>
             <div class="project-card-footer">
@@ -14,12 +14,12 @@
             </div>
           </div>
           <div class="survey-site">
-            <div class="card-title">Locality</div>
+            <div class="card-title">Site Description :</div>
             <div class="project-card-title">{{this.siteName}}</div>
             <p>{{this.siteDesc}}</p>
             <div class="gps-location">
               <div>Lat : {{this.lat}}</div>
-              <div>Lat : {{this.long}}</div>
+              <div>Long : {{this.long}}</div>
             </div>
             <div class="project-card-footer">
               <div class="project-card-dates">Accuracy : {{this.accu}} m</div>

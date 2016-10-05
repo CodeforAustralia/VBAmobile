@@ -1,0 +1,64 @@
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">110</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<surveyId>1070501</surveyId>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SurveyComponent_DS</dataSource>
+				<operationType>fetch</operationType>
+				<textMatchStyle>exact</textMatchStyle>
+			</operationConfig>
+			<startRow xsi:type="xsd:long">0</startRow>
+			<endRow xsi:type="xsd:long">75</endRow>
+			<componentId>isc_TaxonRecordedSummaryTab$20_0</componentId>
+			<appID>builtinApplication</appID>
+			<operation>fetchSurveyComponentBySurveyID</operation>
+			<oldValues xsi:type="xsd:Object">
+				<surveyId>1070501</surveyId>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->
+[{isDSResponse:true,
+	invalidateCache:false,
+	status:0,
+	data:[{ disciplineCde:"tf",
+					samplingMethodDesc:"Targeted search",
+					componentId:1111720
+				}]
+}]
+//isc_RPCResponseEnd
+
+_transaction:
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">111</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<componentId>1111720</componentId>
+				<_forceToRefresh>1475558368277</_forceToRefresh>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SurveyCompSummaryView_DS</dataSource>
+				<operationType>fetch</operationType>
+				<textMatchStyle>exact</textMatchStyle>
+			</operationConfig>
+			<startRow xsi:type="xsd:long">0</startRow>
+			<endRow xsi:type="xsd:long">75</endRow>
+			<componentId>isc_TaxonRecordedSummaryTab$23_0</componentId>
+			<appID>builtinApplication</appID>
+			<operation>fetchDataForSC</operation>
+			<oldValues xsi:type="xsd:Object">
+				<componentId>1111720</componentId>
+				<_forceToRefresh>1475558368277</_forceToRefresh>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+

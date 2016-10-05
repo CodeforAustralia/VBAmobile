@@ -16,7 +16,11 @@ staticSite.get('/projects', function(req, res) {
 
 staticSite.get('/project/:id/surveys', function(req, res) {
 	return staticSiteCtrl.surveys(req, res);
-})
+});
+
+staticSite.get('/survey/:id/species', function(req, res) {
+	return staticSiteCtrl.species(req, res);
+});
 
 staticSite.get('/login', function(req, res) {
 	res.render('login')

@@ -55,18 +55,16 @@ exports.login = function(req, res) {
 	})
 	// procces the response, extract cookie and pass it on
 	.then(function(response) {
-		// console.log(response)
 		let cookies = jar.getCookies(url);
 		return cookies
 	})
 	// Fetch the User Details this will make an extra http request
-	.then(getUserSessionDetail)
+	.then(fetchUserDetails)
 	// setup session cookies and redirect to '/'
 	.then(function(name) {
-		let sess = req.session;
-		sess.username = name;
-		// convert vba login cookie to string and store into the vbamobile cookie.
-		sess.cookies = jar.getCookieString(url);
+		req.session.username = name;
+		// convert vba cookie to string and store into the vbamobile cookie.
+		req.session.cookies = jar.getCookieString(url);
 		res.redirect('/')
 	})
 	.catch(function (err) {
@@ -234,94 +232,57 @@ exports.surveys = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
 
-	let projectID = req.params.id;
-	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
-	let header = {
-		'Host': 'vba.dse.vic.gov.au',
-		'Connection': 'keep-alive',
-		'Cache-Control': 'max-age=0',
-		'Origin': 'https://vba.dse.vic.gov.au',
-		'Upgrade-Insecure-Requests': '1',
-		'Cookie': req.session.cookies
-	}
-	let options = {
-		method: 'POST',
-		resolveWithFullResponse: true,
-		simple: false,
-		url: url,
-		headers: header,
-		form: {
-			_transaction: `
-			<transaction
-				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-				<transactionNum xsi:type="xsd:long">50</transactionNum>
-				<operations xsi:type="xsd:List">
-					<elem xsi:type="xsd:Object">
-						<criteria xsi:type="xsd:Object">
-							<projectId>${projectID}</projectId>
-						</criteria>
-						<operationConfig xsi:type="xsd:Object">
-							<dataSource>Survey_DS</dataSource>
-							<operationType>fetch</operationType>
-							<textMatchStyle>exact</textMatchStyle>
-						</operationConfig>
-						<startRow xsi:type="xsd:long">0</startRow>
-						<endRow xsi:type="xsd:long">10</endRow>
-						<componentId>isc_SearchSurveyWindow$2_6</componentId>
-						<appID>builtinApplication</appID>
-						<operation>viewSurveySheetMain</operation>
-					</elem>
-				</operations>
-			</transaction>`,
-			protocolVersion: '1.0'
-		}
-	}
-	requestp(options)
-	.then(function(response) {
-		// console.log(response.body)
-		let surveys = parseSurveys(response.body)
-		console.log(`project #${projectID} -> survey found : ${surveys.length}.`)
+	let projectId = req.params.id;
+	let cookie = req.session.cookies;
 
-		let surveysIdList = surveys.map(function(survey) {
-			return survey.id
+	fetchSurveysList(projectId, cookie)
+	.then((response) => {
+		console.log(response.body)
+		let surveysData = [];
+		let surveys = parseSurveys(response.body);
+		console.log(`project #${projectId} -> survey found : ${surveys.length}.`)
+
+		let surveysIdList = surveys.map((survey) => {
+			return survey.id;
 		})
-		console.log(surveysIdList)
 
 		// filter down to the first 15 survey
 		// To-do pagination
 		surveysIdList.splice(15);
-		let surveysData = [];
 
+		// create an Array of requests
 		let surveysDataRequests = surveysIdList.map((id) => {
 			return new Promise((resolve) => {
 				fetchSurvey(id, req.session.cookies)
-					.then(function(response) {
-						console.log(response.body)
-						surveyData = parseSurvey(response.body)
-						surveysData.push(surveyData)
-						resolve()
-					})
+				.then((response) => {
+					surveyData = parseSurvey(response.body)
+					surveysData.push(surveyData)
+					resolve()
+				})
 			})
 		});
 
 		Promise.all(surveysDataRequests).then(() => {
-			console.log(surveyData)
+			// console.log(surveyData)
 			let user = isLoggedIn(req);
 			res.render('survey', {
 	  		loggedIn : user,
 	  		helpers : {
 	  			username : user
 	  		},
-	  		// only return the first 10...
 	  		survey: surveysData
 			});
 		})
-
 	})
 	.catch(function (err) {
       console.log(err) 
     });
 };
+
+exports.species = function(req, res) {
+	res.send(`requested ${req.params.id}`)
+};
+
 
 exports.newProject = function(req, res) {
 	// console.log(req.session.cookies)
@@ -341,10 +302,8 @@ exports.surveyPage = function(req, res) {
 let isLoggedIn = function(req) {return req.session.username || false;
 }
 
-let getUserSessionDetail = function(cookies) {
+let fetchUserDetails = function(cookies) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
-	// console.log("------")
-	// console.log(cookies)
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
 		'Connection': 'keep-alive',
@@ -353,7 +312,6 @@ let getUserSessionDetail = function(cookies) {
 		'Upgrade-Insecure-Requests': '1',
 		'Cookie': cookies
 	}
-
 	let options = {
 		resolveWithFullResponse: true,
 		simple: false,
@@ -379,7 +337,6 @@ let getUserSessionDetail = function(cookies) {
 			protocolVersion: '1.0'
 		}
 	}
-
 	return requestp(options)
 	.then(function(response) {
 		let regex = /displayName:("(.*?)")/; 
@@ -471,29 +428,31 @@ let parseSurveys = function(string){
 		start: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
 		end: /surveyEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
 		title: /surveyNme:"([\s\S]*?)",/g,
-		status: /expertReviewStatusCde:"([\s\S]*?)"/g ,
+		status: /expertReviewStatusCde:"([\s\S]*?)"/g
 	}
-	console.time("re");
+	
 	// Executing every regex until no more matchs
 	while ((m = regexs.surveyId.exec(str)) !== null) {
 	  if (m.index === regexs.surveyId.lastIndex) {
 	      regexs.surveyId.lastIndex++;
 	  }
 	  
-	  let id = m;
-	  let title = regexs.title.exec(str);
-	  let status 	= regexs.status.exec(str);
-	  let start = regexs.start.exec(str);
-	  let end 	= regexs.end.exec(str);
-	  // debugger;
-		surveys.push({	title: 	title[1] || 'Unknow title' ,
-										id: 		id[1],
-										status: 	decodeStatus(status[1]),
-										end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
-										start: `${start[2]}/${start[3]}/${start[1]}`
+		// create an object with the regex results
+		let re = { id: m }
+		for (let prop in regexs) {
+			if (prop !== 'surveyId')
+				re[prop] = regexs[prop].exec(str);
+		}
+		console.log(`regex done for survey # ${re.id[1]}`)
+		surveys.push({	
+			title: 	re.title[1],
+			id: 		re.id[1],
+			status: decodeStatus(re.status[1]),
+			end: 		re.end !== null ? `${re.end[2]}/${re.end[3]}/${re.end[1]}` : '...',
+			start: 	`${re.start[2]}/${re.start[3]}/${re.start[1]}`
 		});
 	}
-	console.timeEnd("re");
+	console.log(surveys)
 	return surveys;
 }
 
@@ -516,36 +475,24 @@ let parseSurvey = function(string){
 		accu: /latLongAccuracyddNum:(.*?),/g,
 	}
 
+	// create an object with the regex results
 	let re = {}
 	for (let prop in regexs) {
 		re[prop] = regexs[prop].exec(str)
 	}
-	debugger
 
-	// let surveyId = regexs.surveyId.exec(str);
- //  let surveyStart = regexs.surveyStart.exec(str);
- //  let surveyEnd 	= regexs.surveyEnd.exec(str);
- //  let surveyNme = regexs.surveyNme.exec(str);
- //  let surveyComm 	= regexs.comment.exec(str);
- //  let siteId = regexs.siteId.exec(str);
- //  let siteName = regexs.siteName.exec(str);
- //  let siteDesc = regexs.siteDesc.exec(str);
- //  let lat = regexs.lat.exec(str);
- //  let long = regexs.long.exec(str);
-	
-  // debugger;
 	return {
-					surveyId: re.surveyId[1],
-					surveyStart: `${re.surveyStart[2]}/${re.surveyStart[3]}/${re.surveyStart[1]}`,
+					surveyId: 		re.surveyId[1],
+					surveyStart: 	`${re.surveyStart[2]}/${re.surveyStart[3]}/${re.surveyStart[1]}`,
 					surveyEnd: 		re.surveyEnd === null ? '...' : `${re.surveyEnd[2]}/${re.surveyEnd[3]}/${re.surveyEnd[1]}`,
-					surveyNme: 	re.surveyNme === null ? 'Unknow survey name' : re.surveyNme[1],
-					surveyComm: 	re.surveyComm === null ? 'No comments provided' : re.surveyComm[1],
-					siteId: re.siteId[1],
-					siteDesc: re.siteDesc === null ? 'No site description provided' : re.siteDesc[1],
-					lat: re.lat[1],
-					long: re.long[1],
-					siteId: re.siteId[1],
-					accu: re.accu[1]
+					surveyNme: 		re.surveyNme !== null ? re.surveyNme[1]: 'Unknow survey name',
+					surveyComm: 	re.surveyComm !== null ? re.surveyComm[1]: 'No comments provided',
+					siteId: 			re.siteId[1],
+					siteDesc: 		re.siteDesc !== null ? re.siteDesc[1] : 'No site description provided',
+					lat: 					re.lat[1],
+					long: 				re.long[1],
+					siteId: 			re.siteId[1],
+					accu: 				re.accu[1]
 	};
 };
 
@@ -593,6 +540,101 @@ let fetchSurvey = function(surveyId, cookie) {
 	}
 	return requestp(options)
 };
+
+let fetchSurveysList = function(projectId, cookie) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">50</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<projectId>${projectId}</projectId>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>Survey_DS</dataSource>
+							<operationType>fetch</operationType>
+							<textMatchStyle>exact</textMatchStyle>
+						</operationConfig>
+						<startRow xsi:type="xsd:long">0</startRow>
+						<endRow xsi:type="xsd:long">10</endRow>
+						<componentId>isc_SearchSurveyWindow$2_6</componentId>
+						<appID>builtinApplication</appID>
+						<operation>viewSurveySheetMain</operation>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
+let fetchSurveyMethods = function(surveyId, cookie) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">110</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<surveyId>${surveyId}</surveyId>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>SurveyComponent_DS</dataSource>
+							<operationType>fetch</operationType>
+							<textMatchStyle>exact</textMatchStyle>
+						</operationConfig>
+						<startRow xsi:type="xsd:long">0</startRow>
+						<endRow xsi:type="xsd:long">75</endRow>
+						<componentId>isc_TaxonRecordedSummaryTab$20_0</componentId>
+						<appID>builtinApplication</appID>
+						<operation>fetchSurveyComponentBySurveyID</operation>
+						<oldValues xsi:type="xsd:Object">
+							<surveyId>${surveyId}</surveyId>
+						</oldValues>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
+
 
 
 
