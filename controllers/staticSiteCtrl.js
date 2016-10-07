@@ -156,77 +156,77 @@ exports.projectsPage = function(req, res) {
     });
 };
 
-exports.surveysPage = function(req, res) {
-	// If user not logged in redirect to login page
-	if(!isLoggedIn(req)) return res.redirect('/login');
+// exports.surveysPage = function(req, res) {
+// 	// If user not logged in redirect to login page
+// 	if(!isLoggedIn(req)) return res.redirect('/login');
 
-	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
-	//Lets configure and request
-	// console.log(req.session.cookies);
-	let projectID = req.params.id;
+// 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+// 	//Lets configure and request
+// 	// console.log(req.session.cookies);
+// 	let projectID = req.params.id;
 
-	let header = {
-		'Host': 'vba.dse.vic.gov.au',
-		'Connection': 'keep-alive',
-		'Cache-Control': 'max-age=0',
-		'Origin': 'https://vba.dse.vic.gov.au',
-		'Upgrade-Insecure-Requests': '1',
-		'Cookie': req.session.cookies
-	}
-	let options = {
-		method: 'POST',
-		resolveWithFullResponse: true,
-		simple: false,
-		url: url,
-		headers: header,
-		form: {
-			_transaction: `
-			<transaction
-				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-				<transactionNum xsi:type="xsd:long">50</transactionNum>
-				<operations xsi:type="xsd:List">
-					<elem xsi:type="xsd:Object">
-						<criteria xsi:type="xsd:Object">
-							<projectId>${projectID}</projectId>
-						</criteria>
-						<operationConfig xsi:type="xsd:Object">
-							<dataSource>Survey_DS</dataSource>
-							<operationType>fetch</operationType>
-							<textMatchStyle>exact</textMatchStyle>
-						</operationConfig>
-						<startRow xsi:type="xsd:long">0</startRow>
-						<endRow xsi:type="xsd:long">10</endRow>
-						<componentId>isc_SearchSurveyWindow$2_6</componentId>
-						<appID>builtinApplication</appID>
-						<operation>viewSurveySheetMain</operation>
-					</elem>
-				</operations>
-			</transaction>`,
-			protocolVersion: '1.0'
-		}
-	}
+// 	let header = {
+// 		'Host': 'vba.dse.vic.gov.au',
+// 		'Connection': 'keep-alive',
+// 		'Cache-Control': 'max-age=0',
+// 		'Origin': 'https://vba.dse.vic.gov.au',
+// 		'Upgrade-Insecure-Requests': '1',
+// 		'Cookie': req.session.cookies
+// 	}
+// 	let options = {
+// 		method: 'POST',
+// 		resolveWithFullResponse: true,
+// 		simple: false,
+// 		url: url,
+// 		headers: header,
+// 		form: {
+// 			_transaction: `
+// 			<transaction
+// 				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+// 				<transactionNum xsi:type="xsd:long">50</transactionNum>
+// 				<operations xsi:type="xsd:List">
+// 					<elem xsi:type="xsd:Object">
+// 						<criteria xsi:type="xsd:Object">
+// 							<projectId>${projectID}</projectId>
+// 						</criteria>
+// 						<operationConfig xsi:type="xsd:Object">
+// 							<dataSource>Survey_DS</dataSource>
+// 							<operationType>fetch</operationType>
+// 							<textMatchStyle>exact</textMatchStyle>
+// 						</operationConfig>
+// 						<startRow xsi:type="xsd:long">0</startRow>
+// 						<endRow xsi:type="xsd:long">10</endRow>
+// 						<componentId>isc_SearchSurveyWindow$2_6</componentId>
+// 						<appID>builtinApplication</appID>
+// 						<operation>viewSurveySheetMain</operation>
+// 					</elem>
+// 				</operations>
+// 			</transaction>`,
+// 			protocolVersion: '1.0'
+// 		}
+// 	}
 
-	requestp(options)
-	.then(function(response) {
-		// console.log(response.body)
-		let surveys = parseSurveys(response.body)
-		let user = isLoggedIn(req);
+// 	requestp(options)
+// 	.then(function(response) {
+// 		// console.log(response.body)
+// 		let surveys = parseSurveys(response.body)
+// 		let user = isLoggedIn(req);
 		
-		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
+// 		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
 
-		res.render('surveys', {
-  		loggedIn : user,
-  		helpers : {
-  			username : user
-  		},
-  		// only return the first 10...
-  		survey: surveys.splice(0,10)
-		});
-	})
-	.catch(function (err) {
-      console.log(err) 
-    });
-};
+// 		res.render('surveys', {
+//   		loggedIn : user,
+//   		helpers : {
+//   			username : user
+//   		},
+//   		// only return the first 10...
+//   		survey: surveys.splice(0,10)
+// 		});
+// 	})
+// 	.catch(function (err) {
+//       console.log(err) 
+//     });
+// };
 
 exports.surveys = function(req, res) {
 	// If user not logged in redirect to login page
@@ -280,24 +280,37 @@ exports.surveys = function(req, res) {
 };
 
 exports.species = function(req, res) {
-	res.send(`requested ${req.params.id}`)
-};
+	if(!isLoggedIn(req)) return res.redirect('/login');
 
+	let surveyId = req.params.id;
+	let cookie = req.session.cookies;
+
+	fetchSurveyMethods(surveyId, cookie)
+	.then((response) => {
+
+		let surveyMethods = parseSurveyMethod(response.body);
+		fetchMethodTaxonList(surveyMethods.methodId, cookie)
+		.then((response) => {
+			let taxonList = parseTaxonList(response.body);
+			res.send(taxonList)
+		})
+	})
+};
 
 exports.newProject = function(req, res) {
 	// console.log(req.session.cookies)
 	res.redirect('/survey');
 };
 
-exports.surveyPage = function(req, res) {
-	let user = isLoggedIn(req);
-	res.render('survey', {
-  		loggedIn : user,
-  		helpers : {
-  			username : user
-  		}
-	});
-};
+// exports.surveyPage = function(req, res) {
+// 	let user = isLoggedIn(req);
+// 	res.render('survey', {
+//   		loggedIn : user,
+//   		helpers : {
+//   			username : user
+//   		}
+// 	});
+// };
 
 let isLoggedIn = function(req) {return req.session.username || false;
 }
@@ -496,6 +509,69 @@ let parseSurvey = function(string){
 	};
 };
 
+let parseSurveyMethod = function(string) {
+	// do some regex
+	let str = string;
+	let m;
+	// what a terrible name for an array of regex...
+	let regexs = {
+		methodId: /componentId:(\d*)/g,
+		samplingMethodDesc: /samplingMethodDesc:"([\s\S]*?)"/g,
+		disciplineCde: /disciplineCde:"(.*?)"/g,
+	}
+
+	// create an object with the regex results
+	let re = {}
+	for (let prop in regexs) {
+		re[prop] = regexs[prop].exec(str)
+	}
+
+	return {
+		methodId: 				re.methodId[1],
+		samplingMethodDesc: re.samplingMethodDesc[1],
+		disciplineCde: 			re.disciplineCde[1]
+		// siteDesc: 		re.siteDesc !== null ? re.siteDesc[1] : 'No site description provided',
+	};
+};
+
+let parseTaxonList = function(string) {
+	// do some regex
+	let str = string;
+	let m;
+	let taxonList = [];
+
+	// what a terrible name for an array of regex...
+	let regexs = {
+		taxonId: /taxonId:(\d*)/g,
+		scientificNme: /scientificNme:"([\s\S]*?)"/g,
+		disciplineCde: /disciplineCde:"(.*?)"/g,
+		totalCountInt: /totalCountInt:(\d*)/g
+	}
+
+	// create an object with the regex results
+	// Executing every regex until no more matchs
+	while ((m = regexs.taxonId.exec(str)) !== null) {
+	  if (m.index === regexs.taxonId.lastIndex) {
+	      regexs.taxonId.lastIndex++;
+	  }
+	  
+		// create an object with the regex results
+		// loop thru the regexs obj, except for the taxonId 
+		let re = { taxonId: m }
+		for (let prop in regexs) {
+			if (prop !== 'taxonId')
+				re[prop] = regexs[prop].exec(str);
+		}
+		taxonList.push({	
+			taxonId: 				re.taxonId[1],
+			scientificNme: 	re.scientificNme[1],
+			disciplineCde: 	re.disciplineCde[1],
+			totalCountInt: 	re.totalCountInt[1]
+		});
+	}
+	return taxonList;
+};
+
 let fetchSurvey = function(surveyId, cookie) {
 	console.log(`fetching survey #${surveyId}`)
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
@@ -633,6 +709,51 @@ let fetchSurveyMethods = function(surveyId, cookie) {
 	}
 	return requestp(options)
 };
+
+let fetchMethodTaxonList = function(methodID, cookie) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction:`<transaction
+		xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+		<transactionNum xsi:type="xsd:long">30</transactionNum>
+		<operations xsi:type="xsd:List">
+			<elem xsi:type="xsd:Object">
+				<criteria xsi:type="xsd:Object">
+					<componentId>${methodID}</componentId>
+				</criteria>
+				<operationConfig xsi:type="xsd:Object">
+					<dataSource>SurveyCompSummaryView_DS</dataSource>
+					<operationType>fetch</operationType>
+					<textMatchStyle>exact</textMatchStyle>
+				</operationConfig>
+				<startRow xsi:type="xsd:long">0</startRow>
+				<endRow xsi:type="xsd:long">75</endRow>
+				<componentId>isc_TaxonRecordedSummaryTab$23_0</componentId>
+				<appID>builtinApplication</appID>
+				<operation>fetchDataForSC</operation>
+			</elem>
+		</operations>
+	</transaction>`,
+	protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
 
 
 

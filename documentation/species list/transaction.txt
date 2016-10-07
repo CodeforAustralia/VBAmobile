@@ -34,31 +34,140 @@
 }]
 //isc_RPCResponseEnd
 
-_transaction:
 <transaction
 	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-	<transactionNum xsi:type="xsd:long">111</transactionNum>
+	<transactionNum xsi:type="xsd:long">62</transactionNum>
 	<operations xsi:type="xsd:List">
 		<elem xsi:type="xsd:Object">
 			<criteria xsi:type="xsd:Object">
-				<componentId>1111720</componentId>
-				<_forceToRefresh>1475558368277</_forceToRefresh>
+				<SURVEY_ID xsi:type="xsd:long">1070501</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1111720</SURVEY_COMPONENT_ID>
 			</criteria>
 			<operationConfig xsi:type="xsd:Object">
-				<dataSource>SurveyCompSummaryView_DS</dataSource>
+				<dataSource>SurveyComponent_DS</dataSource>
 				<operationType>fetch</operationType>
-				<textMatchStyle>exact</textMatchStyle>
 			</operationConfig>
-			<startRow xsi:type="xsd:long">0</startRow>
-			<endRow xsi:type="xsd:long">75</endRow>
-			<componentId>isc_TaxonRecordedSummaryTab$23_0</componentId>
 			<appID>builtinApplication</appID>
-			<operation>fetchDataForSC</operation>
+			<operation>SurveyComponent_DS_fetch</operation>
 			<oldValues xsi:type="xsd:Object">
-				<componentId>1111720</componentId>
-				<_forceToRefresh>1475558368277</_forceToRefresh>
+				<SURVEY_ID xsi:type="xsd:long">1070501</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1111720</SURVEY_COMPONENT_ID>
 			</oldValues>
 		</elem>
 	</operations>
 </transaction>
 
+
+//isc_RPCResponseStart-->[{IS_DENATURED:"false",
+HAS_LICENCE:true,
+isDSResponse:true,
+invalidateCache:false,
+status:0,
+"RESTRICTED SITE":"n",
+data:{
+	componentId:1111720,
+	creationTsp:new Date(1405568547551),
+	disciplineCde:"tf",
+	firstDateSdt:null,
+	firstTimeSdt:null,
+	modifiedTsp:null,
+	originalScIdTxt:null,
+	originalSurveyidTxt:null,
+	samplingMethodCde:"70",
+	scCommentTxt:null,
+	scStatusCde:"draft",
+	scStatusValue:"Draft",
+	secondDateSdt:null,
+	secondTimeSdt:null,
+	survey: { 
+		creationTsp:new Date(1405568547442),
+		dateAccuracyCde:null,
+		endHhmmTxt:null,
+		expertReviewStatusCde:"a",
+		modifiedTsp:new Date(1469808096000),
+		monitoringProtocolCde:null,
+		originalSiteidTxt:null,
+		originalSurveyidTxt:null,
+		primaryDisciplineCde:"tf",
+		project:{ 
+			booleanProjectExpeditedCde:false,
+			creationTsp:new Date(1404803114000),
+			dataLicence:null,
+			modifiedTsp:new Date(1405567268551),
+			organisations:[{ 	creationTsp:new Date(1313416800000),
+												modifiedTsp:new Date(1474946642614),
+												orgDisplayNme:"DELWP",
+												organisationDesc:"State Government",
+												organisationId:302,
+												organisationNme:"Department of Environment Land Water & Planning "},
+											{
+												creationTsp:new Date(1313416800000),
+												modifiedTsp:new Date(1475536180166),
+												orgDisplayNme:"Individual",
+												organisationDesc:null,
+												organisationId:213,
+												organisationNme:"Private Individual"}],
+			projectCommentTxt:null,
+			projectContactUid:8776,
+			projectDesc:"Species lists for property on Mt Black\n",
+			projectEndSdt:null,
+			projectExpeditedCde:null,
+			projectId:3921,
+			projectNme:"Mt Black Private Property species recording",
+			projectStartSdt:Date.parseServerDate(2011,3,1),
+			projectStatusCde:"pub" },
+	site: {
+		creationTsp:new Date(1313416800000),
+		fiveMinGridInt:6823,
+		latLongAccuracyddNum:900.0,
+		latitudeddNum:-36.79417,
+		locationCommentTxt:null,
+		longitudeddNum:145.00083,
+		modifiedTsp:new Date(1469689666000),
+		oneMinGridInt:170611,
+		originalSiteidTxt:"544052",
+		siteId:632747,
+		siteLocationDesc:"174 Mt. Black Quarry Road, Wirrate, Vic. 3608",
+		siteNme:"Mt Black",
+		tenMinGridInt:1687 },
+startHhmmTxt:null,
+surveyCommentTxt:null,
+surveyEndSdt:Date.parseServerDate(2011,9,31),
+surveyId:1070501,
+surveyNme:"Property Survey October 2011",
+surveyStartSdt:Date.parseServerDate(2011,0,10),
+userRefTxt:null }}}]//isc_RPCResponseEnd
+
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">87</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">1070501</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1111720</SURVEY_COMPONENT_ID>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>CSamplingMethodDetail_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>CSamplingMethodDetail_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">1070501</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1111720</SURVEY_COMPONENT_ID>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+
+//isc_RPCResponseStart-->[{isDSResponse:true,
+invalidateCache:false,
+status:0,
+data:[{creationTsp:new Date(1405568547582),
+measurementValueDateSdt:null,
+measurementValueNum:250.0,
+measurementValueTxt:null,
+modifiedTsp:null,
+samplingDetailCde:"6"}]}]//isc_RPCResponseEnd
