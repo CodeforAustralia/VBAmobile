@@ -263,9 +263,9 @@ exports.surveys = function(req, res) {
 		});
 
 		Promise.all(surveysDataRequests).then(() => {
-			// console.log(surveyData)
+			console.log(surveyData)
 			let user = isLoggedIn(req);
-			res.render('survey', {
+			res.render('surveys', {
 	  		loggedIn : user,
 	  		helpers : {
 	  			username : user
@@ -292,7 +292,16 @@ exports.species = function(req, res) {
 		fetchMethodTaxonList(surveyMethods.methodId, cookie)
 		.then((response) => {
 			let taxonList = parseTaxonList(response.body);
-			res.send(taxonList)
+			// res.send(taxonList)
+			console.log(taxonList);
+			let user = isLoggedIn(req);
+			res.render('species', {
+	  		loggedIn : !!user,
+	  		helpers : {
+	  			username : user
+	  		},
+	  		taxon: taxonList
+			});
 		})
 	})
 };

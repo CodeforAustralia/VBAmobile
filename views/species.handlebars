@@ -1,0 +1,51 @@
+<main class="content-wrapper">
+    <h1 class="section-title">Species list</h1>
+    <ul class="cards-list w-list-unstyled">
+      <li class="method project-card">
+        <a class="card-link w-inline-block" href="/surveyspage">
+          <div class="survey-detail">
+            <div class="row">
+              <div>Method :</div>
+              <div class="response">{{this.method.name}}</div>
+            </div>
+            <div class="row">
+              <div>Discipline :</div>
+              <div class="response">{{this.method.discipline}}</div>
+            </div>
+            <div class="row">
+              <div>Area sampled :</div>
+              <div class="response">{{this.method.area}}</div>
+            </div>
+            <div class="row">
+              <div>Number of Observers :</div>
+              <div class="response">{{this.method.obs}}</div>
+            </div>
+            <div class="row">
+              <div>Number of species :</div>
+              <div class="response">{{this.method.species}}</div>
+            </div>
+            <div class="project-card-footer">
+              <div class="project-card-dates">{{this.method.start}} &#x279E; {{this.method.end}}</div>
+              <div class="project-card-id"><span class="number-sign">#</span>{{this.method.id}}</div>
+            </div>
+          </div>
+        </a>
+      </li>
+    {{#each taxon}}
+      <li class="project-card">
+        <a class="card-link w-inline-block" href="#">
+          <div class="taxon">
+            <div class="taxon-names">{{this.commonName}}
+              <br>{{this.scientificNme}}</div>
+            <div class="project-card-footer">
+            {{#if totalCountInt}}
+              <div class="taxon-count">Count : {{this.totalCountInt}}</div>
+            {{/if}}
+              <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
+            </div>
+          </div>
+        </a>
+      </li>
+    {{/each}}
+    </ul>
+  </main>

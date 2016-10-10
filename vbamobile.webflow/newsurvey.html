@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--  Last Published: Mon Oct 10 2016 02:35:10 GMT+0000 (UTC)  -->
+<html data-wf-page="57dc83871c93d4e04d965fca" data-wf-site="57ced8c91d3807cb6dad5f35">
+<head>
+  <meta charset="utf-8">
+  <title>species</title>
+  <meta content="species" property="og:title">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <link href="css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="css/components.css" rel="stylesheet" type="text/css">
+  <link href="css/vbamobile.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script type="text/javascript">
+    WebFont.load({
+      google: {
+        families: ["Roboto:regular,500,700"]
+      }
+    });
+  </script>
+  <script src="js/modernizr.js" type="text/javascript"></script>
+  <link href="https://daks2k3a4ib2z.cloudfront.net/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link href="https://daks2k3a4ib2z.cloudfront.net/img/webclip.png" rel="apple-touch-icon">
+</head>
+<body class="body">
+  <header class="header">
+    <div class="titles">
+      <h1 class="title">VBA</h1>
+      <h2 class="sub-title">mobile</h2>
+    </div>
+    <a class="username" href="#">username</a>
+  </header>
+  <main class="content-wrapper">
+    <div class="form w-form">
+      <form action="/survey" class="survey-form" data-name="Email Form" data-redirect="/survey" id="email-form" method="post" name="email-form">
+        <div class="form-inner-container">
+          <h1 class="form-header">General Observation</h1>
+          <label for="Survey-comment">Survey comment:</label>
+          <textarea class="survey-comment w-input" data-name="Survey comment" id="Survey-comment" maxlength="5000" name="Survey-comment" placeholder="Survey comment"></textarea>
+          <label for="name">Name:</label>
+          <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Survey  name" type="text">
+          <label for="Primary-discipline">Primary discipline:</label>
+          <select class="w-select" data-name="Primary discipline" id="Primary-discipline" name="Primary-discipline">
+            <option value="">Aquatic Fauna</option>
+            <option value="First">Aquatic Invertebrates</option>
+            <option value="Second">Fauna</option>
+            <option value="Third">Marine</option>
+            <option value="">Terrestrial Fauna</option>
+          </select>
+          <label for="Site-ID">Site ID:</label>
+          <input class="w-input" data-name="Site ID" id="Site-ID" maxlength="256" name="Site-ID" placeholder="Site ID" required="required" type="text">
+          <h2 class="form-header">Survey information</h2>
+          <div class="dates-selectors-container">
+            <div class="date-selector-element w-embed">
+              <label for="date">Start date:</label>
+              <input class="w-input" type="date" name="startdate">
+            </div>
+            <div class="date-selector-element w-embed">
+              <label for="date">End date:</label>
+              <input class="w-input" type="date" name="enddate">
+            </div>
+          </div>
+        </div>
+        <div class="form-button-center">
+          <input class="form-button w-button" data-wait="Please wait..." type="submit" value="save">
+          <a class="form-button w-button" href="species.html">add species</a>
+        </div>
+      </form>
+      <div class="w-form-done">
+        <div>Thank you! Your submission has been received!</div>
+      </div>
+      <div class="w-form-fail">
+        <div>Oops! Something went wrong while submitting the form</div>
+      </div>
+    </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>
+  <script src="js/vbamobile.js" type="text/javascript"></script>
+  <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
+</body>
+</html>

@@ -41,7 +41,5 @@ config.folders.forEach(function(folder){
  		console.log('coyping '+ folder +' done!');
 	})
 })
-
-
 console.log('Webflow to handlebars conversion done !')
 

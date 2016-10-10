@@ -1,16 +1,15 @@
 <main class="content-wrapper">
-    <h1 class="section-title">Survey detail</h1>
+    <h1 class="section-title">Surveys</h1>
     <ul class="cards-list w-list-unstyled">
     {{#each survey}}
       <li class="project-card">
         <a class="card-link w-inline-block" href="/survey/{{this.surveyId}}/species">
           <div class="survey-detail">
-            <div class="card-title">Survey</div>
             <div class="project-card-title">{{this.surveyNme}}</div>
-            <div>{{this.surveyComm}}</div>
+            <div class="survey-comms">{{this.surveyComm}}</div>
             <div class="project-card-footer">
               <div class="project-card-dates">{{this.surveyStart}} &#x279E; {{this.surveyEnd}}</div>
-              <div class="project-card-id">#{{this.surveyId}}</div>
+              <div class="project-card-id"><span class="number-sign">#</span>{{this.surveyId}}</div>
             </div>
           </div>
           <div class="survey-site">
@@ -22,8 +21,8 @@
               <div>Lat : {{this.long}}</div>
             </div>
             <div class="project-card-footer">
-              <div class="project-card-dates">Accuracy : {{this.accu}} m</div>
-              <div class="project-card-id">#{{this.siteId}}</div>
+              <div class="project-card-dates">Accuracy : {{this.accu}}m</div>
+              <div class="project-card-id"><span class="number-sign">#</span>{{this.siteId}}</div>
             </div>
           </div>
         </a>
