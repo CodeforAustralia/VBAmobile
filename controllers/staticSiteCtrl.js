@@ -213,24 +213,43 @@ exports.species = function(req, res) {
 
 	let surveyId = req.params.id;
 	let cookie = req.session.cookies;
-	let methodDetail;
+	let methodDetail,
+			taxonList;
+
 	fetchSurveyMethods(surveyId, cookie)
 	.then((response) => {
 		let surveyMethods = parseSurveyMethod(response.body);
-		fetchMethodDetail(surveyMethods.methodId, cookie)
-		.then((response) => {
-			methodDetail = parseMethodDetail(response.body);
-		})
 
-		fetchMethodTaxonList(surveyMethods.methodId, cookie)
-		.then((response) => {
-			let taxonList = parseTaxonList(response.body);
-			// res.send(taxonList)
-			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
-			console.log(chalk.cyan(JSON.stringify(surveyMethods, null, 4)))
-			console.log(chalk.cyan(JSON.stringify(methodDetail, null, 4)))
+		// fetchMethodDetail
+		let requests = [];
+		requests.push( 
+			new Promise((resolve) => {
+			fetchMethodDetail(surveyMethods.methodId, cookie)
+			.then((response) => {
+				methodDetail = parseMethodDetail(response.body);
+				resolve()
+				})
+			})
+		);
+		// fetchMethodTaxonList
+		requests.push(new Promise((resolve) => {
+			fetchMethodTaxonList(surveyMethods.methodId, cookie)
+			.then((response) => {
+					taxonList = parseTaxonList(response.body);
+					resolve()
+				})
+			})
+		);
 
+		Promise.all(requests)
+		.then(() => {
 			let user = isLoggedIn(req);
+
+			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
+			console.log(chalk.cyan(
+				JSON.stringify(surveyMethods, null, 4),
+				JSON.stringify(methodDetail, null, 4)));
+
 			res.render('species', {
 	  		loggedIn : !!user,
 	  		helpers : {
