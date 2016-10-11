@@ -3,6 +3,7 @@ var request = require('request');
 var requestp = require('request-promise');
 var config = require('../config');
 var session = require('express-session')
+var chalk = require('chalk');
 
 var app = express();
 
@@ -135,11 +136,11 @@ exports.projectsPage = function(req, res) {
 		}
 	}
 
-	console.log(options)
+	// console.log(options)
 
 	requestp(options)
 	.then(function(response) {
-		console.log(response.body)
+		// console.log(response.body)
 		let projects = parseProject(response.body)
 		let user = isLoggedIn(req);
 
@@ -155,78 +156,6 @@ exports.projectsPage = function(req, res) {
       console.log(err) 
     });
 };
-
-// exports.surveysPage = function(req, res) {
-// 	// If user not logged in redirect to login page
-// 	if(!isLoggedIn(req)) return res.redirect('/login');
-
-// 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
-// 	//Lets configure and request
-// 	// console.log(req.session.cookies);
-// 	let projectID = req.params.id;
-
-// 	let header = {
-// 		'Host': 'vba.dse.vic.gov.au',
-// 		'Connection': 'keep-alive',
-// 		'Cache-Control': 'max-age=0',
-// 		'Origin': 'https://vba.dse.vic.gov.au',
-// 		'Upgrade-Insecure-Requests': '1',
-// 		'Cookie': req.session.cookies
-// 	}
-// 	let options = {
-// 		method: 'POST',
-// 		resolveWithFullResponse: true,
-// 		simple: false,
-// 		url: url,
-// 		headers: header,
-// 		form: {
-// 			_transaction: `
-// 			<transaction
-// 				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-// 				<transactionNum xsi:type="xsd:long">50</transactionNum>
-// 				<operations xsi:type="xsd:List">
-// 					<elem xsi:type="xsd:Object">
-// 						<criteria xsi:type="xsd:Object">
-// 							<projectId>${projectID}</projectId>
-// 						</criteria>
-// 						<operationConfig xsi:type="xsd:Object">
-// 							<dataSource>Survey_DS</dataSource>
-// 							<operationType>fetch</operationType>
-// 							<textMatchStyle>exact</textMatchStyle>
-// 						</operationConfig>
-// 						<startRow xsi:type="xsd:long">0</startRow>
-// 						<endRow xsi:type="xsd:long">10</endRow>
-// 						<componentId>isc_SearchSurveyWindow$2_6</componentId>
-// 						<appID>builtinApplication</appID>
-// 						<operation>viewSurveySheetMain</operation>
-// 					</elem>
-// 				</operations>
-// 			</transaction>`,
-// 			protocolVersion: '1.0'
-// 		}
-// 	}
-
-// 	requestp(options)
-// 	.then(function(response) {
-// 		// console.log(response.body)
-// 		let surveys = parseSurveys(response.body)
-// 		let user = isLoggedIn(req);
-		
-// 		console.log(`${user} requested surveys list for project #${projectID}\n${surveys.length} found.`)
-
-// 		res.render('surveys', {
-//   		loggedIn : user,
-//   		helpers : {
-//   			username : user
-//   		},
-//   		// only return the first 10...
-//   		survey: surveys.splice(0,10)
-// 		});
-// 	})
-// 	.catch(function (err) {
-//       console.log(err) 
-//     });
-// };
 
 exports.surveys = function(req, res) {
 	// If user not logged in redirect to login page
@@ -284,23 +213,39 @@ exports.species = function(req, res) {
 
 	let surveyId = req.params.id;
 	let cookie = req.session.cookies;
-
+	let methodDetail;
 	fetchSurveyMethods(surveyId, cookie)
 	.then((response) => {
-
 		let surveyMethods = parseSurveyMethod(response.body);
+		fetchMethodDetail(surveyMethods.methodId, cookie)
+		.then((response) => {
+			methodDetail = parseMethodDetail(response.body);
+		})
+
 		fetchMethodTaxonList(surveyMethods.methodId, cookie)
 		.then((response) => {
 			let taxonList = parseTaxonList(response.body);
 			// res.send(taxonList)
-			console.log(taxonList);
+			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
+			console.log(chalk.cyan(JSON.stringify(surveyMethods, null, 4)))
+			console.log(chalk.cyan(JSON.stringify(methodDetail, null, 4)))
+
 			let user = isLoggedIn(req);
 			res.render('species', {
 	  		loggedIn : !!user,
 	  		helpers : {
-	  			username : user
+	  			username : user,
 	  		},
-	  		taxon: taxonList
+	  		taxon: taxonList,
+	  		method : {
+	  			name: surveyMethods.samplingMethodDesc,
+	  			discipline: surveyMethods.disciplineCde,
+	  			area: methodDetail.measurementValueNum,
+	  			start: methodDetail.firstDateSdt,
+	  			end: methodDetail.secondDateSdt,
+	  			id: surveyMethods.methodId,
+	  		}
+	  		// methodDetail
 			});
 		})
 	})
@@ -311,20 +256,12 @@ exports.newProject = function(req, res) {
 	res.redirect('/survey');
 };
 
-// exports.surveyPage = function(req, res) {
-// 	let user = isLoggedIn(req);
-// 	res.render('survey', {
-//   		loggedIn : user,
-//   		helpers : {
-//   			username : user
-//   		}
-// 	});
-// };
-
-let isLoggedIn = function(req) {return req.session.username || false;
+let isLoggedIn = function(req) {
+	return req.session.username || false
 }
 
 let fetchUserDetails = function(cookies) {
+	// This function is doing both the fetching and parsing, need to be splited up
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -474,7 +411,7 @@ let parseSurveys = function(string){
 			start: 	`${re.start[2]}/${re.start[3]}/${re.start[1]}`
 		});
 	}
-	console.log(surveys)
+	// console.log(surveys)
 	return surveys;
 }
 
@@ -525,8 +462,8 @@ let parseSurveyMethod = function(string) {
 	// what a terrible name for an array of regex...
 	let regexs = {
 		methodId: /componentId:(\d*)/g,
-		samplingMethodDesc: /samplingMethodDesc:"([\s\S]*?)"/g,
-		disciplineCde: /disciplineCde:"(.*?)"/g,
+		samplingMethodDesc: /samplingMethodDesc:"([\s\S]*?)"/,
+		disciplineCde: /disciplineCde:"(.*?)"/, 
 	}
 
 	// create an object with the regex results
@@ -553,6 +490,7 @@ let parseTaxonList = function(string) {
 	let regexs = {
 		taxonId: /taxonId:(\d*)/g,
 		scientificNme: /scientificNme:"([\s\S]*?)"/g,
+		commonNme: /commonNme:"([\s\S]*?)"/g,
 		disciplineCde: /disciplineCde:"(.*?)"/g,
 		totalCountInt: /totalCountInt:(\d*)/g
 	}
@@ -574,11 +512,48 @@ let parseTaxonList = function(string) {
 		taxonList.push({	
 			taxonId: 				re.taxonId[1],
 			scientificNme: 	re.scientificNme[1],
+			commonNme: re.commonNme[1],
 			disciplineCde: 	re.disciplineCde[1],
 			totalCountInt: 	re.totalCountInt[1]
 		});
 	}
+	// console.log(str)
 	return taxonList;
+};
+
+let parseMethodDetail = function(string) {
+	console.log(chalk.gray(string))
+	// do some regex
+	let str = string;
+	let m;
+	let taxonList = [];
+
+	// what a terrible name for an array of regex...
+	let regexs = {
+		componentId: /componentId:(\d*)/,
+		measurementValueNum: /measurementValueNum:(\d*)/,
+		samplingDetailCde: /samplingDetailCde:"(\d*)"/,
+		scCommentTxt: /scCommentTxt:"([\s\S]*?)"/g,
+		firstDateSdt: /firstDateSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/,
+		secondDateSdt: /secondDateSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/,
+		firstTimeSdt: /firstTimeSdt:"(\d*)"/,
+		secondTimeSdt: /secondTimeSdt:"(\d*)"/,
+	}
+
+	// create an object with the regex results
+	let re = {}
+
+	for (let prop in regexs) {
+		let result = regexs[prop].exec(str)
+		if (result) {
+			if (result.length === 2) {
+				result = result[1]
+			} else result = result.slice(1)
+		}
+		re[prop] = result
+	}
+
+	return re;
 };
 
 let fetchSurvey = function(surveyId, cookie) {
@@ -763,7 +738,49 @@ let fetchMethodTaxonList = function(methodID, cookie) {
 	return requestp(options)
 };
 
-
+let fetchMethodDetail = function(methodID, cookie) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">35</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<SURVEY_COMPONENT_ID xsi:type="xsd:long">${methodID}</SURVEY_COMPONENT_ID>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>CSamplingMethodDetail_DS</dataSource>
+							<operationType>fetch</operationType>
+						</operationConfig>
+						<appID>builtinApplication</appID>
+						<operation>CSamplingMethodDetail_DS_fetch</operation>
+						<oldValues xsi:type="xsd:Object">
+							<SURVEY_COMPONENT_ID xsi:type="xsd:long">${methodID}</SURVEY_COMPONENT_ID>
+						</oldValues>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
 
 
 
