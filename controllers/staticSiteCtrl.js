@@ -213,36 +213,29 @@ exports.species = function(req, res) {
 
 	let surveyId = req.params.id;
 	let cookie = req.session.cookies;
-	let methodDetail,
-			taxonList;
+	// let methodDetail,
+			// taxonList;
 
 	fetchSurveyMethods(surveyId, cookie)
 	.then((response) => {
 		let surveyMethods = parseSurveyMethod(response.body);
 
 		// fetchMethodDetail
-		let requests = [];
-		requests.push( 
-			new Promise((resolve) => {
+		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
-			.then((response) => {
-				methodDetail = parseMethodDetail(response.body);
-				resolve()
-				})
-			})
-		);
-		// fetchMethodTaxonList
-		requests.push(new Promise((resolve) => {
-			fetchMethodTaxonList(surveyMethods.methodId, cookie)
-			.then((response) => {
-					taxonList = parseTaxonList(response.body);
-					resolve()
-				})
-			})
-		);
+			.then( response => resolve(parseMethodDetail(response.body)));
+		});
 
-		Promise.all(requests)
-		.then(() => {
+		// fetchMethodTaxonList
+		let taxonList = new Promise((resolve) => {
+			fetchMethodTaxonList(surveyMethods.methodId, cookie)
+			.then( response => resolve(parseTaxonList(response.body)));
+		});
+
+		Promise.all([methodDetail, taxonList])
+		.then( values => {
+			let methodDetail = values[0];
+			let taxonList = values[1];
 			let user = isLoggedIn(req);
 
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
