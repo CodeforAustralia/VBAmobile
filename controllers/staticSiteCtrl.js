@@ -19,58 +19,24 @@ exports.landingPage = function(req, res) {
 
 exports.login = function(req, res) {
 	console.log('Login request for ' + req.body.username);
-	// let username = req.body.username;
-	let jar = request.jar();
-	let url = 'https://vba.dse.vic.gov.au/vba/login';
+	let cookieJar = request.jar();
 
-	//Lets configure and request
-	let header = {
-		'Host': 'vba.dse.vic.gov.au',
-		'Connection': 'keep-alive',
-		'Cache-Control': 'max-age=0',
-		'Origin': 'https://vba.dse.vic.gov.au',
-		'Upgrade-Insecure-Requests': '1'
-	}
-
-	let options = {
-		method: 'POST',
-		resolveWithFullResponse: true,
-		simple: false,
-		jar: jar,
-		url: url,
-		headers: header,
-		form: {
-			username: req.body.username,
-			password: req.body.password
-		}
-	}
-
-	requestp(options)
-	// Checking if login is succefull
-	.then(function(response){
-		// looking for ?error=1 in the body, is not found login was succesfull
-		let str = response.body
-		let re = /\?error=1/
-		if (re.exec(str)) throw 'failed login';
-		return response;
+	fetchCookie(req.body.username, req.body.password, cookieJar)
+	.then( fetchRes => {
+		// Checking if login is succefull
+		if (/\?error=1/.exec(fetchRes.body)) throw 'failed login';
+		return req.session.cookies = cookieJar.getCookieString(fetchRes.request.href);
 	})
-	// procces the response, extract cookie and pass it on
-	.then(function(response) {
-		let cookies = jar.getCookies(url);
-		return cookies
-	})
-	// Fetch the User Details this will make an extra http request
 	.then(fetchUserDetails)
-	// setup session cookies and redirect to '/'
-	.then(function(name) {
-		req.session.username = name;
+	.then( fetchRes => parseUserDetails(fetchRes.body))
+	.then( name => {
 		// convert vba cookie to string and store into the vbamobile cookie.
-		req.session.cookies = jar.getCookieString(url);
-		res.redirect('/')
+		req.session.username = name;
+		res.redirect('/');
 	})
 	.catch(function (err) {
+	  // need to let the user know login failled
 	  console.log(err)
-	  // need to let the user know login failled, this is bad ux
 	  if (err === 'failed login') res.redirect('/login');
   });
 };
@@ -159,7 +125,10 @@ exports.species = function(req, res) {
 		// fetchMethodDetail
 		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
-			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)));
+			.then( fetchRes => {
+				console.log(chalk.yellow(fetchRes));
+				resolve(parseMethodDetail(fetchRes.body));
+			})
 		});
 
 		// fetchMethodTaxonList
@@ -175,22 +144,26 @@ exports.species = function(req, res) {
 			let user = isLoggedIn(req);
 
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
-			// console.log(chalk.cyan(JSON.stringify(PromisesArr, null, 4)));
+			console.log(chalk.yellow(JSON.stringify(methodDetail, null, 4)));
 
+			let method = {
+	  			id: surveyMethods.methodId,
+	  			name: surveyMethods.samplingMethodDesc,
+	  			discipline: surveyMethods.disciplineCde,
+	  			area: methodDetail.measurementValueNum,
+	  			dateDisplay: !!(methodDetail.firstDateSdt || methodDetail.secondDateSdt),
+	  			start: methodDetail.firstDateSdt,
+	  			end: methodDetail.secondDateSdt,
+	  			species: taxonList.length
+	  		}
+	  	console.log(chalk.cyan(JSON.stringify(method, null, 4)));
 			res.render('species', {
 	  		loggedIn : !!user,
 	  		helpers : {
 	  			username : user,
 	  		},
 	  		taxon: taxonList,
-	  		method : {
-	  			name: surveyMethods.samplingMethodDesc,
-	  			discipline: surveyMethods.disciplineCde,
-	  			area: methodDetail.measurementValueNum,
-	  			start: methodDetail.firstDateSdt,
-	  			end: methodDetail.secondDateSdt,
-	  			id: surveyMethods.methodId,
-	  		}
+	  		method : method
 			});
 		})
 	})
@@ -205,7 +178,9 @@ let isLoggedIn = function(req) {
 	return req.session.username || false
 }
 
-let fetchUserDetails = function(cookies) {
+let fetchUserDetails = function(cookie) {
+	console.log(chalk.red(cookie))
+	debugger;
 	// This function is doing both the fetching and parsing, need to be splited up
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
@@ -214,7 +189,7 @@ let fetchUserDetails = function(cookies) {
 		'Cache-Control': 'max-age=0',
 		'Origin': 'https://vba.dse.vic.gov.au',
 		'Upgrade-Insecure-Requests': '1',
-		'Cookie': cookies
+		'Cookie': cookie
 	}
 	let options = {
 		resolveWithFullResponse: true,
@@ -242,17 +217,13 @@ let fetchUserDetails = function(cookies) {
 		}
 	}
 	return requestp(options)
-	.then(function(response) {
-		let regex = /displayName:("(.*?)")/; 
-		let match = regex.exec(response.body);
- 		// console.log('displayName: ' + match[2])
- 		return match[2];
-	})
-	// Handle failed request... need to work on this one 
-	.catch(function (err) {
-      console.log(err) 
-    });
 }
+
+let parseUserDetails = function(string) {
+	let match = /displayName:("(.*?)")/.exec(string);
+	debugger;
+	return match[2];
+};
 
 let parseProject = function(string){
 	// do some regex
@@ -290,7 +261,7 @@ let parseProject = function(string){
 		});
 	}
 	return projects;
-}
+};
 
 let parseSurveys = function(string){
 	// do some regex
@@ -358,7 +329,7 @@ let parseSurveys = function(string){
 	}
 	// console.log(surveys)
 	return surveys;
-}
+};
 
 let parseSurvey = function(string){
 	// do some regex
@@ -498,6 +469,30 @@ let parseMethodDetail = function(string) {
 	}
 
 	return re;
+};
+
+let fetchCookie = function(username, password, jar) {
+	let url = 'https://vba.dse.vic.gov.au/vba/login';
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1'
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		jar: jar,
+		url: url,
+		headers: header,
+		form: {
+			username: username,
+			password: password
+		}
+	}
+	return requestp(options)
 };
 
 let fetchProject = function(cookie){

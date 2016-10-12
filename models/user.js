@@ -1,3 +1,4 @@
+// This is not beeing used at the moment, hopefully it will never be...
 // get an instance of mongoose and mongoose.Schema
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;

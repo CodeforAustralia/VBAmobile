@@ -12,20 +12,26 @@
               <div>Discipline :</div>
               <div class="response">{{method.discipline}}</div>
             </div>
+            {{#if method.area}}
             <div class="row">
               <div>Area sampled :</div>
               <div class="response">{{method.area}}</div>
             </div>
+            {{/if}}
+            {{#if method.obs}}
             <div class="row">
               <div>Number of Observers :</div>
               <div class="response">{{method.obs}}</div>
             </div>
+            {{/if}}
             <div class="row">
               <div>Number of species :</div>
               <div class="response">{{method.species}}</div>
             </div>
             <div class="project-card-footer">
+              {{#if method.dateDisplay}}
               <div class="project-card-dates">{{method.start}} &#x279E; {{method.end}}</div>
+              {{/if}}
               <div class="project-card-id"><span class="number-sign">#</span>{{method.id}}</div>
             </div>
           </div>
@@ -38,7 +44,7 @@
             <div class="taxon-names">{{this.commonNme}}
               <br>{{this.scientificNme}}</div>
             <div class="project-card-footer">
-            {{#if totalCountInt}}
+            {{#if this.totalCountInt}}
               <div class="taxon-count">Count : {{this.totalCountInt}}</div>
             {{/if}}
               <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
