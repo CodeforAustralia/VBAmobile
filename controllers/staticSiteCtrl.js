@@ -89,61 +89,11 @@ exports.projectsPage = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
 
-	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
-	//Lets configure and request
-	// console.log(req.session.cookies);
-	let header = {
-		'Host': 'vba.dse.vic.gov.au',
-		'Connection': 'keep-alive',
-		'Cache-Control': 'max-age=0',
-		'Origin': 'https://vba.dse.vic.gov.au',
-		'Upgrade-Insecure-Requests': '1',
-		'Cookie': req.session.cookies
-	}
-
-	let options = {
-		method: 'POST',
-		resolveWithFullResponse: true,
-		simple: false,
-		url: url,
-		headers: header,
-		form: {
-			// <transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>
-			_transaction: `
-			<transaction
-						xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
-						<operations xsi:type="xsd:List">
-							<elem xsi:type="xsd:Object">
-								<criteria xsi:type="xsd:Object">
-									<projectStatusCde>pub</projectStatusCde>
-									<isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch>
-								</criteria>
-								<operationConfig xsi:type="xsd:Object">
-									<dataSource>Project_DS</dataSource>
-									<operationType>fetch</operationType>
-									<textMatchStyle>exact</textMatchStyle>
-								</operationConfig>
-								<startRow xsi:type="xsd:long">0</startRow>
-								<endRow xsi:type="xsd:long">75</endRow>
-								<componentId>isc_ManageProjectModule$2_2</componentId>
-								<appID>builtinApplication</appID>
-								<operation>mainProjectSearch</operation>
-							</elem>
-						</operations>
-					</transaction>
-			`,
-			protocolVersion: '1.0'
-		}
-	}
-
-	// console.log(options)
-
-	requestp(options)
-	.then(function(response) {
+	fetchProject(req.session.cookies)
+	.then( fetchRes => parseProject(fetchRes.body))
+	.then( projects => {
 		// console.log(response.body)
-		let projects = parseProject(response.body)
 		let user = isLoggedIn(req);
-
 		res.render('projects', {
   		loggedIn : user,
   		helpers : {
@@ -165,41 +115,29 @@ exports.surveys = function(req, res) {
 	let cookie = req.session.cookies;
 
 	fetchSurveysList(projectId, cookie)
-	.then((response) => {
-		console.log(response.body)
-		let surveysData = [];
-		let surveys = parseSurveys(response.body);
-		console.log(`project #${projectId} -> survey found : ${surveys.length}.`)
-
-		let surveysIdList = surveys.map((survey) => {
-			return survey.id;
-		})
-
-		// filter down to the first 15 survey
+	.then( fetchRes => parseSurveys(fetchRes.body))
+	.then( surveys => {
+		// console.log(response.body)
+		console.log(`project #${chalk.green(projectId)} -> survey found : ${chalk.green(surveys.length)}.`)
 		// To-do pagination
-		surveysIdList.splice(15);
-
 		// create an Array of requests
-		let surveysDataRequests = surveysIdList.map((id) => {
+		let surveysRequests = surveys.map((survey) => {
 			return new Promise((resolve) => {
-				fetchSurvey(id, req.session.cookies)
-				.then((response) => {
-					surveyData = parseSurvey(response.body)
-					surveysData.push(surveyData)
-					resolve()
-				})
+				fetchSurvey(survey.id, req.session.cookies)
+				.then( fetchRes => resolve(parseSurvey(fetchRes.body)))
 			})
 		});
 
-		Promise.all(surveysDataRequests).then(() => {
-			console.log(surveyData)
+		Promise.all(surveysRequests)
+		.then( surveyData => {
+			// console.log(chalk.red(surveyData))
 			let user = isLoggedIn(req);
 			res.render('surveys', {
 	  		loggedIn : user,
 	  		helpers : {
 	  			username : user
 	  		},
-	  		survey: surveysData
+	  		survey: surveyData
 			});
 		})
 	})
@@ -213,35 +151,31 @@ exports.species = function(req, res) {
 
 	let surveyId = req.params.id;
 	let cookie = req.session.cookies;
-	// let methodDetail,
-			// taxonList;
 
 	fetchSurveyMethods(surveyId, cookie)
-	.then((response) => {
-		let surveyMethods = parseSurveyMethod(response.body);
+	.then(fetchRes => parseSurveyMethod(fetchRes.body))
+	.then((surveyMethods) => {
 
 		// fetchMethodDetail
 		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
-			.then( response => resolve(parseMethodDetail(response.body)));
+			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)));
 		});
 
 		// fetchMethodTaxonList
 		let taxonList = new Promise((resolve) => {
 			fetchMethodTaxonList(surveyMethods.methodId, cookie)
-			.then( response => resolve(parseTaxonList(response.body)));
+			.then( fetchRes => resolve(parseTaxonList(fetchRes.body)));
 		});
 
 		Promise.all([methodDetail, taxonList])
-		.then( values => {
-			let methodDetail = values[0];
-			let taxonList = values[1];
+		.then( PromisesArr => {
+			let methodDetail = PromisesArr[0];
+			let taxonList = PromisesArr[1];
 			let user = isLoggedIn(req);
 
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
-			console.log(chalk.cyan(
-				JSON.stringify(surveyMethods, null, 4),
-				JSON.stringify(methodDetail, null, 4)));
+			// console.log(chalk.cyan(JSON.stringify(PromisesArr, null, 4)));
 
 			res.render('species', {
 	  		loggedIn : !!user,
@@ -257,7 +191,6 @@ exports.species = function(req, res) {
 	  			end: methodDetail.secondDateSdt,
 	  			id: surveyMethods.methodId,
 	  		}
-	  		// methodDetail
 			});
 		})
 	})
@@ -414,7 +347,7 @@ let parseSurveys = function(string){
 			if (prop !== 'surveyId')
 				re[prop] = regexs[prop].exec(str);
 		}
-		console.log(`regex done for survey # ${re.id[1]}`)
+		// console.log(`regex done for survey # ${re.id[1]}`)
 		surveys.push({	
 			title: 	re.title[1],
 			id: 		re.id[1],
@@ -430,7 +363,6 @@ let parseSurveys = function(string){
 let parseSurvey = function(string){
 	// do some regex
 	let str = string;
-	let m;
 	// what a terrible name for an array of regex...
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
@@ -566,6 +498,55 @@ let parseMethodDetail = function(string) {
 	}
 
 	return re;
+};
+
+let fetchProject = function(cookie){
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	//Lets configure and request
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			// <transaction xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object"><transactionNum xsi:type="xsd:long">194</transactionNum><operations xsi:type="xsd:List"><elem xsi:type="xsd:Object"><criteria xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></criteria><operationConfig xsi:type="xsd:Object"><dataSource>Project_DS</dataSource><operationType>fetch</operationType><textMatchStyle>exact</textMatchStyle></operationConfig><startRow xsi:type="xsd:long">0</startRow><endRow xsi:type="xsd:long">75</endRow><componentId>isc_ManageProjectModule$2_2</componentId><appID>builtinApplication</appID><operation>mainProjectSearch</operation><oldValues xsi:type="xsd:Object"><projectStatusCde>pub</projectStatusCde><isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch></oldValues></elem></operations></transaction>
+			_transaction: `
+			<transaction
+						xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+						<operations xsi:type="xsd:List">
+							<elem xsi:type="xsd:Object">
+								<criteria xsi:type="xsd:Object">
+									<projectStatusCde>pub</projectStatusCde>
+									<isMyProjectSearch xsi:type="xsd:boolean">true</isMyProjectSearch>
+								</criteria>
+								<operationConfig xsi:type="xsd:Object">
+									<dataSource>Project_DS</dataSource>
+									<operationType>fetch</operationType>
+									<textMatchStyle>exact</textMatchStyle>
+								</operationConfig>
+								<startRow xsi:type="xsd:long">0</startRow>
+								<endRow xsi:type="xsd:long">75</endRow>
+								<componentId>isc_ManageProjectModule$2_2</componentId>
+								<appID>builtinApplication</appID>
+								<operation>mainProjectSearch</operation>
+							</elem>
+						</operations>
+					</transaction>
+			`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
 };
 
 let fetchSurvey = function(surveyId, cookie) {
