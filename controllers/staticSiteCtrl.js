@@ -41,6 +41,13 @@ exports.login = function(req, res) {
   });
 };
 
+exports.logout = function(req, res) {
+	console.log('Logout request for ' + req.body.username);
+	req.session.cookies = null
+	req.session.username = null
+	res.redirect('/');
+};
+
 exports.projectPage = function(req, res) {
 	let user = isLoggedIn(req);
 	res.render('project', {
@@ -125,10 +132,7 @@ exports.species = function(req, res) {
 		// fetchMethodDetail
 		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
-			.then( fetchRes => {
-				console.log(chalk.yellow(fetchRes));
-				resolve(parseMethodDetail(fetchRes.body));
-			})
+			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)))
 		});
 
 		// fetchMethodTaxonList
@@ -146,10 +150,23 @@ exports.species = function(req, res) {
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
 			console.log(chalk.yellow(JSON.stringify(methodDetail, null, 4)));
 
+			let decodeDiscipline = function(code) {
+				switch (code) {
+					case 'tf':
+						return 'Terrestrial Fauna'
+					break;
+					case 'all':
+						return 'all'
+					break;
+					default:
+						return `Unknow code: ${code}`
+				}
+			}
+
 			let method = {
 	  			id: surveyMethods.methodId,
 	  			name: surveyMethods.samplingMethodDesc,
-	  			discipline: surveyMethods.disciplineCde,
+	  			discipline: decodeDiscipline(surveyMethods.disciplineCde),
 	  			area: methodDetail.measurementValueNum,
 	  			dateDisplay: !!(methodDetail.firstDateSdt || methodDetail.secondDateSdt),
 	  			start: methodDetail.firstDateSdt,
@@ -220,9 +237,8 @@ let fetchUserDetails = function(cookie) {
 }
 
 let parseUserDetails = function(string) {
-	let match = /displayName:("(.*?)")/.exec(string);
-	debugger;
-	return match[2];
+	let match = /displayName:"(.*?)"/.exec(string);
+	return match[1];
 };
 
 let parseProject = function(string){
@@ -292,7 +308,7 @@ let parseSurveys = function(string){
 				return 'Under review'
 			break;
 			default:
-				return 'Unknow'
+				return `Unknow status: ${status}`
 		}
 	}
 
@@ -371,28 +387,14 @@ let parseSurvey = function(string){
 };
 
 let parseSurveyMethod = function(string) {
-	// do some regex
-	let str = string;
-	let m;
-	// what a terrible name for an array of regex...
+
 	let regexs = {
 		methodId: /componentId:(\d*)/g,
 		samplingMethodDesc: /samplingMethodDesc:"([\s\S]*?)"/,
 		disciplineCde: /disciplineCde:"(.*?)"/, 
 	}
 
-	// create an object with the regex results
-	let re = {}
-	for (let prop in regexs) {
-		re[prop] = regexs[prop].exec(str)
-	}
-
-	return {
-		methodId: 				re.methodId[1],
-		samplingMethodDesc: re.samplingMethodDesc[1],
-		disciplineCde: 			re.disciplineCde[1]
-		// siteDesc: 		re.siteDesc !== null ? re.siteDesc[1] : 'No site description provided',
-	};
+	return execRegex(regexs, string)
 };
 
 let parseTaxonList = function(string) {
@@ -439,9 +441,9 @@ let parseTaxonList = function(string) {
 let parseMethodDetail = function(string) {
 	console.log(chalk.gray(string))
 	// do some regex
-	let str = string;
-	let m;
-	let taxonList = [];
+	// let str = string;
+	// let m;
+	// let taxonList = [];
 
 	// what a terrible name for an array of regex...
 	let regexs = {
@@ -454,21 +456,21 @@ let parseMethodDetail = function(string) {
 		firstTimeSdt: /firstTimeSdt:"(\d*)"/,
 		secondTimeSdt: /secondTimeSdt:"(\d*)"/,
 	}
-
+	return execRegex(regexs, string)
 	// create an object with the regex results
-	let re = {}
+	// let re = {}
 
-	for (let prop in regexs) {
-		let result = regexs[prop].exec(str)
-		if (result) {
-			if (result.length === 2) {
-				result = result[1]
-			} else result = result.slice(1)
-		}
-		re[prop] = result
-	}
+	// for (let prop in regexs) {
+	// 	let result = regexs[prop].exec(str)
+	// 	if (result) {
+	// 		if (result.length === 2) {
+	// 			result = result[1]
+	// 		} else result = result.slice(1)
+	// 	}
+	// 	re[prop] = result
+	// }
 
-	return re;
+	// return re;
 };
 
 let fetchCookie = function(username, password, jar) {
@@ -769,6 +771,18 @@ let fetchMethodDetail = function(methodID, cookie) {
 	}
 	return requestp(options)
 };
+
+let execRegex = function(regexs, string) {
+	let re = {}
+	for (let prop in regexs) {
+		let result = regexs[prop].exec(string)
+		if (result) {
+			result.length === 2 ? result = result[1] : result = result.slice(1)
+		}
+		re[prop] = result
+	}
+	return re;
+}
 
 
 

@@ -26,6 +26,10 @@ staticSite.get('/login', function(req, res) {
 	res.render('login')
 });
 
+staticSite.get('/logout', function(req, res) {
+	return staticSiteCtrl.logout(req, res);
+});
+
 staticSite.get('/survey', function(req, res) {
 	return staticSiteCtrl.surveys(req, res);
 });
