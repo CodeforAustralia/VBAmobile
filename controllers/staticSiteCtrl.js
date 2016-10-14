@@ -429,7 +429,7 @@ let parseTaxonList = function(string) {
 		taxonList.push({	
 			taxonId: 				re.taxonId[1],
 			scientificNme: 	re.scientificNme[1],
-			commonNme: re.commonNme[1],
+			commonNme: re.commonNme !== null ? re.commonNme[1] : '',
 			disciplineCde: 	re.disciplineCde[1],
 			totalCountInt: 	re.totalCountInt[1]
 		});

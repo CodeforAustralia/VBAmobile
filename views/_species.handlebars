@@ -6,27 +6,33 @@
           <div class="survey-detail">
             <div class="row">
               <div>Method :</div>
-              <div class="response">{{this.method.name}}</div>
+              <div class="response">{{method.name}}</div>
             </div>
             <div class="row">
               <div>Discipline :</div>
-              <div class="response">{{this.method.discipline}}</div>
+              <div class="response">{{method.discipline}}</div>
             </div>
+            {{#if method.area}}
             <div class="row">
               <div>Area sampled :</div>
-              <div class="response">{{this.method.area}}</div>
+              <div class="response">{{method.area}}</div>
             </div>
+            {{/if}}
+            {{#if method.obs}}
             <div class="row">
               <div>Number of Observers :</div>
-              <div class="response">{{this.method.obs}}</div>
+              <div class="response">{{method.obs}}</div>
             </div>
+            {{/if}}
             <div class="row">
               <div>Number of species :</div>
-              <div class="response">{{this.method.species}}</div>
+              <div class="response">{{method.species}}</div>
             </div>
             <div class="project-card-footer">
-              <div class="project-card-dates">{{this.method.start}} &#x279E; {{this.method.end}}</div>
-              <div class="project-card-id"><span class="number-sign">#</span>{{this.method.id}}</div>
+              {{#if method.dateDisplay}}
+              <div class="project-card-dates">{{method.start}} &#x279E; {{method.end}}</div>
+              {{/if}}
+              <div class="project-card-id"><span class="number-sign">#</span>{{method.id}}</div>
             </div>
           </div>
         </a>
@@ -35,11 +41,13 @@
       <li class="project-card">
         <a class="card-link w-inline-block" href="#">
           <div class="taxon">
-            <div class="taxon-names">{{this.taxon.commonName}}
-              <br>{{this.taxon.scientificName}}</div>
+            <div class="taxon-names">{{this.commonNme}}
+              <br>{{this.scientificNme}}</div>
             <div class="project-card-footer">
-              <div class="taxon-count">Count : {{this.taxon.count}}</div>
-              <div class="taxon-id"><span class="number-sign">#</span>{{this.taxon.id}}</div>
+            {{#if this.totalCountInt}}
+              <div class="taxon-count">Count : {{this.totalCountInt}}</div>
+            {{/if}}
+              <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
             </div>
           </div>
         </a>

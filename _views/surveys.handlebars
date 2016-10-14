@@ -1,7 +1,31 @@
 <main class="content-wrapper">
     <h1 class="section-title">Surveys</h1>
     <ul class="cards-list w-list-unstyled">
-    {{#each survey}}
+      <li class="project-card">
+        <a class="card-link w-inline-block" href="/surveyspage">
+          <div class="survey-detail">
+            <div class="project-card-title">Bat survey Camperdown</div>
+            <div class="survey-comms">This population was discovered in the 21st blabla...&#xA0;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
+            <div class="project-card-footer">
+              <div class="project-card-dates">01/02/2016 &#x279E; 15/02/2016</div>
+              <div class="project-card-id"><span class="number-sign">#</span>201923</div>
+            </div>
+          </div>
+          <div class="survey-site">
+            <div class="card-title">Locality</div>
+            <div class="project-card-title">Site name...</div>
+            <p>From the Hamilton Hwy travel north up Common Rd...</p>
+            <div class="gps-location">
+              <div>Lat : 144.0447</div>
+              <div>Long: 144.0447</div>
+            </div>
+            <div class="project-card-footer">
+              <div class="project-card-dates">Accuracy : 50m</div>
+              <div class="project-card-id"><span class="number-sign">#</span>1214</div>
+            </div>
+          </div>
+        </a>
+      </li>
       <li class="project-card">
         <a class="card-link w-inline-block" href="/surveyspage">
           <div class="survey-detail">
@@ -27,6 +51,5 @@
           </div>
         </a>
       </li>
-    {{/each}}
     </ul>
   </main>
