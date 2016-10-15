@@ -22,6 +22,14 @@ staticSite.get('/survey/:id/species', function(req, res) {
 	return staticSiteCtrl.species(req, res);
 });
 
+staticSite.get('/addTaxon', function(req, res) {
+	return staticSiteCtrl.taxonForm(req, res);
+});
+
+staticSite.post('/addTaxon', function(req, res) {
+	return staticSiteCtrl.createTaxonRecord(req, res);
+});
+
 staticSite.get('/login', function(req, res) {
 	res.render('login')
 });

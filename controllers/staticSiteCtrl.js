@@ -80,6 +80,24 @@ exports.projectsPage = function(req, res) {
     });
 };
 
+exports.taxonForm = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+	
+	let user = isLoggedIn(req);
+	res.render('newTaxonRecord', {
+		loggedIn : user,
+		helpers : {
+			username : user
+		},
+		// project: projects
+	});
+};
+
+exports.createTaxonRecord = function(req, res) {
+	console.log(chalk.green(JSON.stringify(req.body, null, 4)));
+};
+
 exports.surveys = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
