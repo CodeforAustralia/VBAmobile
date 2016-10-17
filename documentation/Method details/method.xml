@@ -1,3 +1,28 @@
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">30</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">979720</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1038976</SURVEY_COMPONENT_ID>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SurveyComponent_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>SurveyComponent_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">979720</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1038976</SURVEY_COMPONENT_ID>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+
+
 <!-- A method is called a survey component -->
 <transaction
 	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
@@ -111,6 +136,112 @@ data:{
 }
 }]//isc_RPCResponseEnd
 
+<!-- Another exemple, same request but for different survey -->
+
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">66</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">968307</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1027366</SURVEY_COMPONENT_ID>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SurveyComponent_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>SurveyComponent_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<SURVEY_ID xsi:type="xsd:long">968307</SURVEY_ID>
+				<SURVEY_COMPONENT_ID xsi:type="xsd:long">1027366</SURVEY_COMPONENT_ID>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->[{IS_DENATURED:"false",
+HAS_LICENCE:true,
+isDSResponse:true,
+invalidateCache:false,
+status:0,
+"RESTRICTED SITE":"n",
+data: { 
+	componentId:1027366,
+	creationTsp:new Date(1346210817354),
+	disciplineCde:"tf",
+	firstDateSdt:Date.parseServerDate(2012,3,1),
+	firstTimeSdt:"0000",
+	modifiedTsp:null,
+	originalScIdTxt:null,
+	originalSurveyidTxt:null,
+	samplingMethodCde:"9005",
+	scCommentTxt:"Candidate survey for species distribution models 2015",
+	scStatusCde:"draft",
+	scStatusValue:"Draft",
+	secondDateSdt:Date.parseServerDate(2012,3,2),
+	secondTimeSdt:"0000",
+	survey: { 
+		creationTsp:new Date(1346210693000),
+		dateAccuracyCde:"dd",
+		endHhmmTxt:null,
+		expertReviewStatusCde:"a",
+		modifiedTsp:new Date(1349833766000),
+		monitoringProtocolCde:null,
+		originalSiteidTxt:null,
+		originalSurveyidTxt:null,
+		primaryDisciplineCde:"tf",
+		project:{booleanProjectExpeditedCde:false,
+		creationTsp:new Date(1346208898000),
+		dataLicence:null,
+		modifiedTsp:new Date(1390870640734),
+		organisations:[
+			{
+				creationTsp:new Date(1313416800000),
+				modifiedTsp:new Date(1390361856141),
+				orgDisplayNme:"unknown - do not use",
+				organisationDesc:null,
+				organisationId:402,
+				organisationNme:"Unknown - do not use"},
+			{
+				creationTsp:new Date(1313416800000),
+				modifiedTsp:new Date(1474946642614),
+				orgDisplayNme:"DELWP",
+				organisationDesc:"State Government",
+				organisationId:302,
+				organisationNme:"Department of Environment Land Water & Planning "}],
+				projectCommentTxt:null,
+				projectContactUid:4574,
+				projectDesc:"Mammal surveys",
+				projectEndSdt:null,
+				projectExpeditedCde:null,
+				projectId:2896,
+				projectNme:"Rob Gration fauna surveys 2011 - 2012",
+				projectStartSdt:Date.parseServerDate(2011,2,22),
+				projectStatusCde:"pub"},
+	site:{
+		creationTsp:new Date(1346210620000),
+		fiveMinGridInt:9350,
+		latLongAccuracyddNum:100.0,
+		latitudeddNum:-38.2439,
+		locationCommentTxt:null,
+		longitudeddNum:143.1547,
+		modifiedTsp:new Date(1469689666000),
+		oneMinGridInt:235750,
+		originalSiteidTxt:null,
+		siteId:639423,
+		siteLocationDesc:"Mt Leura,	 Camperdown",	 siteNme:"Camperdown",
+		tenMinGridInt:2350},
+	startHhmmTxt:null,
+	surveyCommentTxt:"Candidate survey for habitat distribution models 2015",
+	surveyEndSdt:Date.parseServerDate(2012,	3,	2),
+	surveyId:968307,
+	surveyNme:"Bat survey,	 Camperdown",
+	surveyStartSdt:Date.parseServerDate(2012,	3,	1),
+	userRefTxt:null}
+}}]//isc_RPCResponseEnd
+
 <!-- The <SURVEY_ID> field isn't required, the response is the same without mentioning it-->
 <transaction
 	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
@@ -144,3 +275,5 @@ measurementValueNum:250.0,
 measurementValueTxt:null,
 modifiedTsp:null,
 samplingDetailCde:"6"}]}]//isc_RPCResponseEnd
+
+

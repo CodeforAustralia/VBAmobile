@@ -1,18 +1,18 @@
 <main class="content-wrapper">
     <div class="form w-form">
-      <form action="/addTaxon" class="survey-form" data-name="Taxon"  id="email-form" method="post" name="email-form" redirect="/survey/:id/species">
+      <form action="/survey/{{survey.id}}/method/{{method.id}}/taxonRecord" class="survey-form" data-name="Taxon"  id="email-form" method="post" name="email-form" redirect="/survey/:id/species">
         <div class="form-inner-container">
           <h1 class="form-header">Add taxon</h1>
           <label for="name">Taxon :</label>
-          <input class="w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Taxon Id" type="text">
-          <label for="Site-ID">Count :</label>
-          <input class="w-input" data-name="Site ID" id="Site-ID" input="number" maxlength="256" name="Site-ID" placeholder="Total count" required="required" type="text">
+          <input class="w-input" data-name="taxonId" id="taxonId" maxlength="256" name="taxonId" placeholder="Taxon Id" type="text">
+          <label for="count">Count :</label>
+          <input class="w-input" data-name="Count" id="count" input="number" maxlength="256" name="count" placeholder="Total count" required="required" type="number">
           <label for="Type-of-record">Type of record :</label>
-          <select class="w-select" data-name="Type of record" id="Type-of-record" name="Type-of-record">
-            <option value="Birds australia nest record card">Birds australia nest record card</option>
-            <option value="Captured">Captured</option>
-            <option value="Captured and released">Captured and released</option>
-            <option value="Heard">Heard</option>
+          <select class="w-select" data-name="Type of record" id="Type-of-record" name="typeCde">
+            <option value="n">Birds australia nest record card</option>
+            <option value="cap">Captured</option>
+            <option value="t">Captured and released</option>
+            <option value="h">Heard</option>
             <option value="Identified from bat detector recording">Identified from bat detector recording</option>
             <option value="Identified from bat detector recording">Identified from hair or scats</option>
             <option value="Indirect evidence">Indirect evidence</option>
@@ -24,9 +24,9 @@
           </select>
           <label>Extra information :</label>
         </div>
-        <select class="w-select" id="extra-information" name="field">
-          <option value="Beach washed">Beach washed</option>
-          <option value="Breeding">Breeding</option>
+        <select class="w-select" id="extra-information" name="extraInfo">
+          <option value="w">Beach washed</option>
+          <option value="b">Breeding</option>
           <option value="Carnivore bait">Carnivore bait</option>
           <option value="Cultivated">Cultivated</option>
           <option value="Escapee">Escapee</option>

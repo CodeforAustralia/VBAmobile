@@ -10,10 +10,10 @@ var app = express();
 exports.landingPage = function(req, res) {
 	let user = isLoggedIn(req);
 	res.render('index', {
-  		loggedIn : user,
-  		helpers : {
-  			username : user
-  		}
+			loggedIn : user,
+			helpers : {
+				username : user
+			}
 	});
 };
 
@@ -29,16 +29,17 @@ exports.login = function(req, res) {
 	})
 	.then(fetchUserDetails)
 	.then( fetchRes => parseUserDetails(fetchRes.body))
-	.then( name => {
+	.then( userDetails => {
 		// convert vba cookie to string and store into the vbamobile cookie.
-		req.session.username = name;
+		req.session.username = userDetails.displayName;
+		req.session.userUid = userDetails.userUid;
 		res.redirect('/');
 	})
 	.catch(function (err) {
-	  // need to let the user know login failled
-	  console.log(err)
-	  if (err === 'failed login') res.redirect('/login');
-  });
+		// need to let the user know login failled
+		console.log(err)
+		if (err === 'failed login') res.redirect('/login');
+	});
 };
 
 exports.logout = function(req, res) {
@@ -51,10 +52,10 @@ exports.logout = function(req, res) {
 exports.projectPage = function(req, res) {
 	let user = isLoggedIn(req);
 	res.render('project', {
-  		loggedIn : user,
-  		helpers : {
-  			username : user
-  		}
+			loggedIn : user,
+			helpers : {
+				username : user
+			}
 	});
 };
 
@@ -68,34 +69,122 @@ exports.projectsPage = function(req, res) {
 		// console.log(response.body)
 		let user = isLoggedIn(req);
 		res.render('projects', {
-  		loggedIn : user,
-  		helpers : {
-  			username : user
-  		},
-  		project: projects
+			loggedIn : user,
+			helpers : {
+				username : user
+			},
+			project: projects
 		});
 	})
 	.catch(function (err) {
-      console.log(err) 
-    });
+			console.log(err) 
+		});
 };
 
-exports.taxonForm = function(req, res) {
+exports.createTaxonRecordPage = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
-	
+	console.log(chalk.green(JSON.stringify(req.params, null, 4)));
+
 	let user = isLoggedIn(req);
+	let methodId = req.params.methodId;
+	let surveyId = req.params.surveyId;
+
 	res.render('newTaxonRecord', {
 		loggedIn : user,
 		helpers : {
 			username : user
 		},
-		// project: projects
+		method : { id : methodId },
+		survey : { id : surveyId }
 	});
 };
 
 exports.createTaxonRecord = function(req, res) {
-	console.log(chalk.green(JSON.stringify(req.body, null, 4)));
+
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1';
+	let cookie = req.session.cookies;
+	let typeCde = req.body.typeCde;
+	let observerId = req.session.userUid;
+	let taxonId = req.body.taxonId;
+	let componentId = req.params.methodId;
+	let surveyId = req.params.surveyId;
+	let totalCount = req.body.count;
+
+	console.log(chalk.green(JSON.stringify({
+		typeCde: typeCde,
+		observerId: observerId,
+		taxonId: taxonId,
+		componentId: componentId,
+		surveyId: surveyId,
+		totalCount: totalCount
+	}, null, 4)));
+
+
+	//Lets configure and request
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<values xsi:type="xsd:Object">
+							<observerId xsi:type="xsd:long">${observerId}</observerId>
+							<taxonIdAdd xsi:type="xsd:long">${taxonId}</taxonIdAdd>
+							<typeCde>${typeCde}</typeCde>
+							<totalCountInt xsi:type="xsd:long">${totalCount}</totalCountInt>
+							<surveyComponent xsi:type="xsd:Object">
+								<componentId xsi:type="xsd:long">${componentId}</componentId>
+								<survey xsi:type="xsd:Object">
+									<surveyId xsi:type="xsd:long">${surveyId}</surveyId>
+								</survey>
+							</surveyComponent>
+						</values>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>TaxonRecorded_DS</dataSource>
+							<operationType>custom</operationType>
+						</operationConfig>
+						<componentId>isc_DynamicForm_17</componentId>
+						<appID>builtinApplication</appID>
+						<operation>saveTaxonRecorded</operation>
+						<oldValues xsi:type="xsd:Object">
+							<observerId xsi:type="xsd:long">${observerId}</observerId>
+							<taxonIdAdd xsi:type="xsd:long">${taxonId}</taxonIdAdd>
+							<typeCde>${typeCde}</typeCde>
+							<totalCountInt xsi:type="xsd:long">${totalCount}</totalCountInt>
+							<surveyComponent xsi:type="xsd:Object">
+								<componentId xsi:type="xsd:long">${componentId}</componentId>
+								<survey xsi:type="xsd:Object">
+									<surveyId xsi:type="xsd:long">${surveyId}</surveyId>
+								</survey>
+							</surveyComponent>
+						</oldValues>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+
+	requestp(options)
+	.then (response => {
+		console.log(chalk.green(JSON.stringify(response, null, 4)));
+		res.redirect(`/survey/${surveyId}/species`);
+	})
 };
 
 exports.surveys = function(req, res) {
@@ -124,17 +213,17 @@ exports.surveys = function(req, res) {
 			// console.log(chalk.red(surveyData))
 			let user = isLoggedIn(req);
 			res.render('surveys', {
-	  		loggedIn : user,
-	  		helpers : {
-	  			username : user
-	  		},
-	  		survey: surveyData
+				loggedIn : user,
+				helpers : {
+					username : user
+				},
+				survey: surveyData
 			});
 		})
 	})
 	.catch(function (err) {
-      console.log(err) 
-    });
+			console.log(err) 
+		});
 };
 
 exports.species = function(req, res) {
@@ -182,23 +271,25 @@ exports.species = function(req, res) {
 			}
 
 			let method = {
-	  			id: surveyMethods.methodId,
-	  			name: surveyMethods.samplingMethodDesc,
-	  			discipline: decodeDiscipline(surveyMethods.disciplineCde),
-	  			area: methodDetail.measurementValueNum,
-	  			dateDisplay: !!(methodDetail.firstDateSdt || methodDetail.secondDateSdt),
-	  			start: methodDetail.firstDateSdt,
-	  			end: methodDetail.secondDateSdt,
-	  			species: taxonList.length
-	  		}
-	  	console.log(chalk.cyan(JSON.stringify(method, null, 4)));
+				id: surveyMethods.methodId,
+				name: surveyMethods.samplingMethodDesc,
+				discipline: decodeDiscipline(surveyMethods.disciplineCde),
+				area: methodDetail.measurementValueNum,
+				dateDisplay: !!(methodDetail.firstDateSdt || methodDetail.secondDateSdt),
+				start: methodDetail.firstDateSdt,
+				end: methodDetail.secondDateSdt,
+				species: taxonList.length
+			};
+
+			console.log(chalk.cyan(JSON.stringify(method, null, 4)));
 			res.render('species', {
-	  		loggedIn : !!user,
-	  		helpers : {
-	  			username : user,
-	  		},
-	  		taxon: taxonList,
-	  		method : method
+				loggedIn : !!user,
+				helpers : {
+					username : user,
+				},
+				taxon: taxonList,
+				method : method,
+				survey : { id : surveyId}
 			});
 		})
 	})
@@ -255,8 +346,15 @@ let fetchUserDetails = function(cookie) {
 }
 
 let parseUserDetails = function(string) {
-	let match = /displayName:"(.*?)"/.exec(string);
-	return match[1];
+	console.log(chalk.yellow(JSON.stringify(string, null, 4)));
+
+	// let match = /displayName:"(.*?)"/.exec(string);
+	// userUid:
+	let regexs = {
+		displayName: /displayName:"(.*?)"/,
+		userUid: /userUid:(\d*)/
+	}
+	return execRegex(regexs, string);
 };
 
 let parseProject = function(string){
@@ -277,15 +375,15 @@ let parseProject = function(string){
 
 	// Executing every regex until no more matchs
 	while ((m = regexs.projectId.exec(str)) !== null) {
-	  if (m.index === regexs.projectId.lastIndex) {
-	      regexs.projectId.lastIndex++;
-	  }
-	  // console.log(m);
-	  let id = m;
-	  let title = regexs.title.exec(str);
-	  let desc 	= regexs.desc.exec(str);
-	  let start = regexs.start.exec(str);
-	  let end 	= regexs.end.exec(str);
+		if (m.index === regexs.projectId.lastIndex) {
+				regexs.projectId.lastIndex++;
+		}
+		// console.log(m);
+		let id = m;
+		let title = regexs.title.exec(str);
+		let desc 	= regexs.desc.exec(str);
+		let start = regexs.start.exec(str);
+		let end 	= regexs.end.exec(str);
 
 		projects.push({	title: 	title[1] ,
 										id: 		id[1],
@@ -342,10 +440,10 @@ let parseSurveys = function(string){
 	
 	// Executing every regex until no more matchs
 	while ((m = regexs.surveyId.exec(str)) !== null) {
-	  if (m.index === regexs.surveyId.lastIndex) {
-	      regexs.surveyId.lastIndex++;
-	  }
-	  
+		if (m.index === regexs.surveyId.lastIndex) {
+				regexs.surveyId.lastIndex++;
+		}
+		
 		// create an object with the regex results
 		let re = { id: m }
 		for (let prop in regexs) {
@@ -433,10 +531,10 @@ let parseTaxonList = function(string) {
 	// create an object with the regex results
 	// Executing every regex until no more matchs
 	while ((m = regexs.taxonId.exec(str)) !== null) {
-	  if (m.index === regexs.taxonId.lastIndex) {
-	      regexs.taxonId.lastIndex++;
-	  }
-	  
+		if (m.index === regexs.taxonId.lastIndex) {
+				regexs.taxonId.lastIndex++;
+		}
+		
 		// create an object with the regex results
 		// loop thru the regexs obj, except for the taxonId 
 		let re = { taxonId: m }
@@ -747,6 +845,50 @@ let fetchMethodTaxonList = function(methodID, cookie) {
 };
 
 let fetchMethodDetail = function(methodID, cookie) {
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+			<transaction
+				xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+				<transactionNum xsi:type="xsd:long">35</transactionNum>
+				<operations xsi:type="xsd:List">
+					<elem xsi:type="xsd:Object">
+						<criteria xsi:type="xsd:Object">
+							<SURVEY_COMPONENT_ID xsi:type="xsd:long">${methodID}</SURVEY_COMPONENT_ID>
+						</criteria>
+						<operationConfig xsi:type="xsd:Object">
+							<dataSource>CSamplingMethodDetail_DS</dataSource>
+							<operationType>fetch</operationType>
+						</operationConfig>
+						<appID>builtinApplication</appID>
+						<operation>CSamplingMethodDetail_DS_fetch</operation>
+						<oldValues xsi:type="xsd:Object">
+							<SURVEY_COMPONENT_ID xsi:type="xsd:long">${methodID}</SURVEY_COMPONENT_ID>
+						</oldValues>
+					</elem>
+				</operations>
+			</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
+let postNewTaxonRecord = function(methodID, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',

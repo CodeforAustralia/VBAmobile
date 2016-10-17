@@ -22,11 +22,11 @@ staticSite.get('/survey/:id/species', function(req, res) {
 	return staticSiteCtrl.species(req, res);
 });
 
-staticSite.get('/addTaxon', function(req, res) {
-	return staticSiteCtrl.taxonForm(req, res);
+staticSite.get('/survey/:surveyId/method/:methodId/taxonRecord', function(req, res) {
+	return staticSiteCtrl.createTaxonRecordPage(req, res);
 });
 
-staticSite.post('/addTaxon', function(req, res) {
+staticSite.post('/survey/:surveyId/method/:methodId/taxonRecord', function(req, res) {
 	return staticSiteCtrl.createTaxonRecord(req, res);
 });
 
