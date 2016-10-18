@@ -110,6 +110,7 @@ exports.createTaxonRecord = function(req, res) {
 	let componentId = req.params.methodId;
 	let surveyId = req.params.surveyId;
 	let totalCount = req.body.count;
+	let extraInfo = req.body.extraInfo;
 
 	console.log(chalk.green(JSON.stringify({
 		typeCde: typeCde,
@@ -117,7 +118,8 @@ exports.createTaxonRecord = function(req, res) {
 		taxonId: taxonId,
 		componentId: componentId,
 		surveyId: surveyId,
-		totalCount: totalCount
+		totalCount: totalCount,
+		extraInfo: extraInfo
 	}, null, 4)));
 
 
@@ -145,8 +147,9 @@ exports.createTaxonRecord = function(req, res) {
 						<values xsi:type="xsd:Object">
 							<observerId xsi:type="xsd:long">${observerId}</observerId>
 							<taxonIdAdd xsi:type="xsd:long">${taxonId}</taxonIdAdd>
-							<typeCde>${typeCde}</typeCde>
 							<totalCountInt xsi:type="xsd:long">${totalCount}</totalCountInt>
+							<typeCde>${typeCde}</typeCde>
+							<extraCde>${extraInfo}</extraCde>
 							<surveyComponent xsi:type="xsd:Object">
 								<componentId xsi:type="xsd:long">${componentId}</componentId>
 								<survey xsi:type="xsd:Object">
@@ -164,8 +167,9 @@ exports.createTaxonRecord = function(req, res) {
 						<oldValues xsi:type="xsd:Object">
 							<observerId xsi:type="xsd:long">${observerId}</observerId>
 							<taxonIdAdd xsi:type="xsd:long">${taxonId}</taxonIdAdd>
-							<typeCde>${typeCde}</typeCde>
 							<totalCountInt xsi:type="xsd:long">${totalCount}</totalCountInt>
+							<typeCde>${typeCde}</typeCde>
+							<extraCde>${extraInfo}</extraCde>
 							<surveyComponent xsi:type="xsd:Object">
 								<componentId xsi:type="xsd:long">${componentId}</componentId>
 								<survey xsi:type="xsd:Object">
@@ -514,6 +518,7 @@ let parseSurveyMethod = function(string) {
 };
 
 let parseTaxonList = function(string) {
+	console.log(chalk.yellow(string));
 	// do some regex
 	let str = string;
 	let m;
@@ -550,7 +555,6 @@ let parseTaxonList = function(string) {
 			totalCountInt: 	re.totalCountInt[1]
 		});
 	}
-	// console.log(str)
 	return taxonList;
 };
 
@@ -941,6 +945,7 @@ let execRegex = function(regexs, string) {
 		}
 		re[prop] = result
 	}
+	if (re === {}) return null;
 	return re;
 }
 

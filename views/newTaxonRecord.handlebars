@@ -8,37 +8,39 @@
           <label for="count">Count :</label>
           <input class="w-input" data-name="Count" id="count" input="number" maxlength="256" name="count" placeholder="Total count" required="required" type="number">
           <label for="Type-of-record">Type of record :</label>
-          <select class="w-select" data-name="Type of record" id="Type-of-record" name="typeCde">
+          <select class="w-select" data-name="Type of record" id="Type-of-record" name="typeCde" required="required">
+            <option value="">Select ...</option>
             <option value="n">Birds australia nest record card</option>
             <option value="cap">Captured</option>
             <option value="t">Captured and released</option>
             <option value="h">Heard</option>
-            <option value="Identified from bat detector recording">Identified from bat detector recording</option>
-            <option value="Identified from bat detector recording">Identified from hair or scats</option>
-            <option value="Indirect evidence">Indirect evidence</option>
-            <option value="Literature">Literature</option>
-            <option value="Museum specimen">Museum specimen</option>
-            <option value="Observation">Observation</option>
-            <option value="Observation with supporting evidence">Observation with supporting evidence</option>
-            <option value="Seen">Seen</option>
+            <option value="d">Identified from bat detector recording</option>
+            <option value="a">Identified from hair or scats</option>
+            <option value="i">Indirect evidence</option>
+            <option value="l">Literature</option>
+            <option value="m">Museum specimen</option>
+            <option value="o">Observation</option>
+            <option value="x">Observation with supporting evidence</option>
+            <option value="s">Seen</option>
           </select>
           <label>Extra information :</label>
         </div>
         <select class="w-select" id="extra-information" name="extraInfo">
+          <option value="">Select ...</option>
           <option value="w">Beach washed</option>
           <option value="b">Breeding</option>
-          <option value="Carnivore bait">Carnivore bait</option>
-          <option value="Cultivated">Cultivated</option>
-          <option value="Escapee">Escapee</option>
-          <option value="Evidence of past use">Evidence of past use</option>
-          <option value="Found dead">Found dead</option>
-          <option value="Herbivore bait">Herbivore bait</option>
-          <option value="In predator scat">In predator scat</option>
-          <option value="No longer present at site">No longer present at site</option>
-          <option value="Released / Introduced">Released / Introduced</option>
-          <option value="Roost site">Roost site</option>
-          <option value="Sub fossil">Sub fossil</option>
-          <option value="Voucher specimen">Voucher specimen</option>
+          <option value="carni">Carnivore bait</option>
+          <option value="cult">Cultivated</option>
+          <option value="e">Escapee</option>
+          <option value="past">Evidence of past use</option>
+          <option value="k">Found dead</option>
+          <option value="herbi">Herbivore bait</option>
+          <option value="z">In predator scat</option>
+          <option value="x">No longer present at site</option>
+          <option value="r">Released / Introduced</option>
+          <option value="c">Roost site</option>
+          <option value="f">Sub fossil</option>
+          <option value="v">Voucher specimen</option>
         </select>
         <label for="Observer">Observer :</label>
         <select class="w-select" data-name="Observer" id="Observer" name="Observer">
