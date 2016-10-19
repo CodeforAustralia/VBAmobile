@@ -91,6 +91,7 @@ exports.createTaxonRecordPage = function(req, res) {
 	let surveyId = req.params.surveyId;
 
 	res.render('newTaxonRecord', {
+		awesomplete: true,
 		loggedIn : user,
 		helpers : {
 			username : user
@@ -941,6 +942,7 @@ let execRegex = function(regexs, string) {
 	for (let prop in regexs) {
 		let result = regexs[prop].exec(string)
 		if (result) {
+			console.log(chalk.green(JSON.stringify(result, null, 4)));
 			result.length === 2 ? result = result[1] : result = result.slice(1)
 		}
 		re[prop] = result
