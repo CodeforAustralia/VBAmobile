@@ -3,7 +3,6 @@ var bodyParser  = require('body-parser');
 var session     = require('express-session');
 var morgan      = require('morgan');
 var exphbs      = require('express-handlebars');
-// var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 var config      = require('./config'); // get our config file
 var Session     = require('./session');
@@ -12,17 +11,20 @@ var app         = express();
 var port        = process.env.PORT || 3000;
 
 // Package curently not being used : 
+// var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
 // var mongoose    = require('mongoose');
 // var path        = require('path');
 // var User        = require('./models/user.js'); // get our mongoose model
 // var connect     = require('connect');
 
 
-app.use(session({secret: config.secret, 
-                 saveUninitialized: true,
-                 resave: true
-               })
+app.use(session(
+	{secret: config.secret, 
+   saveUninitialized: true,
+   resave: true
+ })
 );
+
 app.use(bodyParser.json());         
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('views')); //serve static files from /views

@@ -41,8 +41,11 @@
         <li class="project-card">
           <a class="card-link w-inline-block" href="#">
             <div class="taxon">
-              <div class="taxon-names">{{this.commonNme}}
-                <br>{{this.scientificNme}}</div>
+              <div class="taxon-names">
+              {{#if this.commonNme}}
+                {{this.commonNme}}<br>
+              {{/if}}  
+                {{this.scientificNme}}</div>
               <div class="project-card-footer">
               {{#if this.totalCountInt}}
                 <div class="taxon-count">Count : {{this.totalCountInt}}</div>

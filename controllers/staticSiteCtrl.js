@@ -1,11 +1,11 @@
-var express = require('express');
-var request = require('request');
-var requestp = require('request-promise');
-var config = require('../config');
-var session = require('express-session')
-var chalk = require('chalk');
+const express = require('express');
+const request = require('request');
+const requestp = require('request-promise');
+const config = require('../config');
+const session = require('express-session')
+const chalk = require('chalk');
 
-var app = express();
+let app = express();
 
 exports.landingPage = function(req, res) {
 	let user = isLoggedIn(req);
@@ -27,7 +27,7 @@ exports.login = function(req, res) {
 		if (/\?error=1/.exec(fetchRes.body)) throw 'failed login';
 		return req.session.cookies = cookieJar.getCookieString(fetchRes.request.href);
 	})
-	.then(fetchUserDetails)
+	.then( fetchUserDetails )
 	.then( fetchRes => parseUserDetails(fetchRes.body))
 	.then( userDetails => {
 		// convert vba cookie to string and store into the vbamobile cookie.
@@ -49,15 +49,15 @@ exports.logout = function(req, res) {
 	res.redirect('/');
 };
 
-exports.projectPage = function(req, res) {
-	let user = isLoggedIn(req);
-	res.render('project', {
-			loggedIn : user,
-			helpers : {
-				username : user
-			}
-	});
-};
+// exports.projectPage = function(req, res) {
+// 	let user = isLoggedIn(req);
+// 	res.render('project', {
+// 			loggedIn : user,
+// 			helpers : {
+// 				username : user
+// 			}
+// 	});
+// };
 
 exports.projectsPage = function(req, res) {
 	// If user not logged in redirect to login page
@@ -66,7 +66,6 @@ exports.projectsPage = function(req, res) {
 	fetchProject(req.session.cookies)
 	.then( fetchRes => parseProject(fetchRes.body))
 	.then( projects => {
-		// console.log(response.body)
 		let user = isLoggedIn(req);
 		res.render('projects', {
 			loggedIn : user,
@@ -113,7 +112,7 @@ exports.createTaxonRecord = function(req, res) {
 	let totalCount = req.body.count;
 	let extraInfo = req.body.extraInfo;
 
-	console.log(chalk.green(JSON.stringify({
+	console.log(`New taxon record : `, chalk.green(JSON.stringify({
 		typeCde: typeCde,
 		observerId: observerId,
 		taxonId: taxonId,
@@ -187,7 +186,7 @@ exports.createTaxonRecord = function(req, res) {
 
 	requestp(options)
 	.then (response => {
-		console.log(chalk.green(JSON.stringify(response, null, 4)));
+		// console.log(chalk.green(JSON.stringify(response, null, 4)));
 		res.redirect(`/survey/${surveyId}/species`);
 	})
 };
@@ -202,13 +201,12 @@ exports.surveys = function(req, res) {
 	fetchSurveysList(projectId, cookie)
 	.then( fetchRes => parseSurveys(fetchRes.body))
 	.then( surveys => {
-		// console.log(response.body)
-		console.log(`project #${chalk.green(projectId)} -> survey found : ${chalk.green(surveys.length)}.`)
+		console.log(`${chalk.green(surveys.length)} survey(s) found for project #${chalk.green(projectId)}`)
 		// To-do pagination
 		// create an Array of requests
 		let surveysRequests = surveys.map((survey) => {
 			return new Promise((resolve) => {
-				fetchSurvey(survey.id, req.session.cookies)
+				fetchSurvey(survey.surveyId, req.session.cookies)
 				.then( fetchRes => resolve(parseSurvey(fetchRes.body)))
 			})
 		});
@@ -238,15 +236,15 @@ exports.species = function(req, res) {
 	let cookie = req.session.cookies;
 
 	fetchSurveyMethods(surveyId, cookie)
-	.then(fetchRes => parseSurveyMethod(fetchRes.body))
-	.then((surveyMethods) => {
-
+	.then( fetchRes => parseSurveyMethod(fetchRes.body))
+	.then( (surveyMethods) => {
+		if ( surveyMethods === null ) throw 'no method';
+		console.log(surveyMethods);
 		// fetchMethodDetail
 		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
 			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)))
 		});
-
 		// fetchMethodTaxonList
 		let taxonList = new Promise((resolve) => {
 			fetchMethodTaxonList(surveyMethods.methodId, cookie)
@@ -258,12 +256,12 @@ exports.species = function(req, res) {
 			let methodDetail = PromisesArr[0];
 			let taxonList = PromisesArr[1];
 			let user = isLoggedIn(req);
-
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
 			console.log(chalk.yellow(JSON.stringify(methodDetail, null, 4)));
 
 			let decodeDiscipline = function(code) {
 				switch (code) {
+
 					case 'tf':
 						return 'Terrestrial Fauna'
 					break;
@@ -286,18 +284,22 @@ exports.species = function(req, res) {
 				species: taxonList.length
 			};
 
-			console.log(chalk.cyan(JSON.stringify(method, null, 4)));
+			// console.log(chalk.cyan(JSON.stringify(method, null, 4)));
 			res.render('species', {
 				loggedIn : !!user,
 				helpers : {
 					username : user,
 				},
-				taxon: taxonList,
 				method : method,
+				taxon: taxonList,
 				survey : { id : surveyId}
 			});
 		})
 	})
+	.catch( err => {
+		console.log(err);
+		if (err === 'no method') res.send(`no method assign to survey ${surveyId}`);
+	});
 };
 
 exports.newProject = function(req, res) {
@@ -351,90 +353,47 @@ let fetchUserDetails = function(cookie) {
 }
 
 let parseUserDetails = function(string) {
-	console.log(chalk.yellow(JSON.stringify(string, null, 4)));
-
-	// let match = /displayName:"(.*?)"/.exec(string);
-	// userUid:
 	let regexs = {
 		displayName: /displayName:"(.*?)"/,
 		userUid: /userUid:(\d*)/
 	}
-	return execRegex(regexs, string);
+
+	let userDetails = findALlMatches(regexs, string);
+	console.log(`User detail : `, chalk.yellow(JSON.stringify(string, null, 4)));
+	return userDetails;
 };
 
 let parseProject = function(string){
-	// do some regex
-	let str = string;
-	let m;
+	let project;
 	let projects = [];
 
-	// what a terrible name for an array of regex...
-	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
 	let regexs = {
-		projectId: /projectId:(\d*),/g,
+		id: /projectId:(\d*),/g,
 		start: /projectStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
 		end: /projectEndSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
 		title: /projectNme:"([\s\S]*?)",projectStartSdt:/g,
 		desc: /projectDesc:"([\s\S]*?)",projectEndSdt/g ,
-	}
+	};
 
-	// Executing every regex until no more matchs
-	while ((m = regexs.projectId.exec(str)) !== null) {
-		if (m.index === regexs.projectId.lastIndex) {
-				regexs.projectId.lastIndex++;
-		}
-		// console.log(m);
-		let id = m;
-		let title = regexs.title.exec(str);
-		let desc 	= regexs.desc.exec(str);
-		let start = regexs.start.exec(str);
-		let end 	= regexs.end.exec(str);
+	while((project = findALlMatches(regexs, string)) !== null ) {
+		console.log(project);
+		projects.push(project);
+	};
 
-		projects.push({	title: 	title[1] ,
-										id: 		id[1],
-										desc: 	desc[1],
-										end: 		end === null ? '...' : `${end[2]}/${end[3]}/${end[1]}`,
-										start: `${start[2]}/${start[3]}/${start[1]}`
-		});
-	}
+	projects.forEach(function(project){
+		let start = project.start;
+		let end = project.end;
+		project.start = `${start[1]}/${start[2]}/${start[0]}`;
+		project.end = project.end !== null ? `${end[1]}/${end[2]}/${end[0]}` : '...';
+	});
+
 	return projects;
 };
 
 let parseSurveys = function(string){
-	// do some regex
-	let str = string;
-	let m;
+	let survey;
 	let surveys = [];
-	let decodeStatus = function (status) {
-		switch (status) {
-			case 'a':
-				return 'Approved'
-			break;
-			case 'cr':
-				return 'Change Requested'
-			break;
-			case 'del':
-				return 'Deleted'
-			break;
-			case 'draft':
-				return 'Draft'
-			break;
-			case 'na':
-				return 'Not approved'
-			break;			
-			case 'rr':
-				return 'Ready for review'
-			break;
-			case 'ur':
-				return 'Under review'
-			break;
-			default:
-				return `Unknow status: ${status}`
-		}
-	}
 
-	// what a terrible name for an array of regex...
-	// /projectId:(\d*),projectNme:"/g could be use to increase security, I guess..
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
 		start: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
@@ -442,36 +401,15 @@ let parseSurveys = function(string){
 		title: /surveyNme:"([\s\S]*?)",/g,
 		status: /expertReviewStatusCde:"([\s\S]*?)"/g
 	}
-	
-	// Executing every regex until no more matchs
-	while ((m = regexs.surveyId.exec(str)) !== null) {
-		if (m.index === regexs.surveyId.lastIndex) {
-				regexs.surveyId.lastIndex++;
-		}
-		
-		// create an object with the regex results
-		let re = { id: m }
-		for (let prop in regexs) {
-			if (prop !== 'surveyId')
-				re[prop] = regexs[prop].exec(str);
-		}
-		// console.log(`regex done for survey # ${re.id[1]}`)
-		surveys.push({	
-			title: 	re.title[1],
-			id: 		re.id[1],
-			status: decodeStatus(re.status[1]),
-			end: 		re.end !== null ? `${re.end[2]}/${re.end[3]}/${re.end[1]}` : '...',
-			start: 	`${re.start[2]}/${re.start[3]}/${re.start[1]}`
-		});
-	}
-	// console.log(surveys)
+
+	while((survey = findALlMatches(regexs, string)) !== null ) {
+		surveys.push(survey);
+	};
+
 	return surveys;
 };
 
 let parseSurvey = function(string){
-	// do some regex
-	let str = string;
-	// what a terrible name for an array of regex...
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
 		surveyStart: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
@@ -486,24 +424,19 @@ let parseSurvey = function(string){
 		accu: /latLongAccuracyddNum:(.*?),/g,
 	}
 
-	// create an object with the regex results
-	let re = {}
-	for (let prop in regexs) {
-		re[prop] = regexs[prop].exec(str)
-	}
-
+	let su = findALlMatches(regexs, string)
 	return {
-					surveyId: 		re.surveyId[1],
-					surveyStart: 	`${re.surveyStart[2]}/${re.surveyStart[3]}/${re.surveyStart[1]}`,
-					surveyEnd: 		re.surveyEnd === null ? '...' : `${re.surveyEnd[2]}/${re.surveyEnd[3]}/${re.surveyEnd[1]}`,
-					surveyNme: 		re.surveyNme !== null ? re.surveyNme[1]: 'Unknow survey name',
-					surveyComm: 	re.surveyComm !== null ? re.surveyComm[1]: 'No comments provided',
-					siteId: 			re.siteId[1],
-					siteDesc: 		re.siteDesc !== null ? re.siteDesc[1] : 'No site description provided',
-					lat: 					re.lat[1],
-					long: 				re.long[1],
-					siteId: 			re.siteId[1],
-					accu: 				re.accu[1]
+					surveyId: 		su.surveyId,
+					surveyStart: 	`${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}`,
+					surveyEnd: 		su.surveyEnd === null ? '...' : `${su.surveyEnd[1]}/${su.surveyEnd[2]}/${su.surveyEnd[0]}`,
+					surveyNme: 		su.surveyNme !== null ? su.surveyNme : 'Unknow survey name',
+					surveyComm: 	su.surveyComm !== null ? su.surveyComm : 'No comments provided',
+					siteId: 			su.siteId,
+					siteDesc: 		su.siteDesc !== null ? su.siteDesc : 'No site description provided',
+					lat: 					su.lat,
+					long: 				su.long,
+					siteId: 			su.siteId,
+					accu: 				su.accu
 	};
 };
 
@@ -515,17 +448,12 @@ let parseSurveyMethod = function(string) {
 		disciplineCde: /disciplineCde:"(.*?)"/, 
 	}
 
-	return execRegex(regexs, string)
+	return findALlMatches(regexs, string)
 };
 
 let parseTaxonList = function(string) {
-	console.log(chalk.yellow(string));
-	// do some regex
-	let str = string;
-	let m;
-	let taxonList = [];
-
-	// what a terrible name for an array of regex...
+	let taxon;
+	let taxons = [];
 	let regexs = {
 		taxonId: /taxonId:(\d*)/g,
 		scientificNme: /scientificNme:"([\s\S]*?)"/g,
@@ -534,39 +462,16 @@ let parseTaxonList = function(string) {
 		totalCountInt: /totalCountInt:(\d*)/g
 	}
 
-	// create an object with the regex results
-	// Executing every regex until no more matchs
-	while ((m = regexs.taxonId.exec(str)) !== null) {
-		if (m.index === regexs.taxonId.lastIndex) {
-				regexs.taxonId.lastIndex++;
-		}
-		
-		// create an object with the regex results
-		// loop thru the regexs obj, except for the taxonId 
-		let re = { taxonId: m }
-		for (let prop in regexs) {
-			if (prop !== 'taxonId')
-				re[prop] = regexs[prop].exec(str);
-		}
-		taxonList.push({	
-			taxonId: 				re.taxonId[1],
-			scientificNme: 	re.scientificNme[1],
-			commonNme: re.commonNme !== null ? re.commonNme[1] : '',
-			disciplineCde: 	re.disciplineCde[1],
-			totalCountInt: 	re.totalCountInt[1]
-		});
-	}
-	return taxonList;
+	while((taxon = findALlMatches(regexs, string)) !== null ) {
+		taxons.push(taxon);
+	};
+
+	return taxons;
 };
 
 let parseMethodDetail = function(string) {
 	console.log(chalk.gray(string))
-	// do some regex
-	// let str = string;
-	// let m;
-	// let taxonList = [];
-
-	// what a terrible name for an array of regex...
+	
 	let regexs = {
 		componentId: /componentId:(\d*)/,
 		measurementValueNum: /measurementValueNum:(\d*)/,
@@ -578,20 +483,6 @@ let parseMethodDetail = function(string) {
 		secondTimeSdt: /secondTimeSdt:"(\d*)"/,
 	}
 	return execRegex(regexs, string)
-	// create an object with the regex results
-	// let re = {}
-
-	// for (let prop in regexs) {
-	// 	let result = regexs[prop].exec(str)
-	// 	if (result) {
-	// 		if (result.length === 2) {
-	// 			result = result[1]
-	// 		} else result = result.slice(1)
-	// 	}
-	// 	re[prop] = result
-	// }
-
-	// return re;
 };
 
 let fetchCookie = function(username, password, jar) {
@@ -949,9 +840,57 @@ let execRegex = function(regexs, string) {
 	}
 	if (re === {}) return null;
 	return re;
-}
+};
 
+let findALlMatches = function(regexs, string) {
+	let re = {};
+	for (let prop in regexs) {
+		let result = regexs[prop].exec(string);
+		if ( result ) {
+			// remove the first captured group
+			result.shift();
+			// remove the input
+			delete result.input;
+			if ( result.length === 1 ) result = result[0];
+		}
+		re[prop] = result;
+	}
 
+	for (let prop in re) {
+		if (re[prop] !== null) return re;
+	}
+	return null;
+};
+
+let decodeSurveyStatus = function (status) {
+	switch (status) {
+		case 'a':
+			return 'Approved'
+		break;
+		case 'cr':
+			return 'Change Requested'
+		break;
+		case 'del':
+			return 'Deleted'
+		break;
+		case 'draft':
+			return 'Draft'
+		break;
+		case 'na':
+			return 'Not approved'
+		break;			
+		case 'rr':
+			return 'Ready for review'
+		break;
+		case 'ur':
+			return 'Under review'
+		break;
+		default:
+			return `Unknow status: ${status}`
+	}
+};
+
+let all
 
 
 

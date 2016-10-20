@@ -11,7 +11,8 @@ input.addEventListener('keyup', function() {
 		console.log(event.keyCode)
 		ajax.open("GET", "http://54.206.104.145:8080/species?COMMON_NAME="+ input.value, true);
 		ajax.onload = function() {
-			var list = JSON.parse(ajax.responseText).map(function(i) { return [i.COMMON_NAME, i.TAXON_ID]; });
+			var list = JSON.parse(ajax.responseText).map(function(i) { 
+				return [i.COMMON_NAME + " - " + i.SCIENTIFIC_NAME , i.TAXON_ID]; });
 			console.log(list)
 			awesomplete.list = list;
 		};
