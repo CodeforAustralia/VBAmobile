@@ -5,7 +5,7 @@ const config = require('../config');
 const session = require('express-session')
 const chalk = require('chalk');
 
-let app = express();
+// let app = express();
 
 exports.landingPage = function(req, res) {
 	let user = isLoggedIn(req);
