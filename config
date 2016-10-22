@@ -1,6 +1,3 @@
 module.exports = {
-
-    'secret': 'wednesday',
-    'database': 'mongodb://mongodb://localhost/vbamobile'
-
+  'secret': 'wednesday',
 };

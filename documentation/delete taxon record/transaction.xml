@@ -1,0 +1,28 @@
+Delete taxon record : 
+
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">39</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<values xsi:type="xsd:Object">
+				<SURVEY_ID>1070245</SURVEY_ID>
+				<SURVEY_COMPONENT_ID>1111431</SURVEY_COMPONENT_ID>
+				<TAXON_RECORDED_ID>8437028,8437671</TAXON_RECORDED_ID>
+			</values>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>TaxonRecorded_DS</dataSource>
+				<operationType>custom</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>deleteRecords</operation>
+			<oldValues xsi:type="xsd:Object">
+				<SURVEY_ID>1070245</SURVEY_ID>
+				<SURVEY_COMPONENT_ID>1111431</SURVEY_COMPONENT_ID>
+				<TAXON_RECORDED_ID>8437028,8437671</TAXON_RECORDED_ID>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->[{isDSResponse:true,invalidateCache:false,status:0,SURVEY_COMPONENT_ID:1111431,data:null}]//isc_RPCResponseEnd

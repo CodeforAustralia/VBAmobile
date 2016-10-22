@@ -1,30 +1,21 @@
-var express 		= require('express');
-var bodyParser  = require('body-parser');
-var session     = require('express-session');
-var morgan      = require('morgan');
-var exphbs      = require('express-handlebars');
+const express 		= require('express');
+const bodyParser  = require('body-parser');
+const session     = require('express-session');
+const morgan      = require('morgan');
+const exphbs      = require('express-handlebars');
 
-var config      = require('./config'); // get our config file
-var Session     = require('./session');
+const config      = require('./config'); // get our config file
 
-var app         = express();
-var port        = process.env.PORT || 3000;
+const app         = express();
+const port        = process.env.PORT || 3000;
 
-// Package curently not being used : 
-// var jwt         = require('jsonwebtoken'); // used to create, sign, and verify tokens
-// var mongoose    = require('mongoose');
-// var path        = require('path');
-// var User        = require('./models/user.js'); // get our mongoose model
-// var connect     = require('connect');
-
-
-app.use(session(
-	{secret: config.secret, 
-   saveUninitialized: true,
-   resave: true
+app.use(
+	session({
+		secret: config.secret, 
+  	saveUninitialized: true,
+  	resave: true
  })
 );
-
 app.use(bodyParser.json());         
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('views')); //serve static files from /views
@@ -37,12 +28,10 @@ app.set('view engine', 'handlebars');
 // app.set('superSecret', config.secret); // secret variable
 
 // Routes
-var staticSite = require('./routes/staticSite.js');
+const staticSite = require('./routes/staticSite.js');
 
 
-// var session = new Session();
 app.use('/', staticSite);
-
 app.get('/api', function(req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 });

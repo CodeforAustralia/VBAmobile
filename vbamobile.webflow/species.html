@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--  Last Published: Fri Oct 14 2016 01:49:21 GMT+0000 (UTC)  -->
+<!--  Last Published: Sat Oct 22 2016 04:58:46 GMT+0000 (UTC)  -->
 <html data-wf-page="57f59e99d39b150c44e2b6ed" data-wf-site="57ced8c91d3807cb6dad5f35">
 <head>
   <meta charset="utf-8">
@@ -32,51 +32,66 @@
   <main class="content-wrapper">
     <div class="content">
       <h1 class="section-title">Species list</h1>
-      <a class="card-link w-inline-block" href="#">
-        <div class="survey-detail">
+      <a class="card-link method-card w-inline-block" href="#">
+        <div>
           <div class="row">
             <div>Method :</div>
-            <div class="response">{{this.method.name}}</div>
+            <div class="response">{{method.name}}</div>
           </div>
           <div class="row">
             <div>Discipline :</div>
-            <div class="response">{{this.method.discipline}}</div>
+            <div class="response">{{method.discipline}}</div>
           </div>
           <div class="row">
             <div>Area sampled :</div>
-            <div class="response">{{this.method.area}}</div>
+            <div class="response">{{method.area}}</div>
           </div>
           <div class="row">
             <div>Number of Observers :</div>
-            <div class="response">{{this.method.obs}}</div>
+            <div class="response">{{method.obs}}</div>
           </div>
           <div class="row">
             <div>Number of species :</div>
-            <div class="response">{{this.method.species}}</div>
+            <div class="response">{{method.species}}</div>
           </div>
           <div class="project-card-footer">
             <div class="project-card-dates">{{this.method.start}} ➞ {{this.method.end}}</div>
-            <div class="project-card-id"><span class="number-sign">#</span>{{this.method.id}}</div>
+            <div class="project-card-id"><span class="number-sign">#</span>{{method.id}}</div>
           </div>
         </div>
       </a>
-      <a class="add-species-button w-button" href="/newspecies">add Taxon</a>
-      <ul class="cards-list w-list-unstyled">
-        <li class="project-card">
-          <a class="card-link w-inline-block" href="#">
-            <div class="taxon">
-              <div class="taxon-names">{{this.taxon.commonName}}
-                <br>{{this.taxon.scientificName}}</div>
-              <div class="project-card-footer">
-                <div class="taxon-count">Count : {{this.taxon.count}}</div>
+      <div class="w-form">
+        <form data-name="Email Form" id="email-form" name="email-form">
+          <div class="actions-bar">
+            <a class="add-species-button w-button" href="/newspecies">add Taxon</a>
+            <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="Delete">
+          </div>
+          <ul class="cards-list w-list-unstyled">
+            <li class="card">
+              <a class="card-inner-link w-inline-block" href="#">
+                <div>
+                  <div>{{this.commonName}}</div>
+                  <div>{{this.scientificName}}</div>
+                  <div class="taxon-count">Count : {{this.count}}</div>
+                </div>
+              </a>
+              <div class="card-edit">
+                <div class="taxon-id"><span class="number-sign">#</span>{{this.id}}</div>
+                <div class="w-checkbox w-clearfix">
+                  <input class="w-checkbox-input" data-name="Select" id="Select" name="Select" type="checkbox">
+                  <label class="checkbox-label-hidden w-form-label" for="Select">Select</label>
+                </div>
               </div>
-              <div class="row rowleft">
-                <div class="taxon-id"><span class="number-sign">#</span>{{this.taxon.id}}</div>
-              </div>
-            </div>
-          </a>
-        </li>
-      </ul>
+            </li>
+          </ul>
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div>Oops! Something went wrong while submitting the form</div>
+        </div>
+      </div>
     </div>
   </main>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>

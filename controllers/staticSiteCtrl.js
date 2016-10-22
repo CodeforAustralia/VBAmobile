@@ -5,8 +5,6 @@ const config = require('../config');
 const session = require('express-session')
 const chalk = require('chalk');
 
-// let app = express();
-
 exports.landingPage = function(req, res) {
 	let user = isLoggedIn(req);
 	res.render('index', {
@@ -48,16 +46,6 @@ exports.logout = function(req, res) {
 	req.session.username = null
 	res.redirect('/');
 };
-
-// exports.projectPage = function(req, res) {
-// 	let user = isLoggedIn(req);
-// 	res.render('project', {
-// 			loggedIn : user,
-// 			helpers : {
-// 				username : user
-// 			}
-// 	});
-// };
 
 exports.projectsPage = function(req, res) {
 	// If user not logged in redirect to login page
@@ -307,11 +295,11 @@ exports.newProject = function(req, res) {
 	res.redirect('/survey');
 };
 
-let isLoggedIn = function(req) {
+const isLoggedIn = function(req) {
 	return req.session.username || false
-}
+};
 
-let fetchUserDetails = function(cookie) {
+const fetchUserDetails = function(cookie) {
 	console.log(chalk.red(cookie))
 	debugger;
 	// This function is doing both the fetching and parsing, need to be splited up
@@ -350,20 +338,20 @@ let fetchUserDetails = function(cookie) {
 		}
 	}
 	return requestp(options)
-}
+};
 
-let parseUserDetails = function(string) {
+const parseUserDetails = function(string) {
 	let regexs = {
 		displayName: /displayName:"(.*?)"/,
 		userUid: /userUid:(\d*)/
 	}
 
-	let userDetails = findALlMatches(regexs, string);
+	let userDetails = findAllMatches(regexs, string);
 	console.log(`User detail : `, chalk.yellow(JSON.stringify(string, null, 4)));
 	return userDetails;
 };
 
-let parseProject = function(string){
+const parseProject = function(string){
 	let project;
 	let projects = [];
 
@@ -375,7 +363,7 @@ let parseProject = function(string){
 		desc: /projectDesc:"([\s\S]*?)",projectEndSdt/g ,
 	};
 
-	while((project = findALlMatches(regexs, string)) !== null ) {
+	while((project = findAllMatches(regexs, string)) !== null ) {
 		console.log(project);
 		projects.push(project);
 	};
@@ -390,7 +378,7 @@ let parseProject = function(string){
 	return projects;
 };
 
-let parseSurveys = function(string){
+const parseSurveys = function(string){
 	let survey;
 	let surveys = [];
 
@@ -402,14 +390,14 @@ let parseSurveys = function(string){
 		status: /expertReviewStatusCde:"([\s\S]*?)"/g
 	}
 
-	while((survey = findALlMatches(regexs, string)) !== null ) {
+	while((survey = findAllMatches(regexs, string)) !== null ) {
 		surveys.push(survey);
 	};
 
 	return surveys;
 };
 
-let parseSurvey = function(string){
+const parseSurvey = function(string){
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
 		surveyStart: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
@@ -424,7 +412,7 @@ let parseSurvey = function(string){
 		accu: /latLongAccuracyddNum:(.*?),/g,
 	}
 
-	let su = findALlMatches(regexs, string)
+	let su = findAllMatches(regexs, string)
 	return {
 					surveyId: 		su.surveyId,
 					surveyStart: 	`${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}`,
@@ -440,7 +428,7 @@ let parseSurvey = function(string){
 	};
 };
 
-let parseSurveyMethod = function(string) {
+const parseSurveyMethod = function(string) {
 
 	let regexs = {
 		methodId: /componentId:(\d*)/g,
@@ -448,10 +436,10 @@ let parseSurveyMethod = function(string) {
 		disciplineCde: /disciplineCde:"(.*?)"/, 
 	}
 
-	return findALlMatches(regexs, string)
+	return findAllMatches(regexs, string)
 };
 
-let parseTaxonList = function(string) {
+const parseTaxonList = function(string) {
 	let taxon;
 	let taxons = [];
 	let regexs = {
@@ -462,14 +450,14 @@ let parseTaxonList = function(string) {
 		totalCountInt: /totalCountInt:(\d*)/g
 	}
 
-	while((taxon = findALlMatches(regexs, string)) !== null ) {
+	while((taxon = findAllMatches(regexs, string)) !== null ) {
 		taxons.push(taxon);
 	};
 
 	return taxons;
 };
 
-let parseMethodDetail = function(string) {
+const parseMethodDetail = function(string) {
 	console.log(chalk.gray(string))
 	
 	let regexs = {
@@ -482,10 +470,11 @@ let parseMethodDetail = function(string) {
 		firstTimeSdt: /firstTimeSdt:"(\d*)"/,
 		secondTimeSdt: /secondTimeSdt:"(\d*)"/,
 	}
-	return execRegex(regexs, string)
+
+	return findAllMatches(regexs, string)
 };
 
-let fetchCookie = function(username, password, jar) {
+const fetchCookie = function(username, password, jar) {
 	let url = 'https://vba.dse.vic.gov.au/vba/login';
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -509,7 +498,7 @@ let fetchCookie = function(username, password, jar) {
 	return requestp(options)
 };
 
-let fetchProject = function(cookie){
+const fetchProject = function(cookie){
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	//Lets configure and request
 	let header = {
@@ -558,7 +547,7 @@ let fetchProject = function(cookie){
 	return requestp(options)
 };
 
-let fetchSurvey = function(surveyId, cookie) {
+const fetchSurvey = function(surveyId, cookie) {
 	console.log(`fetching survey #${surveyId}`)
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
@@ -603,7 +592,7 @@ let fetchSurvey = function(surveyId, cookie) {
 	return requestp(options)
 };
 
-let fetchSurveysList = function(projectId, cookie) {
+const fetchSurveysList = function(projectId, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -648,7 +637,7 @@ let fetchSurveysList = function(projectId, cookie) {
 	return requestp(options)
 };
 
-let fetchSurveyMethods = function(surveyId, cookie) {
+const fetchSurveyMethods = function(surveyId, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -696,7 +685,7 @@ let fetchSurveyMethods = function(surveyId, cookie) {
 	return requestp(options)
 };
 
-let fetchMethodTaxonList = function(methodID, cookie) {
+const fetchMethodTaxonList = function(methodID, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -740,7 +729,7 @@ let fetchMethodTaxonList = function(methodID, cookie) {
 	return requestp(options)
 };
 
-let fetchMethodDetail = function(methodID, cookie) {
+const fetchMethodDetail = function(methodID, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -784,7 +773,7 @@ let fetchMethodDetail = function(methodID, cookie) {
 	return requestp(options)
 };
 
-let postNewTaxonRecord = function(methodID, cookie) {
+const postNewTaxonRecord = function(methodID, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -828,7 +817,7 @@ let postNewTaxonRecord = function(methodID, cookie) {
 	return requestp(options)
 };
 
-let execRegex = function(regexs, string) {
+const execRegex = function(regexs, string) {
 	let re = {}
 	for (let prop in regexs) {
 		let result = regexs[prop].exec(string)
@@ -842,7 +831,7 @@ let execRegex = function(regexs, string) {
 	return re;
 };
 
-let findALlMatches = function(regexs, string) {
+const findAllMatches = function(regexs, string) {
 	let re = {};
 	for (let prop in regexs) {
 		let result = regexs[prop].exec(string);
@@ -862,7 +851,7 @@ let findALlMatches = function(regexs, string) {
 	return null;
 };
 
-let decodeSurveyStatus = function (status) {
+const decodeSurveyStatus = function (status) {
 	switch (status) {
 		case 'a':
 			return 'Approved'
@@ -889,8 +878,6 @@ let decodeSurveyStatus = function (status) {
 			return `Unknow status: ${status}`
 	}
 };
-
-let all
 
 
 
