@@ -11,60 +11,47 @@
             <div>Discipline :</div>
             <div class="response">{{method.discipline}}</div>
           </div>
-          {{#if method.area}}
           <div class="row">
             <div>Area sampled :</div>
             <div class="response">{{method.area}}</div>
           </div>
-          {{/if}}
-          {{#if method.obs}}
           <div class="row">
             <div>Number of Observers :</div>
             <div class="response">{{method.obs}}</div>
           </div>
-          {{/if}}
           <div class="row">
             <div>Number of species :</div>
             <div class="response">{{method.species}}</div>
           </div>
           <div class="project-card-footer">
-            {{#if method.dateDisplay}}
             <div class="project-card-dates">{{this.method.start}} &#x279E; {{this.method.end}}</div>
-            {{/if}}
             <div class="project-card-id"><span class="number-sign">#</span>{{method.id}}</div>
           </div>
         </div>
       </a>
       <div class="w-form">
-        <form action="/survey/:id/species" method="post" data-name="Email Form" id="email-form" name="email-form">
+        <form data-name="Email Form" id="email-form" name="email-form">
           <div class="actions-bar">
-            <a class="add-species-button w-button" href="/survey/{{survey.id}}/method/{{method.id}}/taxonRecord">add Taxon</a>
+            <a class="add-species-button w-button" href="/newspecies">add Taxon</a>
             <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="Delete">
           </div>
           <ul class="cards-list w-list-unstyled">
-          {{#each taxon}}
             <li class="card">
               <a class="card-inner-link w-inline-block" href="#">
                 <div>
-                  <div>
-                  {{#if this.commonNme}}
-                    {{this.commonNme}}<br>
-                  {{/if}}
-                    {{this.commonName}}</div>
+                  <div>{{this.commonName}}</div>
                   <div>{{this.scientificName}}</div>
-                  {{#if this.totalCountInt}}
-                  <div class="taxon-count">Count : {{this.totalCountInt}}</div>
-                  {{/if}}
+                  <div class="taxon-count">Count : {{this.count}}</div>
                 </div>
               </a>
               <div class="card-edit">
-                <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
+                <div class="taxon-id"><span class="number-sign">#</span>{{this.id}}</div>
                 <div class="w-checkbox w-clearfix">
-                  <input class="w-checkbox-input" data-name="Select" id="{{this.taxonId}}" name="Select" type="checkbox">
+                  <input class="w-checkbox-input" data-name="Select" id="Select" name="Select" type="checkbox">
+                  <label class="checkbox-label-hidden w-form-label" for="Select">Select</label>
                 </div>
               </div>
             </li>
-            {{/each}}
           </ul>
         </form>
         <div class="w-form-done">

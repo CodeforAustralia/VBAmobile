@@ -201,7 +201,7 @@ exports.surveys = function(req, res) {
 
 		Promise.all(surveysRequests)
 		.then( surveyData => {
-			// console.log(chalk.red(surveyData))
+			console.log(chalk.red(surveyData))
 			let user = isLoggedIn(req);
 			res.render('surveys', {
 				loggedIn : user,
@@ -241,15 +241,14 @@ exports.species = function(req, res) {
 
 		Promise.all([methodDetail, taxonList])
 		.then( PromisesArr => {
-			let methodDetail = PromisesArr[0];
-			let taxonList = PromisesArr[1];
+			let methodDetail = PromisesArr[0] || {};
+			let taxonList = PromisesArr[1] || [];
 			let user = isLoggedIn(req);
 			console.log(`Taxon list : ${chalk.green(taxonList.length)} record found`);
 			console.log(chalk.yellow(JSON.stringify(methodDetail, null, 4)));
 
 			let decodeDiscipline = function(code) {
 				switch (code) {
-
 					case 'tf':
 						return 'Terrestrial Fauna'
 					break;
@@ -261,18 +260,22 @@ exports.species = function(req, res) {
 				}
 			}
 
+			console.log(surveyMethods)
+
 			let method = {
 				id: surveyMethods.methodId,
 				name: surveyMethods.samplingMethodDesc,
 				discipline: decodeDiscipline(surveyMethods.disciplineCde),
-				area: methodDetail.measurementValueNum,
-				dateDisplay: !!(methodDetail.firstDateSdt || methodDetail.secondDateSdt),
-				start: methodDetail.firstDateSdt,
-				end: methodDetail.secondDateSdt,
+				area: !!methodDetail.measurementValueNum ? methodDetail.measurementValueNum : false,
+				dateDisplay: !!methodDetail.firstDateSd && !!methodDetail.secondDateSdt,
+				start: !!methodDetail.firstDateSdt ? methodDetail.firstDateSd : false,
+				end: !!methodDetail.secondDateSdt ? methodDetail.secondDateSdt : false,
 				species: taxonList.length
 			};
 
-			// console.log(chalk.cyan(JSON.stringify(method, null, 4)));
+
+			console.log(chalk.cyan(JSON.stringify(method, null, 4)));
+			// debugger;
 			res.render('species', {
 				loggedIn : !!user,
 				helpers : {
@@ -379,6 +382,7 @@ const parseProject = function(string){
 };
 
 const parseSurveys = function(string){
+	console.log(string);
 	let survey;
 	let surveys = [];
 
@@ -458,6 +462,7 @@ const parseTaxonList = function(string) {
 };
 
 const parseMethodDetail = function(string) {
+
 	console.log(chalk.gray(string))
 	
 	let regexs = {
@@ -770,6 +775,7 @@ const fetchMethodDetail = function(methodID, cookie) {
 			protocolVersion: '1.0'
 		}
 	}
+	console.log(chalk.yellow(JSON.stringify(options, null, 4)));
 	return requestp(options)
 };
 

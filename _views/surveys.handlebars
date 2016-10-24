@@ -2,9 +2,8 @@
     <div class="content">
       <h1 class="section-title">Surveys</h1>
       <ul class="cards-list w-list-unstyled">
-      {{#each survey}}
         <li>
-          <a class="survey w-inline-block" href="/survey/{{this.surveyId}}/species">
+          <a class="survey w-inline-block" href="/surveyspage">
             <div class="survey-detail">
               <div class="project-card-title">{{this.surveyNme}}</div>
               <div class="survey-comms">{{this.surveyComm}}</div>
@@ -30,7 +29,6 @@
             </div>
           </a>
         </li>
-      {{/each}}
       </ul>
     </div>
   </main>

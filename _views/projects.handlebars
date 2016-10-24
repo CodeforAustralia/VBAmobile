@@ -2,17 +2,7 @@
     <div class="content">
       <h1 class="section-title">Projects list</h1>
       <ul class="cards-list w-list-unstyled">
-        <li class="project-card">
-          <a class="card-link w-inline-block" href="/surveyspage">
-            <div class="project-card-title">Armstrong Western Highway Diversion</div>
-            <p class="project-card-desc">Fauna survey and assessment prior to new road diversion.
-              <br>Bla bla bla save the possum, bla bla.</p>
-            <div class="project-card-footer">
-              <div class="project-card-dates">10/12/01 &#x279E; 14/12/01</div>
-              <div class="project-card-id"><span class="number-sign">#</span>1214</div>
-            </div>
-          </a>
-        </li>
+      {{#each project}}
         <li class="project-card">
           <a class="card-link w-inline-block" href="/surveyspage">
             <div class="project-card-title">{{this.title}}</div>
@@ -23,6 +13,7 @@
             </div>
           </a>
         </li>
+      {{/each}}
       </ul>
     </div>
   </main>
