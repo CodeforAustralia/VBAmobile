@@ -231,16 +231,28 @@ exports.species = function(req, res) {
 		// fetchMethodDetail
 		let methodDetail = new Promise((resolve) => {
 			fetchMethodDetail(surveyMethods.methodId, cookie)
-			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)))
+			.then( fetchRes => resolve(parseMethodDetail(fetchRes.body)));
+			// .then( fetchRes => {
+			// 	let methodDetail = parseMethodDetail(fetchRes.body);
+			// 	console.log(chalk.red(JSON.stringify(methodDetail, null, 4)));
+			// 	resolve(methodDetail);
+			// });
 		});
 		// fetchMethodTaxonList
 		let taxonList = new Promise((resolve) => {
 			fetchMethodTaxonList(surveyMethods.methodId, cookie)
 			.then( fetchRes => resolve(parseTaxonList(fetchRes.body)));
+			// .then( fetchRes => {
+			// 	let taxonList = parseTaxonList(fetchRes.body);
+			// 	console.log(chalk.yellow(JSON.stringify(taxonList, null, 4)));
+			// 	resolve(taxonList);
+			// });
 		});
 
 		Promise.all([methodDetail, taxonList])
 		.then( PromisesArr => {
+			console.log(PromisesArr);
+			debugger;
 			let methodDetail = PromisesArr[0] || {};
 			let taxonList = PromisesArr[1] || [];
 			let user = isLoggedIn(req);
@@ -260,7 +272,7 @@ exports.species = function(req, res) {
 				}
 			}
 
-			console.log(surveyMethods)
+			console.log(methodDetail)
 
 			let method = {
 				id: surveyMethods.methodId,
@@ -304,7 +316,7 @@ const isLoggedIn = function(req) {
 
 const fetchUserDetails = function(cookie) {
 	console.log(chalk.red(cookie))
-	debugger;
+	// debugger;
 	// This function is doing both the fetching and parsing, need to be splited up
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
@@ -366,8 +378,9 @@ const parseProject = function(string){
 		desc: /projectDesc:"([\s\S]*?)",projectEndSdt/g ,
 	};
 
-	while((project = findAllMatches(regexs, string)) !== null ) {
+	while ( project = findAllMatches(regexs, string) ) {
 		console.log(project);
+		// debugger;
 		projects.push(project);
 	};
 
@@ -375,7 +388,7 @@ const parseProject = function(string){
 		let start = project.start;
 		let end = project.end;
 		project.start = `${start[1]}/${start[2]}/${start[0]}`;
-		project.end = project.end !== null ? `${end[1]}/${end[2]}/${end[0]}` : '...';
+		project.end = !!project.end ? `${end[1]}/${end[2]}/${end[0]}` : '...';
 	});
 
 	return projects;
@@ -394,7 +407,7 @@ const parseSurveys = function(string){
 		status: /expertReviewStatusCde:"([\s\S]*?)"/g
 	}
 
-	while((survey = findAllMatches(regexs, string)) !== null ) {
+	while( survey = findAllMatches(regexs, string) ) {
 		surveys.push(survey);
 	};
 
@@ -420,11 +433,11 @@ const parseSurvey = function(string){
 	return {
 					surveyId: 		su.surveyId,
 					surveyStart: 	`${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}`,
-					surveyEnd: 		su.surveyEnd === null ? '...' : `${su.surveyEnd[1]}/${su.surveyEnd[2]}/${su.surveyEnd[0]}`,
-					surveyNme: 		su.surveyNme !== null ? su.surveyNme : 'Unknow survey name',
-					surveyComm: 	su.surveyComm !== null ? su.surveyComm : 'No comments provided',
+					surveyEnd: 		!!su.surveyEnd ? `${su.surveyEnd[1]}/${su.surveyEnd[2]}/${su.surveyEnd[0]}` : '...',
+					surveyNme: 		!!su.surveyNme ? su.surveyNme : 'Unknow survey name',
+					surveyComm: 	!!su.surveyComm ? su.surveyComm : 'No comments provided',
 					siteId: 			su.siteId,
-					siteDesc: 		su.siteDesc !== null ? su.siteDesc : 'No site description provided',
+					siteDesc: 		!!su.siteDesc ? su.siteDesc : 'No site description provided',
 					lat: 					su.lat,
 					long: 				su.long,
 					siteId: 			su.siteId,
@@ -454,7 +467,7 @@ const parseTaxonList = function(string) {
 		totalCountInt: /totalCountInt:(\d*)/g
 	}
 
-	while((taxon = findAllMatches(regexs, string)) !== null ) {
+	while( taxon = findAllMatches(regexs, string) ) {
 		taxons.push(taxon);
 	};
 
@@ -775,7 +788,6 @@ const fetchMethodDetail = function(methodID, cookie) {
 			protocolVersion: '1.0'
 		}
 	}
-	console.log(chalk.yellow(JSON.stringify(options, null, 4)));
 	return requestp(options)
 };
 
@@ -823,21 +835,8 @@ const postNewTaxonRecord = function(methodID, cookie) {
 	return requestp(options)
 };
 
-const execRegex = function(regexs, string) {
-	let re = {}
-	for (let prop in regexs) {
-		let result = regexs[prop].exec(string)
-		if (result) {
-			console.log(chalk.green(JSON.stringify(result, null, 4)));
-			result.length === 2 ? result = result[1] : result = result.slice(1)
-		}
-		re[prop] = result
-	}
-	if (re === {}) return null;
-	return re;
-};
-
 const findAllMatches = function(regexs, string) {
+	// build and object with prop for each matching regex, return {} if nothing found.
 	let re = {};
 	for (let prop in regexs) {
 		let result = regexs[prop].exec(string);
@@ -851,10 +850,12 @@ const findAllMatches = function(regexs, string) {
 		re[prop] = result;
 	}
 
-	for (let prop in re) {
-		if (re[prop] !== null) return re;
-	}
-	return null;
+	// empty array if none prop are matching regex
+	const regexMatchesKeys = Object.keys(re).filter(key => re[key] !== null); 
+	
+	if ( regexMatchesKeys.length > 0 ) {
+		return re;
+	} else return false;
 };
 
 const decodeSurveyStatus = function (status) {
