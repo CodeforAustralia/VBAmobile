@@ -1,17 +1,18 @@
 const chalk = require('chalk');
+const parse = {};
 
-exports.userDetails = function(string) {
+parse.userDetails = function(string) {
 	let regexs = {
 		displayName: /displayName:"(.*?)"/,
 		userUid: /userUid:(\d*)/
 	}
 
-	let userDetails = findAllMatches(regexs, string);
+	let userDetails = this.findAllMatches(regexs, string);
 	console.log(`User detail : `, chalk.yellow(JSON.stringify(string, null, 4)));
 	return userDetails;
 };
 
-exports.project = function(string){
+parse.project = function(string){
 	let project;
 	let projects = [];
 
@@ -23,7 +24,7 @@ exports.project = function(string){
 		desc: /projectDesc:"([\s\S]*?)",projectEndSdt/g ,
 	};
 
-	while ( project = findAllMatches(regexs, string) ) {
+	while ( project = this.findAllMatches(regexs, string) ) {
 		console.log(project);
 		// debugger;
 		projects.push(project);
@@ -39,7 +40,7 @@ exports.project = function(string){
 	return projects;
 };
 
-exports.surveys = function(string){
+parse.surveys = function(string){
 	console.log(string);
 	let survey;
 	let surveys = [];
@@ -52,14 +53,14 @@ exports.surveys = function(string){
 		status: /expertReviewStatusCde:"([\s\S]*?)"/g
 	}
 
-	while( survey = findAllMatches(regexs, string) ) {
+	while( survey = this.findAllMatches(regexs, string) ) {
 		surveys.push(survey);
 	};
 
 	return surveys;
 };
 
-exports.survey = function(string){
+parse.survey = function(string){
 	let regexs = {
 		surveyId: /surveyId:(\d*),/g,
 		surveyStart: /surveyStartSdt:Date\.parseServerDate\((\d*),(\d*),(\d*)\)/g,
@@ -74,7 +75,7 @@ exports.survey = function(string){
 		accu: /latLongAccuracyddNum:(.*?),/g,
 	}
 
-	let su = findAllMatches(regexs, string)
+	let su = this.findAllMatches(regexs, string)
 	return {
 					surveyId: 		su.surveyId,
 					surveyStart: 	`${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}`,
@@ -90,7 +91,7 @@ exports.survey = function(string){
 	};
 };
 
-exports.surveyMethod = function(string) {
+parse.surveyMethod = function(string) {
 
 	let regexs = {
 		methodId: /componentId:(\d*)/g,
@@ -98,10 +99,10 @@ exports.surveyMethod = function(string) {
 		disciplineCde: /disciplineCde:"(.*?)"/, 
 	}
 
-	return findAllMatches(regexs, string)
+	return this.findAllMatches(regexs, string)
 };
 
-exports.taxonList = function(string) {
+parse.taxonList = function(string) {
 	console.log(string);
 	let taxon;
 	let taxons = [];
@@ -114,14 +115,14 @@ exports.taxonList = function(string) {
 		totalCountInt: /totalCountInt:(\d*)/g
 	}
 
-	while( taxon = findAllMatches(regexs, string) ) {
+	while( taxon = this.findAllMatches(regexs, string) ) {
 		taxons.push(taxon);
 	};
 
 	return taxons;
 };
 
-exports.methodDetail = function(string) {
+parse.methodDetail = function(string) {
 
 	console.log(chalk.gray(string))
 	
@@ -136,10 +137,10 @@ exports.methodDetail = function(string) {
 		secondTimeSdt: /secondTimeSdt:"(\d*)"/,
 	}
 
-	return findAllMatches(regexs, string)
+	return this.findAllMatches(regexs, string)
 };
 
-const findAllMatches = function(regexs, string) {
+parse.findAllMatches = function(regexs, string) {
 	// build and object with prop for each matching regex, return {} if nothing found.
 	let re = {};
 	for (let prop in regexs) {
@@ -155,9 +156,11 @@ const findAllMatches = function(regexs, string) {
 	}
 
 	// empty array if none prop are matching regex
-	const regexMatchesKeys = Object.keys(re).filter(key => re[key] !== null); 
+	const matchedKeysCount = Object.keys(re).filter(key => re[key] !== null); 
 	
-	if ( regexMatchesKeys.length > 0 ) {
+	if ( matchedKeysCount.length > 0 ) {
 		return re;
 	} else return false;
 };
+
+module.exports = parse;

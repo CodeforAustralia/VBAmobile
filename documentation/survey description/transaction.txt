@@ -232,6 +232,7 @@ surnameNme:"McMaster",
 userTypeCde:"o",
 fullName:"Donna McMaster",
 loginNameNme:"McM932"}]}]//isc_RPCResponseEnd_transaction:
+
 <transaction
 	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
 	<transactionNum xsi:type="xsd:long">40</transactionNum>
