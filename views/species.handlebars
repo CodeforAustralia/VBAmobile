@@ -29,14 +29,14 @@
           </div>
           <div class="project-card-footer">
             {{#if method.dateDisplay}}
-            <div class="project-card-dates">{{this.method.start}} &#x279E; {{this.method.end}}</div>
+            <div class="project-card-dates">{{method.start}} &#x279E; {{method.end}}</div>
             {{/if}}
             <div class="project-card-id"><span class="number-sign">#</span>{{method.id}}</div>
           </div>
         </div>
       </a>
       <div class="w-form">
-        <form action="/survey/:id/species" method="post" data-name="Email Form" id="email-form" name="email-form">
+        <form action="/survey/{{survey.id}}/method/{{method.id}}/species/destroy" method="post" data-name="Taxon id" id="taxonSelect" name="select taxon">
           <div class="actions-bar">
             <a class="add-species-button w-button" href="/survey/{{survey.id}}/method/{{method.id}}/taxonRecord">add Taxon</a>
             <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="delete">
@@ -60,7 +60,7 @@
               <div class="card-edit">
                 <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
                 <div class="w-checkbox w-clearfix">
-                  <input class="w-checkbox-input" data-name="taxonId" id="{{this.taxonId}}" name="{{this.taxonId}}" type="checkbox">
+                  <input class="w-checkbox-input" data-name="taxonId" id="{{this.id}}" name="{{this.id}}" type="checkbox">
                 </div>
               </div>
             </li>

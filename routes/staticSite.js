@@ -1,6 +1,6 @@
-var express = require('express');
-var staticSite = express.Router();
-var staticSiteCtrl = require('../controllers/staticSiteCtrl.js');
+const express = require('express');
+const staticSite = express.Router();
+const staticSiteCtrl = require('../controllers/staticSiteCtrl.js');
 
 staticSite.get('/', function(req, res) {
 	return staticSiteCtrl.landingPage(req, res);
@@ -28,6 +28,10 @@ staticSite.get('/survey/:surveyId/method/:methodId/taxonRecord', function(req, r
 
 staticSite.post('/survey/:surveyId/method/:methodId/taxonRecord', function(req, res) {
 	return staticSiteCtrl.createTaxonRecord(req, res);
+});
+
+staticSite.post('/survey/:surveyId/method/:methodId/species/destroy', function(req, res) {
+	return staticSiteCtrl.deleteTaxonRecord(req, res);
 });
 
 staticSite.get('/login', function(req, res) {
