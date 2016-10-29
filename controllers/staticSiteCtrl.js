@@ -115,10 +115,17 @@ exports.createTaxonRecord = function(req, res) {
 };
 
 exports.deleteTaxonRecord = function(req, res) {
+	let cookie = req.session.cookies;
 	const surveyId = req.params.surveyId;
 	const methodId = req.params.methodId;
+	// const taxonIds = req.body;
+	let taxonRecordIds = [];
+	for (let taxonIds in req.body) {
+		taxonRecordIds.push(taxonIds)
+	};
 
-	res.send("surveyId : " + surveyId + "\n surveyId : " + methodId)
+	post.deleteTaxonRecord(surveyId, methodId, taxonRecordIds, cookie)
+		.then(res.redirect(`/survey/${surveyId}/species`));
 };
 
 exports.surveys = function(req, res) {
