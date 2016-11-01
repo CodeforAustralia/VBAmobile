@@ -124,6 +124,7 @@ exports.deleteTaxonRecord = function(req, res) {
 		taxonRecordIds.push(taxonIds)
 	};
 
+	// TODO: error handling
 	post.deleteTaxonRecord(surveyId, methodId, taxonRecordIds, cookie)
 		.then(res.redirect(`/survey/${surveyId}/species`));
 };
