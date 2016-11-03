@@ -1,0 +1,25 @@
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">27</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<siteId>632747</siteId>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SiteEnteredPosition_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<componentId>isc_DynamicForm_7</componentId>
+			<appID>builtinApplication</appID>
+			<operation>fetchSiteEnteredPosition</operation>
+			<oldValues xsi:type="xsd:Object">
+				<siteId>632747</siteId>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->[{isDSResponse:true,invalidateCache:false,status:0,data:{XCoordinateTxt:"0",YCoordinateTxt:"0",accuracyTxt:"1000",coordPositionCde:"tl",coordTypeCde:"latlong",creationTsp:new Date(1313416800000),datumCde:"g",gpsUsedCde:null,id:{sepCde:"sp",siteId:632747},modifiedTsp:new Date(1478060996850),otherInfoTxt:null,sepCommentTxt:null},shape:"Point"}]//isc_RPCResponseEnd
+
+curl 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1&isc_tnum=27' -H 'Pragma: no-cache' -H 'Origin: https://vba.dse.vic.gov.au' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,fr;q=0.6' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: */*' -H 'Cache-Control: no-cache' -H 'Referer: https://vba.dse.vic.gov.au/vba/index.jsp' -H 'Cookie: JSESSIONID=D558D7B46CB20C8421777EE046CC7F73.worker1; isc_cState=ready; NSC_JOxowpqucj3yneeb0fo0hbduv21smct=ffffffff0935322c45525d5f4f58455e445a4a423660' -H 'Connection: keep-alive' --data '_transaction=%3Ctransaction%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2F10%2FXMLSchema-instance%22%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CtransactionNum%20xsi%3Atype%3D%22xsd%3Along%22%3E27%3C%2FtransactionNum%3E%3Coperations%20xsi%3Atype%3D%22xsd%3AList%22%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CsiteId%3E632747%3C%2FsiteId%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ESiteEnteredPosition_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3C%2FoperationConfig%3E%3CcomponentId%3Eisc_DynamicForm_7%3C%2FcomponentId%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3EfetchSiteEnteredPosition%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CsiteId%3E632747%3C%2FsiteId%3E%3C%2FoldValues%3E%3C%2Felem%3E%3C%2Foperations%3E%3C%2Ftransaction%3E&protocolVersion=1.0' --compressed

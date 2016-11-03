@@ -1,0 +1,28 @@
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">28</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<surveyId>1070245</surveyId>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>SurveyComponent_DS</dataSource>
+				<operationType>fetch</operationType>
+				<textMatchStyle>exact</textMatchStyle>
+			</operationConfig>
+			<startRow xsi:type="xsd:long">0</startRow>
+			<endRow xsi:type="xsd:long">75</endRow>
+			<componentId>isc_ListGridWithFooter_1</componentId>
+			<appID>builtinApplication</appID>
+			<operation>fetchSurveyComponentBySurveyID</operation>
+			<oldValues xsi:type="xsd:Object">
+				<surveyId>1070245</surveyId>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->[{isDSResponse:true,invalidateCache:false,status:0,data:[{disciplineCde:"tf",samplingMethodDesc:"Targeted search",componentId:1111431}]}]//isc_RPCResponseEnd
+
+curl 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1&isc_tnum=28' -H 'Pragma: no-cache' -H 'Origin: https://vba.dse.vic.gov.au' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,fr;q=0.6' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: */*' -H 'Cache-Control: no-cache' -H 'Referer: https://vba.dse.vic.gov.au/vba/index.jsp' -H 'Cookie: JSESSIONID=D558D7B46CB20C8421777EE046CC7F73.worker1; isc_cState=ready; NSC_JOxowpqucj3yneeb0fo0hbduv21smct=ffffffff0935322c45525d5f4f58455e445a4a423660' -H 'Connection: keep-alive' --data '_transaction=%3Ctransaction%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2F10%2FXMLSchema-instance%22%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CtransactionNum%20xsi%3Atype%3D%22xsd%3Along%22%3E28%3C%2FtransactionNum%3E%3Coperations%20xsi%3Atype%3D%22xsd%3AList%22%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CsurveyId%3E1070245%3C%2FsurveyId%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ESurveyComponent_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3CtextMatchStyle%3Eexact%3C%2FtextMatchStyle%3E%3C%2FoperationConfig%3E%3CstartRow%20xsi%3Atype%3D%22xsd%3Along%22%3E0%3C%2FstartRow%3E%3CendRow%20xsi%3Atype%3D%22xsd%3Along%22%3E75%3C%2FendRow%3E%3CcomponentId%3Eisc_ListGridWithFooter_1%3C%2FcomponentId%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3EfetchSurveyComponentBySurveyID%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CsurveyId%3E1070245%3C%2FsurveyId%3E%3C%2FoldValues%3E%3C%2Felem%3E%3C%2Foperations%3E%3C%2Ftransaction%3E&protocolVersion=1.0' --compressed

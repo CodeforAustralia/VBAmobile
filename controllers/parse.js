@@ -78,7 +78,7 @@ parse.survey = function(string){
 	let su = this.findAllMatches(regexs, string)
 	return {
 					surveyId: 		su.surveyId,
-					surveyStart: 	`${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}`,
+					surveyStart: 	!!su.surveyStart ? `${su.surveyStart[1]}/${su.surveyStart[2]}/${su.surveyStart[0]}` : '...',
 					surveyEnd: 		!!su.surveyEnd ? `${su.surveyEnd[1]}/${su.surveyEnd[2]}/${su.surveyEnd[0]}` : '...',
 					surveyNme: 		!!su.surveyNme ? su.surveyNme : 'Unknow survey name',
 					surveyComm: 	!!su.surveyComm ? su.surveyComm : 'No comments provided',

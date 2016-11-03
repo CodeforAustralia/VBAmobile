@@ -1,0 +1,66 @@
+<transaction
+	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+	<transactionNum xsi:type="xsd:long">23</transactionNum>
+	<operations xsi:type="xsd:List">
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<type>Cover Abundance</type>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>Lookup_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>Lookup_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<type>Cover Abundance</type>
+			</oldValues>
+		</elem>
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<type>Extra</type>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>Lookup_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>Lookup_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<type>Extra</type>
+			</oldValues>
+		</elem>
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<type>Type</type>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>Lookup_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>Lookup_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<type>Type</type>
+			</oldValues>
+		</elem>
+		<elem xsi:type="xsd:Object">
+			<criteria xsi:type="xsd:Object">
+				<type>Reliability</type>
+			</criteria>
+			<operationConfig xsi:type="xsd:Object">
+				<dataSource>Lookup_DS</dataSource>
+				<operationType>fetch</operationType>
+			</operationConfig>
+			<appID>builtinApplication</appID>
+			<operation>Lookup_DS_fetch</operation>
+			<oldValues xsi:type="xsd:Object">
+				<type>Reliability</type>
+			</oldValues>
+		</elem>
+	</operations>
+</transaction>
+
+//isc_RPCResponseStart-->[{isDSResponse:true,invalidateCache:false,status:0,data:[{dependOnCde:null,enabled:true,id:"+",label:"+ BB < 1% projective foliage, few individuals (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"1",label:"1 BB 1-5% projective foliage cover or < 1% many individuals (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"2",label:"2 BB 5-25% projective foliage cover or < 5% numerous individuals (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"3",label:"3 BB 26-50% projective foliage cover (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"4",label:"4 BB 51-75% projective foliage cover (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"5",label:"5 BB 76-100% projective foliage cover (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"r",label:"r BB Rare or solitary with negligible cover (braun-blanquet)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"+ dom",label:"+ Dom < 1% projective foliage cover, few individuals (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"1 dom",label:"1 Dom < 1% projective foliage cover, several individuals (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"2 dom",label:"2 Dom 1-4% projective foliage cover, many individuals (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"3 dom",label:"3 Dom 4-10% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"4 dom",label:"4 Dom 10-25% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"5 dom",label:"5 Dom 25-33% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"6 dom",label:"6 Dom 33-50% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"7 dom",label:"7 Dom 50-75% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"8 dom",label:"8 Dom 75-90% projective foliage cover (domin scale)",type:"Cover Abundance"},{dependOnCde:null,enabled:true,id:"9 dom",label:"9 Dom 90-100% projective foliage cover (domin scale)",type:"Cover Abundance"}]},{isDSResponse:true,invalidateCache:false,status:0,data:[{dependOnCde:null,enabled:true,id:"w",label:"Beach washed",type:"Extra"},{dependOnCde:null,enabled:true,id:"b",label:"Breeding",type:"Extra"},{dependOnCde:null,enabled:true,id:"carni",label:"Carnivore bait",type:"Extra"},{dependOnCde:null,enabled:true,id:"cult",label:"Cultivated",type:"Extra"},{dependOnCde:null,enabled:true,id:"e",label:"Escapee",type:"Extra"},{dependOnCde:null,enabled:true,id:"past",label:"Evidence of past use",type:"Extra"},{dependOnCde:null,enabled:true,id:"k",label:"Found dead",type:"Extra"},{dependOnCde:null,enabled:true,id:"herbi",label:"Herbivore bait",type:"Extra"},{dependOnCde:null,enabled:true,id:"z",label:"In predator scat",type:"Extra"},{dependOnCde:null,enabled:true,id:"x",label:"No longer present at site",type:"Extra"},{dependOnCde:null,enabled:true,id:"r",label:"Released/Introduced",type:"Extra"},{dependOnCde:null,enabled:true,id:"c",label:"Roost site",type:"Extra"},{dependOnCde:null,enabled:true,id:"s",label:"Salvaged",type:"Extra"},{dependOnCde:null,enabled:true,id:"f",label:"Sub fossil",type:"Extra"},{dependOnCde:null,enabled:true,id:"v",label:"Voucher specimen",type:"Extra"}]},{isDSResponse:true,invalidateCache:false,status:0,data:[{dependOnCde:null,enabled:true,id:"n",label:"Birds australia nest record card",type:"Type"},{dependOnCde:null,enabled:true,id:"cap",label:"Captured",type:"Type"},{dependOnCde:null,enabled:true,id:"t",label:"Captured and released",type:"Type"},{dependOnCde:null,enabled:true,id:"h",label:"Heard",type:"Type"},{dependOnCde:null,enabled:true,id:"d",label:"Identified from bat detector recording",type:"Type"},{dependOnCde:null,enabled:true,id:"a",label:"Identified from hair or scats",type:"Type"},{dependOnCde:null,enabled:true,id:"i",label:"Indirect evidence",type:"Type"},{dependOnCde:null,enabled:true,id:"l",label:"Literature",type:"Type"},{dependOnCde:null,enabled:true,id:"mon",label:"Monitored species",type:"Type"},{dependOnCde:null,enabled:true,id:"m",label:"Museum specimen",type:"Type"},{dependOnCde:null,enabled:true,id:"o",label:"Observation",type:"Type"},{dependOnCde:null,enabled:true,id:"x",label:"Observation with supporting evidence",type:"Type"},{dependOnCde:null,enabled:true,id:"p",label:"Pers. Comm.",type:"Type"},{dependOnCde:null,enabled:true,id:"r",label:"Released",type:"Type"},{dependOnCde:null,enabled:true,id:"s",label:"Seen",type:"Type"}]},{isDSResponse:true,invalidateCache:false,status:0,data:[{dependOnCde:null,enabled:true,id:"acc",label:"Acceptable",type:"Reliability"},{dependOnCde:null,enabled:true,id:"con",label:"Confirmed",type:"Reliability"},{dependOnCde:null,enabled:true,id:"dbt",label:"Unconfirmed",type:"Reliability"},{dependOnCde:null,enabled:true,id:"del",label:"Deleted",type:"Reliability"}]}]//isc_RPCResponseEnd
+
+curl 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1&isc_tnum=23' -H 'Pragma: no-cache' -H 'Origin: https://vba.dse.vic.gov.au' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,fr;q=0.6' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: */*' -H 'Cache-Control: no-cache' -H 'Referer: https://vba.dse.vic.gov.au/vba/index.jsp' -H 'Cookie: JSESSIONID=D558D7B46CB20C8421777EE046CC7F73.worker1; isc_cState=ready; NSC_JOxowpqucj3yneeb0fo0hbduv21smct=ffffffff0935322c45525d5f4f58455e445a4a423660' -H 'Connection: keep-alive' --data '_transaction=%3Ctransaction%20xmlns%3Axsi%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2F10%2FXMLSchema-instance%22%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CtransactionNum%20xsi%3Atype%3D%22xsd%3Along%22%3E23%3C%2FtransactionNum%3E%3Coperations%20xsi%3Atype%3D%22xsd%3AList%22%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3ECover%20Abundance%3C%2Ftype%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ELookup_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3C%2FoperationConfig%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3ELookup_DS_fetch%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3ECover%20Abundance%3C%2Ftype%3E%3C%2FoldValues%3E%3C%2Felem%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EExtra%3C%2Ftype%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ELookup_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3C%2FoperationConfig%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3ELookup_DS_fetch%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EExtra%3C%2Ftype%3E%3C%2FoldValues%3E%3C%2Felem%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EType%3C%2Ftype%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ELookup_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3C%2FoperationConfig%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3ELookup_DS_fetch%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EType%3C%2Ftype%3E%3C%2FoldValues%3E%3C%2Felem%3E%3Celem%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ccriteria%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EReliability%3C%2Ftype%3E%3C%2Fcriteria%3E%3CoperationConfig%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3CdataSource%3ELookup_DS%3C%2FdataSource%3E%3CoperationType%3Efetch%3C%2FoperationType%3E%3C%2FoperationConfig%3E%3CappID%3EbuiltinApplication%3C%2FappID%3E%3Coperation%3ELookup_DS_fetch%3C%2Foperation%3E%3ColdValues%20xsi%3Atype%3D%22xsd%3AObject%22%3E%3Ctype%3EReliability%3C%2Ftype%3E%3C%2FoldValues%3E%3C%2Felem%3E%3C%2Foperations%3E%3C%2Ftransaction%3E&protocolVersion=1.0' --compressed

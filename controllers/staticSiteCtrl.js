@@ -142,7 +142,7 @@ exports.surveys = function(req, res) {
 		console.log(`${chalk.green(surveys.length)} survey(s) found for project #${chalk.green(projectId)}`)
 		// To-do pagination
 		// create an Array of requests
-		let surveysRequests = surveys.map((survey) => {
+		let surveysRequests = surveys.slice(0, 15).map((survey) => {
 			return new Promise((resolve) => {
 				get.survey(survey.surveyId, req.session.cookies)
 				.then( fetchRes => resolve(parse.survey(fetchRes.body)))
@@ -164,7 +164,7 @@ exports.surveys = function(req, res) {
 	})
 	.catch(function (err) {
 			console.log(err) 
-		});
+	});
 };
 
 exports.species = function(req, res) {
