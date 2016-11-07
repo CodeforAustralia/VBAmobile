@@ -10,6 +10,7 @@ const get = require('./get.js');
 const post = require('./post.js');
 
 exports.landingPage = function(req, res) {
+	if(!isLoggedIn(req)) return res.redirect('/login');
 	let user = isLoggedIn(req);
 	res.render('index', {
 			loggedIn : user,
