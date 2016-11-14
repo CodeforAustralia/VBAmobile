@@ -240,7 +240,7 @@ exports.species = function(req, res) {
 				},
 				survey : { id : surveyId },
 				method : method,
-				taxon: taxonList,
+				taxon: taxonList.reverse(),
 				survey : { id : surveyId}
 			});
 		})
