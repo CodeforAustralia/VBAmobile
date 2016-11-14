@@ -13,6 +13,7 @@ parse.userDetails = function(string) {
 };
 
 parse.project = function(string){
+	console.log(string);
 	let project;
 	let projects = [];
 

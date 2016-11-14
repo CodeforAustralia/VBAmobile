@@ -1,4 +1,4 @@
-var expect    = require("chai").expect;
+var expect = require("chai").expect;
 var parse = require("../controllers/parse.js");
 
 describe("Parse response from VBA server", function(){
