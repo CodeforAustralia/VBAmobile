@@ -787,11 +787,7 @@ body {
     -ms-flex: 1;
     flex: 1;
   }
-  .form-button {
-    -webkit-flex-basis: 50%;
-    -ms-flex-preferred-size: 50%;
-    flex-basis: 50%;
-  }
+
   .gps-location {
     -webkit-justify-content: space-around;
     -ms-flex-pack: distribute;
@@ -901,11 +897,7 @@ body {
     -ms-flex-item-align: center;
     align-self: center;
   }
-  .form-button {
-    -webkit-flex-basis: 50%;
-    -ms-flex-preferred-size: 50%;
-    flex-basis: 50%;
-  }
+
   .survey-form {
     padding-right: 4%;
     padding-left: 4%;
@@ -1122,12 +1114,7 @@ body {
     -ms-flex: 0 auto;
     flex: 0 auto;
   }
-  .form-button {
-    -webkit-flex-basis: 50%;
-    -ms-flex-preferred-size: 50%;
-    flex-basis: 50%;
-    background-color: rgba(32, 21, 71, .8);
-  }
+
   .survey-form {
     padding-right: 0%;
     padding-left: 0%;
