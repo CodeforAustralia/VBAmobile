@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--  Last Published: Fri Dec 02 2016 22:11:30 GMT+0000 (UTC)  -->
-<html data-wf-page="58002ede5e607d6c3a465476" data-wf-site="57ced8c91d3807cb6dad5f35">
+<html data-wf-page="583d3f31c76cd8ef7589150b" data-wf-site="57ced8c91d3807cb6dad5f35">
 <head>
   <meta charset="utf-8">
-  <title>newspecie</title>
-  <meta content="newspecie" property="og:title">
+  <title>new general obs</title>
+  <meta content="new general obs" property="og:title">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link href="css/normalize.css" rel="stylesheet" type="text/css">
   <link href="css/components.css" rel="stylesheet" type="text/css">
@@ -73,12 +73,19 @@
             <option value="Sub fossil">Sub fossil</option>
             <option value="Voucher specimen">Voucher specimen</option>
           </select>
-          <label for="Observer">Observer :</label>
-          <select class="fiel w-select" data-name="Observer" id="Observer" name="Observer">
-            <option value="Myself">Myself</option>
-          </select>
+          <label>Location :</label>
+          <div class="gps-button">
+            <a class="buttons-size w-button" href="#">🎯 &nbsp;Get location</a>
+            <a class="buttons-size manual-location w-button" href="#">Enter location</a>
+          </div>
+          <label>Time :</label>
+          <div class="time-buttons">
+            <a class="buttons-size w-button" href="#">⏰ &nbsp;Now</a>
+            <a class="buttons-size manual-time w-button" href="#">Enter time</a>
+          </div>
           <div class="form-button-center">
             <input class="form-button w-button" data-wait="Please wait..." type="submit" value="save">
+            <input class="form-button incomplete-form w-button" data-wait="Please wait..." type="submit" value="complete form">
           </div>
         </div>
       </form>

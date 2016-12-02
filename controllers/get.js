@@ -113,6 +113,7 @@ get.project = function(cookie){
 			protocolVersion: '1.0'
 		}
 	}
+	console.log(chalk.red( JSON.stringify(options, null, 4) ) );
 	return requestp(options)
 };
 

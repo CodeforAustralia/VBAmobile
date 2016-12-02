@@ -39,7 +39,7 @@
         <form action="/survey/{{survey.id}}/method/{{method.id}}/species/destroy" method="post" data-name="Taxon id" id="taxonSelect" name="select taxon">
           <div class="actions-bar">
             <a class="add-species-button w-button" href="/survey/{{survey.id}}/method/{{method.id}}/taxonRecord">add Taxon</a>
-            <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="Delete">
+            <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="delete">
           </div>
           <ul class="cards-list w-list-unstyled">
           {{#each taxon}}
@@ -59,13 +59,12 @@
               </a>
               <div class="card-edit">
                 <div class="taxon-id"><span class="number-sign">#</span>{{this.taxonId}}</div>
-                <div class="select-taxon w-checkbox w-clearfix">
+                <div class="w-checkbox w-clearfix">
                   <input class="w-checkbox-input" data-name="taxonId" id="{{this.id}}" name="{{this.id}}" type="checkbox">
-                  <label class="checkbox-label-hidden w-form-label" for="Select">Select</label>
                 </div>
               </div>
             </li>
-          {{/each}}
+            {{/each}}
           </ul>
         </form>
         <div class="w-form-done">

@@ -5,7 +5,8 @@ let mkdirp = require('mkdirp');
 let ncp = require('ncp').ncp;
 ncp.limit = 16;
 
-// WARNING everything is in Sync mode, sory for that...
+// Convert raw webflow files to handlebars
+// Strips the header / footer on pages.
 
 config.layouts.forEach(function(layoutFileName){
 	let layoutsDir = './_views/layouts'

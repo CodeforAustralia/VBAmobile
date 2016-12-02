@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--  Last Published: Sat Oct 22 2016 04:58:46 GMT+0000 (UTC)  -->
+<!--  Last Published: Fri Dec 02 2016 22:11:30 GMT+0000 (UTC)  -->
 <html data-wf-page="57ef8423a1f3da343ca8dff1" data-wf-site="57ced8c91d3807cb6dad5f35">
 <head>
   <meta charset="utf-8">
@@ -33,7 +33,34 @@
     <div class="content">
       <h1 class="section-title">Surveys</h1>
       <ul class="cards-list w-list-unstyled">
-        <li>
+        <li class="suvey-card">
+          <a class="survey w-inline-block" href="/surveyspage">
+            <div class="survey-detail">
+              <div class="project-card-title">{{this.surveyNme}}</div>
+              <div class="survey-comms">{{this.surveyComm}}</div>
+              <div class="project-card-footer">
+                <div class="project-card-dates">{{this.surveyStart}} ➞ {{this.surveyEnd}}</div>
+                <div class="project-card-id"><span class="number-sign">#</span>{{this.surveyId}}</div>
+              </div>
+            </div>
+            <div class="survey-site">
+              <div class="card-title">Locality</div>
+              <div class="project-card-title">{{this.siteName}}</div>
+              <p class="card-desc">{{this.siteDesc}}</p>
+              <div class="gps-location">
+                <div>Lat : {{this.lat}}</div>
+                <div>Lat : {{this.long}}</div>
+              </div>
+              <div class="project-card-footer">
+                <div class="project-card-dates">Accuracy : {{this.accu}}m</div>
+                <div class="card-id">
+                  <div>site ID <span class="number-sign">#</span>{{this.siteId}}</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li class="suvey-card">
           <a class="survey w-inline-block" href="/surveyspage">
             <div class="survey-detail">
               <div class="project-card-title">{{this.surveyNme}}</div>

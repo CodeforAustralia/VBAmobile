@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!--  Last Published: Sat Oct 22 2016 04:58:46 GMT+0000 (UTC)  -->
+<!--  Last Published: Fri Dec 02 2016 22:11:30 GMT+0000 (UTC)  -->
 <html data-wf-page="57f59e99d39b150c44e2b6ed" data-wf-site="57ced8c91d3807cb6dad5f35">
 <head>
   <meta charset="utf-8">
@@ -61,9 +61,9 @@
         </div>
       </a>
       <div class="w-form">
-        <form data-name="Email Form" id="email-form" name="email-form">
+        <form data-name="Email Form" data-redirect="/newspecies" id="email-form" name="email-form" redirect="/newspecies">
           <div class="actions-bar">
-            <a class="add-species-button w-button" href="/newspecies">add Taxon</a>
+            <input class="add-species-button w-button" data-wait="Please wait..." type="submit" value="Add observation">
             <input class="delete-button w-button" data-wait="Please wait..." type="submit" value="Delete">
           </div>
           <ul class="cards-list w-list-unstyled">
@@ -71,14 +71,14 @@
               <a class="card-inner-link w-inline-block" href="#">
                 <div>
                   <div>{{this.commonName}}</div>
-                  <div>{{this.scientificName}}</div>
+                  <div class="science-name">{{this.scientificName}}</div>
                   <div class="taxon-count">Count : {{this.count}}</div>
                 </div>
               </a>
               <div class="card-edit">
                 <div class="taxon-id"><span class="number-sign">#</span>{{this.id}}</div>
-                <div class="w-checkbox w-clearfix">
-                  <input class="w-checkbox-input" data-name="Select" id="Select" name="Select" type="checkbox">
+                <div class="select-taxon w-checkbox w-clearfix">
+                  <input class="checkbox-select-taxon w-checkbox-input" data-name="Select" id="Select" name="Select" type="checkbox">
                   <label class="checkbox-label-hidden w-form-label" for="Select">Select</label>
                 </div>
               </div>
