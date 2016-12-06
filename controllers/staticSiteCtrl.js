@@ -93,6 +93,39 @@ exports.createTaxonRecordPage = function(req, res) {
 	});
 };
 
+exports.incObsPage = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+	console.log(chalk.green(JSON.stringify(req.params, null, 4)));
+
+	let user = isLoggedIn(req);
+	let methodId = req.params.methodId;
+	let surveyId = req.params.surveyId;
+
+	res.render('newGeneralObs', {
+		awesomplete: true,
+		loggedIn : user,
+		helpers : {
+			username : user
+		},
+		method : { id : methodId },
+		survey : { id : surveyId }
+	});
+};
+
+exports.createIncObs = function(req, res) {
+	// If user not logged in redirect to login page
+	if(!isLoggedIn(req)) return res.redirect('/login');
+	console.log('Params : ', chalk.green(JSON.stringify(req.params, null, 4)));
+
+	let user = isLoggedIn(req);
+	// let methodId = req.params.methodId;
+	// let surveyId = req.params.surveyId;
+
+	res.send(`work in progress ... <br />
+						${ JSON.stringify(req.body, null, 2) }`);
+};
+
 exports.createTaxonRecord = function(req, res) {
 
 	let cookie = req.session.cookies;

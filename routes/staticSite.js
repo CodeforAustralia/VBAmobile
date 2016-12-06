@@ -54,4 +54,12 @@ staticSite.post('/project', function(req, res) {
 	return staticSiteCtrl.newProject(req, res);
 })
 
+staticSite.get('/incobs', function(req, res) {
+	return staticSiteCtrl.incObsPage(req, res);
+});
+
+staticSite.post('/incobs', function(req, res) {
+	return staticSiteCtrl.createIncObs(req, res);
+});
+
 module.exports = staticSite;
