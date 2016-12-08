@@ -95,7 +95,7 @@ exports.createTaxonRecordPage = function(req, res) {
 
 exports.incObsPage = function(req, res) {
 	// If user not logged in redirect to login page
-	if(!isLoggedIn(req)) return res.redirect('/login');
+	// if(!isLoggedIn(req)) return res.redirect('/login');
 	console.log(chalk.green(JSON.stringify(req.params, null, 4)));
 
 	let user = isLoggedIn(req);
@@ -103,6 +103,7 @@ exports.incObsPage = function(req, res) {
 	let surveyId = req.params.surveyId;
 
 	res.render('newGeneralObs', {
+		incObs: true,
 		awesomplete: true,
 		loggedIn : user,
 		helpers : {
@@ -124,6 +125,7 @@ exports.createIncObs = function(req, res) {
 
 	res.send(`work in progress ... <br />
 						${ JSON.stringify(req.body, null, 2) }`);
+	// res.redirect(`/survey/${taxonRecord.surveyId}/species`);
 };
 
 exports.createTaxonRecord = function(req, res) {
