@@ -134,6 +134,7 @@ exports.createIncObs = function(req, res) {
 
 exports.createTaxonRecord = function(req, res) {
 
+console.log(chalk.red(JSON.stringify(req.body, null, 4)));
 	let cookie = req.session.cookies;
 	let taxonRecord = {
 		typeCde : req.body.typeCde,
@@ -149,7 +150,8 @@ exports.createTaxonRecord = function(req, res) {
 
 	post.newTaxonRecord(taxonRecord, cookie)
 	.then (response => {
-		// console.log(chalk.green(JSON.stringify(response, null, 4)));
+		console.log(chalk.green(JSON.stringify(response, null, 4)));
+		console.log('survey ID : ', taxonRecord.surveyId);
 		res.redirect(`/survey/${taxonRecord.surveyId}/species`);
 	})
 };
