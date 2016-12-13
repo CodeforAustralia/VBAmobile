@@ -9,6 +9,14 @@ const config      = require('./config'); // get our config file
 const app         = express();
 const port        = process.env.PORT || 3000;
 
+app.use( function(req, res, next) {
+	if ( req.header['x-forwarded-proto'] != 'https' ) {
+		// console.log(req)
+    res.redirect(`https://${req.headers.host}${req.url}`) }
+  else
+    next()
+	});
+
 app.use(
 	session({
 		secret: config.secret, 
