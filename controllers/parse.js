@@ -159,7 +159,7 @@ parse.findAllMatches = function(regexs, string) {
 	// empty array if none prop are matching regex
 	const matchedKeysCount = Object.keys(re).filter(key => re[key] !== null); 
 	
-	if ( matchedKeysCount.length > 0 ) {
+	if ( matchedKeysCount.length > 1 ) {
 		return re;
 	} else return false;
 };
