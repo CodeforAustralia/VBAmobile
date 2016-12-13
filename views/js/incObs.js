@@ -17,7 +17,7 @@ if ("geolocation" in navigator) {
 		}
 
 	 	gpsOutput.innerHTML = "<p>Locating…</p>";
-	 	navigator.geolocation.getCurrentPosition(success, error, {timeout: 3000});
+	 	navigator.geolocation.getCurrentPosition(success, error, {timeout: 10000});
 	});
 } else {
   /* geolocation IS NOT available */
