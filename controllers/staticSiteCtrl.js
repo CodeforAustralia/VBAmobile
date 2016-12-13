@@ -123,6 +123,10 @@ exports.createIncObs = function(req, res) {
 	// let methodId = req.params.methodId;
 	// let surveyId = req.params.surveyId;
 
+	// create new survey for project 1
+	// add taxon record
+	// redirect to taxon list
+
 	res.send(`work in progress ... <br />
 						${ JSON.stringify(req.body, null, 2) }`);
 	// res.redirect(`/survey/${taxonRecord.surveyId}/species`);

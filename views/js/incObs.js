@@ -1,8 +1,5 @@
-console.log('made it');
-
 let getLocationButton = document.getElementById('getLocation');
 let getTime = document.getElementById('time-button');
-
 let gpsOutput = document.getElementById('locationLabel');
 let timeOutput = document.getElementById('timeLabel');
 
@@ -15,12 +12,12 @@ if ("geolocation" in navigator) {
 	    gpsOutput.innerHTML = '<p>Location : <br> Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
 	  }
 
-		function error() {
-		  gpsOutput.innerHTML = "Unable to retrieve your location";
+		function error(e) {
+		  gpsOutput.innerHTML = "Unable to retrieve your location <br>" + e.message;
 		}
 
 	 	gpsOutput.innerHTML = "<p>Locating…</p>";
-	 	navigator.geolocation.getCurrentPosition(success, error);
+	 	navigator.geolocation.getCurrentPosition(success, error, {timeout: 3000});
 	});
 } else {
   /* geolocation IS NOT available */
@@ -37,7 +34,7 @@ getTime.addEventListener('click', function() {
   ("0" + m.getUTCHours()).slice(-2) + ":" +
   ("0" + m.getUTCMinutes()).slice(-2) + ":" +
   ("0" + m.getUTCSeconds()).slice(-2);
-  
+
 	timeOutput.innerHTML = `<p>Time: ${formatedTime} </p>`
 });
 
