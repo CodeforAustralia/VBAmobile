@@ -1,4 +1,4 @@
-var speciesListApi = "https://vbaspecies.tk/species/search?q=poss";
+var speciesListApi = "https://vbaspecies.tk/species/search?q=";
 var ajax = new XMLHttpRequest();
 var input = document.getElementById("taxonId");
 var awesomplete = new Awesomplete(input, {
