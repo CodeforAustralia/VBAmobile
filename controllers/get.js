@@ -343,4 +343,57 @@ get.methodDetail = function(methodID, cookie) {
 	return requestp(options)
 };
 
+get.verifySiteEditability = function( formData, cookie ){
+	const url = 'https://vba.dse.vic.gov.au/dotmap/verifySiteEditability.json';
+
+	const header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	};
+	
+	const options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: formData
+		// {
+		// 	siteId:
+		// 	nme:Vic State Library
+		// 	desc:corner of Latrobe / Swanston
+		// 	comment:
+		// 	type:Point
+		// 	Accuracy:50
+		// 	isc_SpacerItem_0:
+		// 	isc_CanvasItem_0:
+		// 	gps:
+		// 	location:cc
+		// 	cType:1
+		// 	Datum:w
+		// 	Latitude:37.8100
+		// 	Longitude:144.9641
+		// 	lati2:
+		// 	longi2:
+		// 	zone:54
+		// 	mapNo:
+		// 	Easting:
+		// 	Northing:
+		// 	edition:
+		// 	pageGrid:
+		// 	Validate:
+		// 	coordinateInfoChanged:true
+		// 	geom:
+		// 	userId:10660
+		// }
+	}
+	console.log(chalk.yellow(JSON.stringify(options, null, 2)));
+	return requestp(options)
+};
+
+
 module.exports = get;

@@ -118,11 +118,34 @@ exports.createIncObs = function(req, res) {
 	// If user not logged in redirect to login page
 	if(!isLoggedIn(req)) return res.redirect('/login');
 	console.log('Params : ', chalk.green(JSON.stringify(req.params, null, 4)));
+	const cookie = req.session.cookies;
 
 	let user = isLoggedIn(req);
 	// let methodId = req.params.methodId;
 	// let surveyId = req.params.surveyId;
 
+	const formData = 	{
+			nme:`Vic State Library`,
+			desc:'corner of Latrobe / Swanston',
+			type:`Point`,
+			Accuracy:50,
+			location:`cc`,
+			cType:1,
+			Datum:`w`,
+			Latitude:37.8100,
+			Longitude:144.9641,
+			zone:54,
+			coordinateInfoChanged:true,
+			userId:10660,
+		}
+	// create new site
+	get.verifySiteEditability( formData, cookie )
+		.then(response => {
+			console.log( response )
+		})
+		.catch( e => {
+			console.log(e);
+		});
 	// create new survey for project 1
 	// add taxon record
 	// redirect to taxon list
@@ -134,7 +157,7 @@ exports.createIncObs = function(req, res) {
 
 exports.createTaxonRecord = function(req, res) {
 
-console.log(chalk.red(JSON.stringify(req.body, null, 4)));
+	console.log(chalk.red(JSON.stringify(req.body, null, 4)));
 	let cookie = req.session.cookies;
 	let taxonRecord = {
 		typeCde : req.body.typeCde,

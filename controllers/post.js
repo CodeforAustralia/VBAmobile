@@ -70,7 +70,7 @@ post.newTaxonRecord = function(taxonRecord, cookie) {
 };
 
 post.deleteTaxonRecord = function(surveyId, methodId, taxonRecordIds, cookie) {
-	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1';
 	
 	let header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -79,7 +79,7 @@ post.deleteTaxonRecord = function(surveyId, methodId, taxonRecordIds, cookie) {
 		'Origin': 'https://vba.dse.vic.gov.au',
 		'Upgrade-Insecure-Requests': '1',
 		'Cookie': cookie
-	}
+	};
 
 	let options = {
 		method: 'POST',

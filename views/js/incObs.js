@@ -1,6 +1,8 @@
 let getLocationButton = document.getElementById('getLocation');
 let getTime = document.getElementById('time-button');
-let gpsOutput = document.getElementById('locationLabel');
+let gpsLat = document.getElementById('lat');
+let gpsLong = document.getElementById('long');
+
 let timeOutput = document.getElementById('timeLabel');
 
 if ("geolocation" in navigator) {
@@ -9,14 +11,17 @@ if ("geolocation" in navigator) {
 		function success(position) {
 	    var latitude  = position.coords.latitude;
 	    var longitude = position.coords.longitude;
-	    gpsOutput.innerHTML = '<p>Location : <br> Latitude is ' + latitude + '° <br>Longitude is ' + longitude + '°</p>';
+	    gpsLat.value = latitude;
+	    gpsLong.value = longitude;
+   	 	getLocationButton.innerHTML = "🎯 &nbsp; Get location";
 	  }
 
 		function error(e) {
 		  gpsOutput.innerHTML = "Unable to retrieve your location <br>" + e.message;
+		  getLocationButton.innerHTML = "🎯 &nbsp; Get location";
 		}
 
-	 	gpsOutput.innerHTML = "<p>Locating…</p>";
+	 	getLocationButton.innerHTML = "🎯 &nbsp; Locating...";
 	 	navigator.geolocation.getCurrentPosition(success, error, {timeout: 10000});
 	});
 } else {
