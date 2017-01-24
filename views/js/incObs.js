@@ -4,6 +4,7 @@ let gpsLat = document.getElementById('lat');
 let gpsLong = document.getElementById('long');
 
 let timeOutput = document.getElementById('timeLabel');
+let gpsOutput = document.getElementById('locationLabel');
 
 if ("geolocation" in navigator) {
   /* geolocation is available */
