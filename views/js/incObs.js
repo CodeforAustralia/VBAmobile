@@ -10,7 +10,7 @@ let getTime = document.getElementById('time-button');
 let date = document.getElementById('date');
 let time = document.getElementById('time');
 
-
+alert('working')
 if ("geolocation" in navigator) {
   /* geolocation is available */
 	getLocationButton.addEventListener('click', function() {
