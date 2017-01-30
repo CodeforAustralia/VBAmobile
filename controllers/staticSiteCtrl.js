@@ -123,26 +123,100 @@ exports.createIncObs = function(req, res) {
 	let user = isLoggedIn(req);
 	// let methodId = req.params.methodId;
 	// let surveyId = req.params.surveyId;
+	let surveyId;
+	const verifySiteOptions = 	{
+		location: 'cc',
+		cType: '1',
+		Datum: 'g',
+		zone: 54,
+		Latitude: req.body.lat,
+		Longitude: req.body.long,
+		gps: true,
+		Accuracy:1
+	}
 
-	const formData = 	{
-			nme:`Vic State Library`,
-			desc:'corner of Latrobe / Swanston',
-			type:`Point`,
-			Accuracy:50,
-			location:`cc`,
-			cType:1,
-			Datum:`w`,
-			Latitude:37.8100,
-			Longitude:144.9641,
-			zone:54,
-			coordinateInfoChanged:true,
-			userId:10660,
-		}
 	// create new site
-	get.verifySiteEditability( formData, cookie )
+	get.verifySiteEditability( verifySiteOptions, cookie )
 		.then(response => {
-			console.log( response )
-		})
+			// console.log( response.body )
+			if ( !(response.body.wkt) ) {
+				throw response.body
+			}
+			// "POINT(145.480171 -36.660507)"
+			let pointsRegex = /POINT\(((?:-|)\d*\.\d*) ((?:-|)\d*.\d*)/
+			let [,long, lat] = pointsRegex.exec(response.body.wkt);
+			console.log(`long : ${long} lat : ${lat}`)
+			return [long, lat]
+		}).then(points => {
+			return post.saveSite({
+				// siteId:
+				nme: req.body.locNme,
+				desc: req.body.locDesc,
+				// comment:
+				type: 'Point',
+				Accuracy:2,
+				// isc_SpacerItem_0:
+				// isc_CanvasItem_0:
+				gps: true,
+				location:'cc',
+				cType:1,
+				Datum:'g',
+				Latitude: points[1],
+				Longitude: points[0],
+				// lati2:
+				// longi2:
+				zone:54,
+				// mapNo:
+				// Easting:
+				// Northing:
+				// edition:
+				// pageGrid:
+				// Validate:
+				coordinateInfoChanged:true,
+				geom:`${points[0]}${points[1]}`,
+				userId: req.session.userUid
+			}, cookie)
+		}).then( saveSiteRes => {
+			console.log( saveSiteRes.body);
+
+			return post.createSurvey({
+				surveyNme: req.body.locNme,
+				surveyStartSdt: req.body.date,
+				siteId: saveSiteRes.body.siteId,
+				userUid: req.session.userUid,
+				projectId: 1,
+				primaryDisciplineCde: 'tf'
+			}, cookie);
+		}).then( createSurveyRes => {
+			console.log(createSurveyRes.body)
+			let surveyId = /SURVEY_ID:"(\d*)"/.exec(createSurveyRes.body)[1]
+			return surveyId;
+		}).then( surveyId => {
+			return get.surveyForGeneralObs( surveyId, cookie );
+		}).then( response => parseResponse( response.body) )
+			// .then( surveyData => {
+			// 	res.send( surveyData );
+			// })
+			.then( survey => {
+				survey = survey[0];
+				console.log(survey)
+
+				surveyId = survey.data.surveyId;
+				let taxonRecord = {
+						typeCde : req.body.typeCde,
+						observerId : req.session.userUid,
+						taxonId : req.body.taxonId,
+						componentId : survey.componentId,
+						surveyId : surveyId,
+						totalCount : req.body.count,
+						extraInfo : req.body.extraInfo
+					};
+				console.log( taxonRecord );
+				return post.newTaxonRecord(taxonRecord, cookie)
+			}).then(response => {
+				console.log( response.body )
+				res.redirect(`/survey/${surveyId}/species`);
+			})
 		.catch( e => {
 			console.log(e);
 		});
@@ -150,8 +224,8 @@ exports.createIncObs = function(req, res) {
 	// add taxon record
 	// redirect to taxon list
 
-	res.send(`work in progress ... <br />
-						${ JSON.stringify(req.body, null, 2) }`);
+	// res.send(`work in progress ... <br />
+	// 					${ JSON.stringify(req.body, null, 2) }`);
 	// res.redirect(`/survey/${taxonRecord.surveyId}/species`);
 };
 
@@ -350,4 +424,13 @@ const decodeSurveyStatus = function (status) {
 		default:
 			return `Unknow status: ${status}`
 	}
+};
+
+let parseResponse = function( data ) {
+	// remove the begining and end of the string
+	// //isc_RPCResponseStart--> //isc_RPCResponseEnd
+	var trim = data.slice(25, data.length - 20);
+	// Clean the data out of function
+	var clean = trim.replace(/Date\.parseServerDate/g, 'new Date');
+	return eval(clean);
 };

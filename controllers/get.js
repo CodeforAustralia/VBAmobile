@@ -162,6 +162,53 @@ get.survey = function(surveyId, cookie) {
 	return requestp(options)
 };
 
+// duplication with the get.survey function
+get.surveyForGeneralObs = function ( surveyId, cookie) {
+	console.log(`fetching survey #${surveyId} for general Obs`)
+	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
+	let header = {
+		'Host': 'vba.dse.vic.gov.au',
+		'Connection': 'keep-alive',
+		'Cache-Control': 'max-age=0',
+		'Origin': 'https://vba.dse.vic.gov.au',
+		'Upgrade-Insecure-Requests': '1',
+		'Cookie': cookie
+	}
+	let options = {
+		method: 'POST',
+		resolveWithFullResponse: true,
+		simple: false,
+		url: url,
+		headers: header,
+		form: {
+			_transaction: `
+				<transaction	xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:type="xsd:Object">
+					<transactionNum xsi:type="xsd:long">19</transactionNum>
+					<operations xsi:type="xsd:List">
+						<elem xsi:type="xsd:Object">
+							<criteria xsi:type="xsd:Object">
+								<surveyId>${surveyId}</surveyId>
+								<isGeneralObservation xsi:type="xsd:boolean">true</isGeneralObservation>
+							</criteria>
+							<operationConfig xsi:type="xsd:Object">
+								<dataSource>Survey_DS</dataSource>
+								<operationType>fetch</operationType>
+							</operationConfig>
+							<appID>builtinApplication</appID>
+							<operation>fetchSurvey</operation>
+							<oldValues xsi:type="xsd:Object">
+								<surveyId>${surveyId}</surveyId>
+								<isGeneralObservation xsi:type="xsd:boolean">true</isGeneralObservation>
+							</oldValues>
+						</elem>
+					</operations>
+				</transaction>`,
+			protocolVersion: '1.0'
+		}
+	}
+	return requestp(options)
+};
+
 get.surveysList = function(projectId, cookie) {
 	let url = 'https://vba.dse.vic.gov.au/vba/vba/sc/IDACall?isc_rpc=1&isc_v=SC_SNAPSHOT-2010-08-03&isc_xhr=1'
 	let header = {
@@ -344,7 +391,7 @@ get.methodDetail = function(methodID, cookie) {
 };
 
 get.verifySiteEditability = function( formData, cookie ){
-	const url = 'https://vba.dse.vic.gov.au/dotmap/verifySiteEditability.json';
+	const url = 'https://vba.dse.vic.gov.au/dotmap/validatePoint.json';
 
 	const header = {
 		'Host': 'vba.dse.vic.gov.au',
@@ -359,41 +406,13 @@ get.verifySiteEditability = function( formData, cookie ){
 		method: 'POST',
 		resolveWithFullResponse: true,
 		simple: false,
+		json:true,
 		url: url,
 		headers: header,
 		form: formData
-		// {
-		// 	siteId:
-		// 	nme:Vic State Library
-		// 	desc:corner of Latrobe / Swanston
-		// 	comment:
-		// 	type:Point
-		// 	Accuracy:50
-		// 	isc_SpacerItem_0:
-		// 	isc_CanvasItem_0:
-		// 	gps:
-		// 	location:cc
-		// 	cType:1
-		// 	Datum:w
-		// 	Latitude:37.8100
-		// 	Longitude:144.9641
-		// 	lati2:
-		// 	longi2:
-		// 	zone:54
-		// 	mapNo:
-		// 	Easting:
-		// 	Northing:
-		// 	edition:
-		// 	pageGrid:
-		// 	Validate:
-		// 	coordinateInfoChanged:true
-		// 	geom:
-		// 	userId:10660
-		// }
 	}
 	console.log(chalk.yellow(JSON.stringify(options, null, 2)));
 	return requestp(options)
 };
-
 
 module.exports = get;

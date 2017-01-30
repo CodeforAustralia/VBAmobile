@@ -4,56 +4,64 @@
         <div class="form-inner-container">
           <h1 class="form-header">Add observation</h1>
           <label for="name">Species :</label>
-          <input class="w-input" data-name="Name" id="taxonId" maxlength="256" name="Name" placeholder="Search for species" type="text">
+          <input class="w-input" data-name="taxonId" id="taxonId" maxlength="256" name="taxonId" placeholder="Search for species" type="text">
           <label for="Site-ID">Count :</label>
-          <input class="w-input" data-name="Site ID" id="Site-ID" input="number" maxlength="256" name="Site-ID" placeholder="Total count" required="required" type="text">
+          <input class="w-input" data-name="count" id="count" input="number" maxlength="256" name="count" placeholder="Total count" required="required" type="text">
           <label for="Type-of-record">Type of record :</label>
-          <select class="w-select" data-name="Type of record" id="Type-of-record" name="Type-of-record" required="required">
+          <select class="w-select" data-name="Type of record" id="Type-of-record" name="typeCde" required="required">
             <option value="">Select ...</option>
-            <option value="Observation">Observation</option>
-            <option value="Birds australia nest record card">Birds australia nest record card</option>
-            <option value="Captured">Captured</option>
-            <option value="Captured and released">Captured and released</option>
-            <option value="Heard">Heard</option>
-            <option value="Identified from bat detector recording">Identified from bat detector recording</option>
-            <option value="Identified from bat detector recording">Identified from hair or scats</option>
-            <option value="Indirect evidence">Indirect evidence</option>
-            <option value="Literature">Literature</option>
-            <option value="Museum specimen">Museum specimen</option>
-            <option value="Observation with supporting evidence">Observation with supporting evidence</option>
-            <option value="Seen">Seen</option>
+            <option value="o">Observation</option>
+            <option value="s">Seen</option>
+            <option value="x">Observation with supporting evidence</option>
+            <option value="i">Indirect evidence</option>
+            <option value="cap">Captured</option>
+            <option value="t">Captured and released</option>
+            <option value="h">Heard</option>
+            <option value="a">Identified from hair or scats</option>
+            <option value="d">Identified from bat detector recording</option>
+            <option value="l">Literature</option>
+            <option value="n">Birds australia nest record card</option>
+            <option value="m">Museum specimen</option>
           </select>
           <label for="extra-information">Extra information :</label>
-          <select class="w-select" id="extra-information" name="field">
-            <option value="">Select ...</option>
-            <option value="Beach washed">Beach washed</option>
-            <option value="Breeding">Breeding</option>
-            <option value="Carnivore bait">Carnivore bait</option>
-            <option value="Cultivated">Cultivated</option>
-            <option value="Escapee">Escapee</option>
-            <option value="Evidence of past use">Evidence of past use</option>
-            <option value="Found dead">Found dead</option>
-            <option value="Herbivore bait">Herbivore bait</option>
-            <option value="In predator scat">In predator scat</option>
-            <option value="No longer present at site">No longer present at site</option>
-            <option value="Released / Introduced">Released / Introduced</option>
-            <option value="Roost site">Roost site</option>
-            <option value="Sub fossil">Sub fossil</option>
-            <option value="Voucher specimen">Voucher specimen</option>
-          </select>
+          <select class="w-select" id="extra-information" name="extraInfo">
+          <option value="">Select ...</option>
+          <option value="w">Beach washed</option>
+          <option value="b">Breeding</option>
+          <option value="carni">Carnivore bait</option>
+          <option value="cult">Cultivated</option>
+          <option value="e">Escapee</option>
+          <option value="past">Evidence of past use</option>
+          <option value="k">Found dead</option>
+          <option value="herbi">Herbivore bait</option>
+          <option value="z">In predator scat</option>
+          <option value="x">No longer present at site</option>
+          <option value="r">Released / Introduced</option>
+          <option value="c">Roost site</option>
+          <option value="f">Sub fossil</option>
+          <option value="v">Voucher specimen</option>
+        </select>
           <label id="locationLabel">Location :</label>
+          <label for="name">Location name :</label>
+            <input class="w-input" data-name="locationName" id="name" maxlength="256" name="locNme" placeholder="Carlton garden south" type="text">
+          <label for="desc">Location description :</label>
+            <textarea class="w-input" data-name="locationDesc" id="desc" maxlength="256" name="locDesc" placeholder="Parks with fountains and artificial lakes" type="text"></textarea>
           <label for="name">Latitude :</label>
-            <input class="w-input" data-name="Latitude" id="lat" maxlength="256" name="Latitude" placeholder="37.8100" type="text">
+            <input class="w-input" data-name="Latitude" id="lat" maxlength="256" name="lat" placeholder="37.8100" type="text">
           <label for="name">Longitude :</label>
-            <input class="w-input" data-name="Longitude" id="long" maxlength="256" name="Longitude" placeholder="144.1234" type="text">
+            <input class="w-input" data-name="Longitude" id="long" maxlength="256" name="long" placeholder="144.1234" type="text">
           <div class="gps-button">
             <a class="buttons-size w-button" href="#" id="getLocation" >&#x1F3AF; &#xA0;Get location</a>
             <!-- <a class="buttons-size manual-location w-button" href="#">Enter location</a> -->
           </div>
           <label id="timeLabel">Time :</label>
+          <label for="name">Date :</label>
+            <input class="w-input" data-name="Date" id="date" maxlength="256" name="date" placeholder="yyyy-mm-dd" type="text">
+          <label for="name">Time :</label>
+            <input class="w-input" data-name="Time" id="time" maxlength="256" name="time" placeholder="hhmm" type="text">
           <div class="time-buttons">
             <a id="time-button" class="buttons-size w-button" href="#">&#x23F0; &#xA0;Now</a>
-            <a class="buttons-size manual-time w-button" href="#">Enter time</a>
+            <!-- <a class="buttons-size manual-time w-button" href="#">Enter time</a> -->
           </div>
           <div class="form-button-center">
             <input class="form-button w-button" data-wait="Please wait..." type="submit" value="save">
