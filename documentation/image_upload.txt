@@ -1,0 +1,19 @@
+curl 'https://vba.dse.vic.gov.au/vba/uploadFile.do?type=Image&pk=taxonRecorded_8430720' -H 'Cookie: JSESSIONID=2D018315A84A1D4886F8FEB44F73D7CA.worker1; isc_cState=ready; NSC_JOxowpqucj3yneeb0fo0hbduv21smct=ffffffff0935322c45525d5f4f58455e445a4a423660' -H 'Origin: https://vba.dse.vic.gov.au' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8,fr;q=0.6' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36' -H 'Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryQUOxp0VdkmzRDXp9' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Cache-Control: max-age=0' -H 'Referer: https://vba.dse.vic.gov.au/vba/index.jsp' -H 'Connection: keep-alive' --data-binary $'------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="dataFileTaken"\r\n\r\n$$DATE$$:2017-02-01 00:00:00\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="dataFileTaken_dateTextField"\r\n\r\n01/02/2017\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="copyrightOwner"\r\n\r\ntest\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="copyrightDate"\r\n\r\n$$DATE$$:2017-02-01 00:00:00\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="copyrightDate_dateTextField"\r\n\r\n01/02/2017\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="capation"\r\n\r\ntest\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="description"\r\n\r\n\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="localityDescription"\r\n\r\n\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9\r\nContent-Disposition: form-data; name="file"; filename="turtle.png"\r\nContent-Type: image/png\r\n\r\n\r\n------WebKitFormBoundaryQUOxp0VdkmzRDXp9--\r\n' --compressed
+
+<input type="FILE" name="file" id="isc_13E" handlenativeevents="false" $89="isc_UploadItem_1" $9a="$9b" spellcheck="true" oninput="isc_UploadItem_1.$43g()" autocomplete="OFF" class="normal" style="WIDTH:426px;HEIGHT:-4px;" tabindex="7464">
+
+POST /vba/uploadFile.do?type=Image&pk=taxonRecorded_8430720 HTTP/1.1
+Host: vba.dse.vic.gov.au
+Connection: keep-alive
+Content-Length: 733102
+Cache-Control: max-age=0
+Origin: https://vba.dse.vic.gov.au
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarynx1JWNcYVB9OAfoB
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Referer: https://vba.dse.vic.gov.au/vba/index.jsp
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.8,fr;q=0.6
+Cookie: JSESSIONID=72DBB05E49B114C9AFA17381B1B44197.worker1; isc_cState=ready; NSC_JOxowpqucj3yneeb0fo0hbduv21smct=ffffffff0935322c45525d5f4f58455e445a4a423660
+
