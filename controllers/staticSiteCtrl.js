@@ -14,7 +14,7 @@ exports.landingPage = function(req, res) {
 	let user = isLoggedIn(req);
 	res.render('index', {
 			loggedIn : user,
-			helpers : {
+			helpers : { 
 				username : user
 			}
 	});
@@ -132,7 +132,7 @@ exports.createIncObs = function(req, res) {
 		Latitude: req.body.lat,
 		Longitude: req.body.long,
 		gps: true,
-		Accuracy:1
+		accuracy: req.body.accu
 	}
 
 	// create new site
@@ -142,10 +142,17 @@ exports.createIncObs = function(req, res) {
 			if ( !(response.body.wkt) ) {
 				throw response.body
 			}
+
 			// "POINT(145.480171 -36.660507)"
-			let pointsRegex = /POINT\(((?:-|)\d*\.\d*) ((?:-|)\d*.\d*)/
+			let pointsRegex = /POINT\(((?:-|)\d*\.\d*) ((?:-|)\d*.\d*)/;
+			// let zoneRegex = /Zone (\d{2})/;
+
 			let [,long, lat] = pointsRegex.exec(response.body.wkt);
+			// let zone = zoneRegex.exec(response.body.html);
+
 			console.log(`long : ${long} lat : ${lat}`)
+			console.log(chalk.red(JSON.stringify(response.body, null, 4)))
+
 			return [long, lat]
 		}).then(points => {
 			return post.saveSite({
@@ -154,7 +161,7 @@ exports.createIncObs = function(req, res) {
 				desc: req.body.locDesc,
 				// comment:
 				type: 'Point',
-				Accuracy:2,
+				Accuracy: verifySiteOptions.accuracy,
 				// isc_SpacerItem_0:
 				// isc_CanvasItem_0:
 				gps: true,
@@ -165,7 +172,7 @@ exports.createIncObs = function(req, res) {
 				Longitude: points[0],
 				// lati2:
 				// longi2:
-				zone:54,
+				// zone:points[2],
 				// mapNo:
 				// Easting:
 				// Northing:
